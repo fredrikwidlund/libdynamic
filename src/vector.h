@@ -5,9 +5,7 @@ typedef struct vector vector;
 
 struct vector
 {
-  void    *data;
-  size_t   size;
-  size_t   capacity;
+  buffer   data;
   size_t   object_size;
   void   (*release)(void *);
 };
@@ -38,9 +36,6 @@ int     vector_push_back(vector *, void *);
 void    vector_pop_back(vector *);
 int     vector_insert(vector *, size_t, size_t, void *);
 void    vector_erase(vector *, size_t, size_t);
-int     vector_clear(vector *);
-
-/* internals */
-size_t  vector_roundup_size(size_t);
-
+void    vector_clear(vector *);
+ 
 #endif /* VECTOR_H_INCLUDED */

@@ -1,0 +1,4 @@
+gcc -Wall -Werror -Wpedantic -std=c11 -O3 -std=c11 -flto -c -o vector.o vector.c 
+gcc -Wall -Werror -Wpedantic -std=c11 -O3 -std=c11 -flto -c -o buffer.o buffer.c 
+gcc -Wall -Werror -Wpedantic -std=c11 -O3 -std=c11 -flto -c -o test.o test.c 
+gcc -Wall -Werror -Wpedantic -std=c11 -O3 -std=c11 -flto -o test test.o buffer.o vector.o 

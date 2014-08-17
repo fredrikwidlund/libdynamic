@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "buffer.h"
 #include "vector.h"
 
 /* allocators */
@@ -31,8 +32,9 @@ void vector_free(vector *v)
 
 void vector_init(vector *v, size_t object_size)
 {
-  memset(v, 0, sizeof *v);
+  buffer_init(&v->data);
   v->object_size = object_size;
+  v->release = NULL;
 }
 
 void vector_release(vector *v, void (*release)(void *))
@@ -59,9 +61,10 @@ void *vector_deconstruct(vector *v)
 
 size_t vector_size(vector *v)
 {
-  return v->size;
+  return buffer_size(&v->data) / v->object_size;
 }
 
+/*
 int vector_resize(vector *v, size_t size)
 {
   int e;
@@ -73,10 +76,11 @@ int vector_resize(vector *v, size_t size)
   v->size = size;
   return 0;
 }
+*/
 
 size_t vector_capacity(vector *v)
 {
-  return v->capacity;
+  return buffer_capacity(&v->data) / v->object_size;
 }
 
 int vector_empty(vector *v)
@@ -86,70 +90,48 @@ int vector_empty(vector *v)
 
 int vector_reserve(vector *v, size_t capacity)
 {
-  if (capacity > v->capacity)
-    {
-      size_t size = vector_roundup_size(capacity * v->object_size);
-      void *data = realloc(v->data, size);
-
-      if (!data)
-        return -1;
-
-      v->capacity = size / v->object_size;
-      v->data = data;
-    }
-
-  return 0;
+  return buffer_reserve(&v->data, capacity * v->object_size);
 }
 
 int vector_shrink_to_fit(vector *v)
 {
-  if (v->capacity > v->size)
-    {
-      void *data = realloc(v->data, v->size * v->object_size);
-      
-      if (v->size > 0 && !data)
-        return -1;
-
-      v->capacity = v->size;
-      v->data = data;
-    }
-
-  return 0;
+  return buffer_compact(&v->data);
 }
 
 /* element access */
 
 void *vector_at(vector *v, size_t index)
 {  
-  return ((char *) v->data) + (index * v->object_size);
+  return buffer_data(&v->data) + (index * v->object_size);
 }
 
 void *vector_front(vector *v)
 {
-  return vector_at(v, 0);;
+  return vector_at(v, 0);
 }
 
 void *vector_back(vector *v)
 {
-  return vector_at(v, v->size - 1);
+  return buffer_end(&v->data) - v->object_size;
 }
 
 void *vector_data(vector *v)
 {
-  return v->data;
+  return buffer_data(&v->data);
 }
 
 /* modifiers */
 
 int vector_push_back(vector *v, void *value)
 {
-  return vector_insert(v, v->size, 1, value);
+  return buffer_append(&v->data, value, v->object_size);
 }
 
+/*
 void vector_pop_back(vector *v)
 {
   vector_erase(v, v->size - 1, v->size);
-}
+  }
 
 int vector_insert(vector *v, size_t position, size_t size, void *base)
 {
@@ -177,25 +159,9 @@ void vector_erase(vector *v, size_t from, size_t to)
   memmove(vector_at(v, from), vector_at(v, to), (v->size - to) * v->object_size);
   v->size -= to - from;
 }
+*/
 
-int vector_clear(vector *v)
+void vector_clear(vector *v)
 {
-  vector_erase(v, 0, vector_size(v));
-  return vector_shrink_to_fit(v);
-}
-
-/* internals */
-
-size_t vector_roundup_size(size_t size)
-{
-  size --;
-  size |= size >> 1;
-  size |= size >> 2;
-  size |= size >> 4;
-  size |= size >> 8;
-  size |= size >> 16;
-  size |= size >> 32;
-  size ++;
-
-  return size;
+  buffer_clear(&v->data);
 }
