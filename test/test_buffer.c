@@ -7,7 +7,7 @@
 #include <setjmp.h>
 #include <google/cmockery.h>
 
-#include "dynamic.h"
+#include "buffer.h"
 
 void core()
 {
