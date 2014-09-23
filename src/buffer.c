@@ -2,10 +2,8 @@
 #include <config.h>
 #endif
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <err.h>
 
 #include "buffer.h"
 
@@ -14,13 +12,13 @@
 buffer *buffer_new()
 {
   buffer *b;
-  
+
   b = malloc(sizeof *b);
   if (!b)
     return NULL;
-  
+
   buffer_init(b);
-  
+
   return b;
 }
 
@@ -32,17 +30,16 @@ void buffer_free(buffer *b)
 
 void buffer_init(buffer *b)
 {
-  b->base = NULL;
-  b->top = NULL;
-  b->memory_base = NULL;
-  b->memory_top = NULL;
+  b->data = NULL;
+  b->size = 0;
+  b->capacity = 0;
 }
 
 char *buffer_deconstruct(buffer *b)
 {
   char *data;
-  
-  buffer_compact(b);
+
+  (void) buffer_compact(b);
   data = buffer_data(b);
   free(b);
 
@@ -53,102 +50,74 @@ char *buffer_deconstruct(buffer *b)
 
 size_t buffer_size(buffer *b)
 {
-  return b->top - b->base;
+  return b->size;
 }
 
 size_t buffer_capacity(buffer *b)
 {
-  return b->memory_top - b->memory_base;
-}
-
-size_t buffer_capacity_head(buffer *b)
-{
-  return b->base - b->memory_base;
-}
-
-size_t buffer_capacity_tail(buffer *b)
-{
-  return b->memory_top - b->top;
+  return b->capacity;
 }
 
 int buffer_reserve(buffer *b, size_t capacity)
 {
-  char *memory_base;
+  char *data;
 
-  if (capacity > buffer_capacity(b))
+  if (capacity > b->capacity)
     {
       capacity = buffer_roundup(capacity);
-      memory_base = realloc(b->memory_base, capacity);
-      if (!memory_base)
+      data = realloc(b->data, capacity);
+      if (!data)
         return -1;
-
-      b->base += memory_base - b->memory_base;
-      b->top += memory_base - b->memory_base;
-      b->memory_base = memory_base;
-      b->memory_top = memory_base + capacity;
+      b->data = data;
+      b->capacity = capacity;
     }
 
   return 0;
 }
 
-void buffer_move(buffer *b, size_t size)
-{
-  printf("[move %ld]\n", size);
-  memmove(b->base + size, b->base, buffer_size(b));
-  b->base += size;
-  b->top += size;
-}
-
 int buffer_compact(buffer *b)
 {
-  printf("[buffer compact]\n");
-  
+  char *data;
+
+  if (b->capacity > b->size)
+    {
+      data = realloc(b->data, b->size);
+      if (!data)
+        return -1;
+      b->data = data;
+      b->capacity = b->size;
+    }
+
   return 0;
 }
 
 /* modifiers */
 
-int buffer_prepend(buffer *b, char *data, size_t size)
+int buffer_insert(buffer *b, size_t position, char *data, size_t size)
 {
   int e;
 
-  e = buffer_reserve(b, buffer_size(b) + size);
+  e = buffer_reserve(b, b->size + size);
   if (e == -1)
     return -1;
 
-  if (buffer_capacity_head(b) < size)
-    buffer_move(b, size - buffer_capacity_head(b));
-  b->base -= size;
-  memcpy(b->base, data, size);
+  if (position < b->size)
+    memmove(b->data + position + size, b->data + position, b->size - position);
+  memcpy(b->data + position, data, size);
+  b->size += size;
 
   return 0;
 }
 
-int buffer_append(buffer *b, char *data, size_t size)
+void buffer_erase(buffer *b, size_t position, size_t size)
 {
-  int e;
-
-  e = buffer_reserve(b, buffer_size(b) + size);
-  if (e == -1)
-    return -1;
-
-  if (buffer_capacity_tail(b) < size)
-    buffer_move(b, - (size - buffer_capacity_head(b)));
-  memcpy(b->top, data, size);
-  b->top += size;
-  
-  return 0;
+  memmove(b->data + position, b->data + position + size, b->size - position - size);
+  b->size -= size;
 }
-
-void buffer_insert(buffer *b, size_t position, char *data, size_t size)
-{
-  printf("[buffer insert]\n");
-}
-
 
 void buffer_clear(buffer *b)
 {
-  free(b->memory_base);
+  free(b->data);
   buffer_init(b);
 }
 
@@ -156,12 +125,7 @@ void buffer_clear(buffer *b)
 
 char *buffer_data(buffer *b)
 {
-  return b->base;
-}
-
-char *buffer_end(buffer *b)
-{
-  return b->top;
+  return b->data;
 }
 
 /* internals */
@@ -176,6 +140,6 @@ size_t buffer_roundup(size_t size)
   size |= size >> 16;
   size |= size >> 32;
   size ++;
-  
+
   return size;
 }

@@ -6,6 +6,7 @@
 #define DYNAMIC_VERSION_MINOR 1
 #define DYNAMIC_VERSION_PATCH 0
 
+#include <dynamic/buffer.h>
 #include <dynamic/vector.h>
 
 #endif /* DYNAMIC_H_INCLUDED */

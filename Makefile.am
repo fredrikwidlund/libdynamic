@@ -10,8 +10,8 @@ LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmockery -L/opt/local/lib
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 
-SOURCE_FILES = src/vector.c
-HEADER_FILES = src/vector.h
+SOURCE_FILES = src/vector.c src/buffer.c
+HEADER_FILES = src/vector.h src/buffer.h
 
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_CFLAGS = $(LIB_CFLAGS)
@@ -22,12 +22,15 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(LIB_TEST_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-BUILD_TESTS = test/test_vector
+BUILD_TESTS = test/test_buffer test/test_vector
 
 TESTS = $(BUILD_TESTS) test/test_valgrind.sh test/test_coverage.sh
 
 check_PROGRAMS = $(BUILD_TESTS)
 check_SCRIPTS = test
+
+test_test_buffer_CFLAGS = $(LIB_TEST_CFLAGS)
+test_test_buffer_LDADD = $(LDADD_TEST_FLAGS)
 
 test_test_vector_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_vector_LDADD = $(LDADD_TEST_FLAGS)
