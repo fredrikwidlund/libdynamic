@@ -31,9 +31,13 @@ check_SCRIPTS = test
 
 test_test_buffer_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_buffer_LDADD = $(LDADD_TEST_FLAGS)
+test_test_buffer_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_buffer_SOURCES = test/test_buffer.c test/test_util.c
 
 test_test_vector_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_vector_LDADD = $(LDADD_TEST_FLAGS)
+test_test_vector_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_vector_SOURCES = test/test_vector.c test/test_util.c
 
 headerfilesdir = $(includedir)/dynamic
 headerfiles_HEADERS = $(HEADER_FILES)

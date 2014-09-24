@@ -40,10 +40,40 @@ void core()
   free(s);
 }
 
+extern int debug_out_of_memory;
+
+void memory()
+{
+  buffer *b;
+  int e;
+
+  debug_out_of_memory = 1;
+  b = buffer_new();
+  assert_false(b);
+  debug_out_of_memory = 0;
+
+  b = buffer_new();
+  assert_true(b);
+  debug_out_of_memory = 1;
+  e = buffer_insert(b, 0, "xxx", 3);
+  assert_int_equal(e, -1);
+  debug_out_of_memory = 0;
+
+  e = buffer_insert(b, 0, "xxx", 3);
+  assert_int_equal(e, 0);
+  debug_out_of_memory = 1;
+  e = buffer_compact(b);
+  assert_int_equal(e, -1);
+  debug_out_of_memory = 0;
+
+  buffer_free(b);
+}
+
 int main()
 {
   const UnitTest tests[] = {
-    unit_test(core)
+    unit_test(core),
+    unit_test(memory)
   };
 
   return run_tests(tests);
