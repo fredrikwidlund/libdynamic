@@ -9,51 +9,49 @@ vector \- dynamically sized vector modelled roughly after std::vector
 
 .B ALLOCATORS
 
-vector_t *vector_new(size_t object_size);
+vector *vector_new(size_t object_size);
 .br
-void      vector_free(vector_t *vector);
+void    vector_free(vector *vector);
 .br
-void      vector_init(vector_t *vector, size_t object_size);
+void    vector_init(vector *vector, size_t object_size);
 .br
-void      vector_release(vector_t *vector, void (*release)(void *));
+void    vector_release(vector *vector, void (*release)(void *));
 .br
-void     *vector_deconstruct(vector *);
+void   *vector_deconstruct(vector *);
 
 .B CAPACITY
 
-size_t    vector_size(vector_t *vector);
+size_t  vector_size(vector *vector);
 .br
-int       vector_resize(vector_t *vector, size_t new_size);
+size_t  vector_capacity(vector *vector);
 .br
-size_t    vector_capacity(vector_t *vector);
+int     vector_empty(vector *);
 .br
-int       vector_empty(vector *);
+int     vector_reserve(vector *vector, size_t reserved_size);
 .br
-int       vector_reserve(vector_t *vector, size_t reserved_size);
-.br
-int       vector_shrink_to_fit(vector_t *vector);
+int     vector_shrink_to_fit(vector *vector);
 
 .B ELEMENT ACCESS
 
-void     *vector_at(vector_t *vector, size_t position);
+void   *vector_at(vector *vector, size_t position);
 .br
-void     *vector_front(vector_t *vector);
+void   *vector_front(vector *vector);
 .br
-void     *vector_back(vector_t *vector);
+void   *vector_back(vector *vector);
 .br
-void     *vector_data(vector_t *vector);
+void   *vector_data(vector *vector);
 
 .B MODIFIERS
 
-int       vector_push_back(vector_t *vector, void *object);
+int     vector_push_back(vector *vector, void *object);
 .br
-void      vector_pop_back(vector_t *vector);
+void    vector_pop_back(vector *vector);
 .br
-int       vector_insert(vector_t *vector, size_t position, size_t number_of_objects, void *objects);
+int     vector_insert(vector *vector, size_t position, size_t number_of_objects, void *objects);
 .br
-void      vector_erase(vector_t *vector, size_t from_position, size_t to_position);
+void    vector_erase(vector *vector, size_t from_position, size_t to_position);
 .br
-int       vector_clear(vector_t *vector);
+void    vector_clear(vector *vector);
 
 .SH DESCRIPTION
 
