@@ -40,4 +40,9 @@ The tests require 100% code coverage to succeed.
     Branches executed:100.00% of 6
     Taken at least once:100.00% of 6
     Calls executed:100.00% of 25
-
+    [string]
+    File 'src/string.c'
+    Lines executed:100.00% of 94
+    Branches executed:100.00% of 24
+    Taken at least once:100.00% of 24
+    Calls executed:100.00% of 48
