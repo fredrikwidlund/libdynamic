@@ -5,7 +5,7 @@ LIB_CFLAGS += -ffat-lto-objects
 endif
 
 LIB_TEST_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs -std=c11 -I/opt/local/include
-LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmockery -L/opt/local/lib
+LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmocka -L/opt/local/lib
 
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4

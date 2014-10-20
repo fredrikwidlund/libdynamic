@@ -5,7 +5,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <setjmp.h>
-#include <google/cmockery.h>
+#include <cmocka.h>
 
 #include "../src/buffer.h"
 

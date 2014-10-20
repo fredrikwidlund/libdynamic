@@ -21,7 +21,7 @@ Installation
 Tests
 -----
 
-Requires cmockery (https://code.google.com/p/cmockery/) to be installed, as well as valgrind (http://valgrind.org/) for memory tests.
+Requires cmocka (http://cmocka.org/) to be installed, as well as valgrind (http://valgrind.org/) for memory tests.
 
     make check
 
