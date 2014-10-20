@@ -8,6 +8,7 @@ Where appropriate containers are modelled (roughly) after the stdc++ equivalents
 Currently implemented types are:
 
 * vector  - modelled after std::vector
+* string  - modelled after std::string
 
 Installation
 ------------
