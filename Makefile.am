@@ -1,17 +1,17 @@
-LIB_CFLAGS = -O3 -flto -std=c11 -I$(top_srcdir)/src
+LIB_CFLAGS = -O3 -flto -std=c11
 
 if HAVE_FAT_LTO_OBJECTS
 LIB_CFLAGS += -ffat-lto-objects
 endif
 
-LIB_TEST_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs -std=c11 -I$(top_srcdir)/src -I/opt/local/include
+LIB_TEST_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs -std=c11 -I/opt/local/include
 LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmockery -L/opt/local/lib
 
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 
-SOURCE_FILES = src/vector.c src/buffer.c
-HEADER_FILES = src/vector.h src/buffer.h
+SOURCE_FILES = src/vector.c src/string.c src/buffer.c
+HEADER_FILES = src/vector.h src/string.h src/buffer.h
 
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_CFLAGS = $(LIB_CFLAGS)
@@ -22,7 +22,7 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(LIB_TEST_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-BUILD_TESTS = test/test_buffer test/test_vector
+BUILD_TESTS = test/test_buffer test/test_vector test/test_string
 
 TESTS = $(BUILD_TESTS) test/test_valgrind.sh test/test_coverage.sh
 
@@ -38,6 +38,11 @@ test_test_vector_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_vector_LDADD = $(LDADD_TEST_FLAGS)
 test_test_vector_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
 test_test_vector_SOURCES = test/test_vector.c test/test_util.c
+
+test_test_string_CFLAGS = $(LIB_TEST_CFLAGS)
+test_test_string_LDADD = $(LDADD_TEST_FLAGS)
+test_test_string_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_string_SOURCES = test/test_string.c test/test_util.c
 
 headerfilesdir = $(includedir)/dynamic
 headerfiles_HEADERS = $(HEADER_FILES)

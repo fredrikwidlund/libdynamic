@@ -7,7 +7,7 @@
 #include <setjmp.h>
 #include <google/cmockery.h>
 
-#include "buffer.h"
+#include "../src/buffer.h"
 
 void core()
 {

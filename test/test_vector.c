@@ -7,8 +7,8 @@
 #include <setjmp.h>
 #include <google/cmockery.h>
 
-#include "buffer.h"
-#include "vector.h"
+#include "../src/buffer.h"
+#include "../src/vector.h"
 
 void release(void *object)
 {
@@ -100,7 +100,7 @@ void memory()
 
   v = vector_new(1);
   assert_true(v);
-  debug_out_of_memory = 1
+  debug_out_of_memory = 1;
   e = vector_push_back(v, "x");
   assert_int_equal(e, -1);
   debug_out_of_memory = 0;
