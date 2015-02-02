@@ -1,2 +1,5 @@
 2014-08-06  Fredrik Widlund <fredrik.widlund@gmail.com>
 	* : Initial revision
+
+2016-02-05  Fredrik Widlund <fredrik.widlund@gmail.com>
+	* : Add map_str and map_int
