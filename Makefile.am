@@ -10,8 +10,8 @@ LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmocka -L/opt/local/lib
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 
-SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/map_int.c src/map_str.c src/cfarmhash.c
-HEADER_FILES = src/vector.h src/string.h src/buffer.h src/map_int.h src/map_str.h src/cfarmhash.h
+SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/map_int.c src/map_str.c src/cfarmhash.c src/io.c
+HEADER_FILES = src/vector.h src/string.h src/buffer.h src/map_int.h src/map_str.h src/cfarmhash.h src/io.h
 
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_CFLAGS = $(LIB_CFLAGS)

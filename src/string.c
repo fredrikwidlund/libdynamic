@@ -37,6 +37,11 @@ void string_init(string *s, char *data)
   buffer_insert(&s->buffer, 0, data, strlen(data) + 1);
 }
 
+char *string_deconstruct(string *s)
+{
+  return buffer_deconstruct(&s->buffer);
+}
+
 /* capacity */
 
 size_t string_length(string *s)
