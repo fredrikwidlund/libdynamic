@@ -9,6 +9,10 @@ Currently implemented types are:
 
 * vector  - modelled after std::vector
 * string  - modelled after std::string
+* map_int - modelled after std::unordered_map
+* map_str - modelled after std::unordered_map
+
+The library also contains a C port of the Google Farmhash hash function.
 
 Installation
 ------------
