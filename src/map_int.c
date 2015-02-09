@@ -15,8 +15,11 @@
 map_int *map_int_new(size_t value_size, uint32_t reserved_empty, uint32_t reserved_deleted)
 {
   map_int *map;
+
+  map = malloc(sizeof *map);
+  if (!map)
+    return NULL;
   
-  map = (map_int *) malloc(sizeof *map);
   map_int_init(map, value_size, reserved_empty, reserved_deleted);
   
   return map;
@@ -173,8 +176,9 @@ void map_int_rehash(map_int *map, size_t capacity_requested)
     {
       map_old = *map;
       capacity = map_int_roundup_size(capacity_requested);
-      map->keys = (uint32_t *) malloc(capacity * sizeof(*map->keys));
+      map->keys = malloc(capacity * sizeof(*map->keys));
       map->values = malloc(capacity * map->value_size);
+
       for (i = 0; i < capacity; i ++)
 	map->keys[i] =  map->reserved_empty;
       

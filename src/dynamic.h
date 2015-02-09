@@ -16,7 +16,6 @@ extern "C" {
 #include <dynamic/cfarmhash.h>
 #include <dynamic/map_int.h>
 #include <dynamic/map_str.h>
-#include <dynamic/map_pair.h>
 #include <dynamic/io.h>
 
 #ifdef __cplusplus
