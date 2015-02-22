@@ -14,9 +14,8 @@ extern "C" {
 #include <dynamic/vector.h>
 #include <dynamic/string.h>
 #include <dynamic/cfarmhash.h>
-#include <dynamic/map_int.h>
+#include <dynamic/mapi.h>
 #include <dynamic/map_str.h>
-#include <dynamic/map_pair.h>
 #include <dynamic/io.h>
 
 #ifdef __cplusplus

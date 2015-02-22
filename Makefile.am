@@ -10,8 +10,8 @@ LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmocka -L/opt/local/lib
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 
-SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/map_int.c src/map_str.c src/map_pair.c src/cfarmhash.c src/io.c
-HEADER_FILES = src/vector.h src/string.h src/buffer.h src/map_int.h src/map_str.h src/map_pair.h src/cfarmhash.h src/io.h
+SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/mapi.c src/map_str.c src/cfarmhash.c src/io.c
+HEADER_FILES = src/vector.h src/string.h src/buffer.h src/mapi.h src/map_str.h src/cfarmhash.h src/io.h
 
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_CFLAGS = $(LIB_CFLAGS)
@@ -22,36 +22,38 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(LIB_TEST_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-BUILD_TESTS = test/test_buffer test/test_vector test/test_string test/test_map_int test/test_map_str
+BUILD_TESTS = test/test_buffer test/test_vector test/test_string test/test_mapi test/test_map_str
 
 TESTS = $(BUILD_TESTS) test/test_valgrind.sh test/test_coverage.sh
 
 check_PROGRAMS = $(BUILD_TESTS)
 check_SCRIPTS = test
 
+TEST_LD_WRAP = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc
+
 test_test_buffer_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_buffer_LDADD = $(LDADD_TEST_FLAGS)
-test_test_buffer_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_buffer_LDFLAGS = $(TEST_LD_WRAP)
 test_test_buffer_SOURCES = test/test_buffer.c test/test_util.c
 
 test_test_vector_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_vector_LDADD = $(LDADD_TEST_FLAGS)
-test_test_vector_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_vector_LDFLAGS = $(TEST_LD_WRAP)
 test_test_vector_SOURCES = test/test_vector.c test/test_util.c
 
 test_test_string_CFLAGS = $(LIB_TEST_CFLAGS)
 test_test_string_LDADD = $(LDADD_TEST_FLAGS)
-test_test_string_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_string_LDFLAGS = $(TEST_LD_WRAP)
 test_test_string_SOURCES = test/test_string.c test/test_util.c
 
-test_test_map_int_CFLAGS =  $(LIB_TEST_CFLAGS)
-test_test_map_int_LDADD = $(LDADD_TEST_FLAGS)
-test_test_map_int_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
-test_test_map_int_SOURCES = test/test_map_int.c test/test_util.c
+test_test_mapi_CFLAGS =  $(LIB_TEST_CFLAGS)
+test_test_mapi_LDADD = $(LDADD_TEST_FLAGS)
+test_test_mapi_LDFLAGS = $(TEST_LD_WRAP)
+test_test_mapi_SOURCES = test/test_mapi.c test/test_util.c
 
 test_test_map_str_CFLAGS =  $(LIB_TEST_CFLAGS)
 test_test_map_str_LDADD = $(LDADD_TEST_FLAGS)
-test_test_map_str_LDFLAGS = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc
+test_test_map_str_LDFLAGS = $(TEST_LD_WRAP)
 test_test_map_str_SOURCES = test/test_map_str.c test/test_util.c
 
 headerfilesdir = $(includedir)/dynamic

@@ -17,7 +17,7 @@ map_str *map_str_new(size_t value_size)
 {
   map_str *map;
   
-  map = (map_str *) malloc(sizeof *map);
+  map = malloc(sizeof *map);
   map_str_init(map, value_size);
   
   return map;

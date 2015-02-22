@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -111,9 +109,9 @@ void core()
 
 int main()
 {
-  const UnitTest tests[] = {
-    unit_test(core)
+  const struct CMUnitTest tests[] = {
+    cmocka_unit_test(core)
   };
 
-  return run_tests(tests);
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }

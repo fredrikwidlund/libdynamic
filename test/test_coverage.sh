@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for file in buffer vector string map_int map_str
+for file in buffer vector string mapi map_str
 do
     echo [$file]
     test=`gcov -b src/libdynamic_test_a-$file | grep -A4 File.*$file`

@@ -71,10 +71,10 @@ void memory()
 
 int main()
 {
-  const UnitTest tests[] = {
-    unit_test(core),
-    unit_test(memory)
+  const struct CMUnitTest tests[] = {
+    cmocka_unit_test(core),
+    cmocka_unit_test(memory)
   };
 
-  return run_tests(tests);
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }

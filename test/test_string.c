@@ -147,13 +147,15 @@ void core()
   string_replace_all(s, "e", "");
   string_replace_all(s, "none", "other");
   assert_string_equal(string_data(s), "som chosn words in chosn ordr");
-  string_free(s);
-}
 
-extern int debug_out_of_memory;
+  cp = string_deconstruct(s);
+  assert_string_equal(cp, "som chosn words in chosn ordr");
+  free(cp);
+}
 
 void memory()
 {
+  extern int debug_out_of_memory;
   string *s, *s2;
   int e;
 
@@ -186,10 +188,10 @@ void memory()
 
 int main()
 {
-  const UnitTest tests[] = {
-    unit_test(core),
-    unit_test(memory)
+  const struct CMUnitTest tests[] = {
+    cmocka_unit_test(core),
+    cmocka_unit_test(memory)
   };
 
-  return run_tests(tests);
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }
