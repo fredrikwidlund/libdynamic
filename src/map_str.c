@@ -8,8 +8,8 @@
 #include <string.h>
 #include <sys/param.h>
 
-#include "map_str.h"
-#include "cfarmhash.h"
+#include "dynamic/cfarmhash.h"
+#include <dynamic.h>
 
 /* allocators */
 

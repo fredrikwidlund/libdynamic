@@ -4,11 +4,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
-#include "buffer.h"
-#include "vector.h"
-#include "string.h"
+#include <dynamic.h>
 
 /* allocators */
 

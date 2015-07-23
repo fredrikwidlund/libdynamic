@@ -10,10 +10,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include "buffer.h"
-#include "vector.h"
-#include "string.h"
-#include "io.h"
+#include <dynamic.h>
 
 buffer *io_read(int fd, size_t size)
 {

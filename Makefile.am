@@ -1,4 +1,4 @@
-LIB_CFLAGS = -O3 -flto -std=c11
+LIB_CFLAGS = -Isrc -O3 -flto -std=c11
 
 if HAVE_FAT_LTO_OBJECTS
 LIB_CFLAGS += -ffat-lto-objects
@@ -11,7 +11,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 
 SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/mapi.c src/map_str.c src/cfarmhash.c src/io.c
-HEADER_FILES = src/vector.h src/string.h src/buffer.h src/mapi.h src/map_str.h src/cfarmhash.h src/io.h
+HEADER_FILES = src/dynamic/vector.h src/dynamic/string.h src/dynamic/buffer.h src/dynamic/mapi.h src/dynamic/map_str.h src/dynamic/cfarmhash.h src/dynamic/io.h
 
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_CFLAGS = $(LIB_CFLAGS)

@@ -9,7 +9,7 @@
 #include <sys/param.h>
 #include <err.h>
 
-#include "mapi.h"
+#include <dynamic.h>
 
 /* internals */
 
