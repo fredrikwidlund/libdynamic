@@ -9,7 +9,7 @@
 #include <sys/param.h>
 #include <err.h>
 
-#include "mapi.h"
+#include "dynamic/mapi.h"
 
 /* internals */
 
@@ -218,7 +218,7 @@ int mapi_rehash(mapi *m, size_t c)
       if (!nm.objects)
 	  return -1;
       
-      for (o = mapi_begin(&nm); o < mapi_end(&nm); o = mapi_inc(&nm, o))
+      for (o = nm.objects; o < mapi_end(&nm); o = mapi_inc(&nm, o))
 	mapi_super(o)->key = nm.empty_key;
       
       for (o = mapi_begin(m); o < mapi_end(m); o = mapi_next(m, o))

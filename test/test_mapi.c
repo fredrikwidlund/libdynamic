@@ -4,10 +4,13 @@
 #include <stdarg.h>
 #include <string.h>
 #include <sys/time.h>
+
+#define UNIT_TESTING 1
+
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../src/mapi.h"
+#include "../src/dynamic/mapi.h"
 
 struct ii
 {
@@ -75,7 +78,8 @@ void core()
   /* lookup non-existing object */
   assert_true(mapi_empty(m, mapi_at(m, 7)));
   assert_true(mapi_find(m, 7) == NULL);
-		      
+  mapi_free(m);
+
   /* create int->char map */
   m = mapi_new(sizeof *is);
   mapi_release(m, release_value);

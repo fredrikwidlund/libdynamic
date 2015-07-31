@@ -7,8 +7,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../src/buffer.h"
-#include "../src/vector.h"
+#include "../src/dynamic/buffer.h"
+#include "../src/dynamic/vector.h"
 
 void release(void *object)
 {

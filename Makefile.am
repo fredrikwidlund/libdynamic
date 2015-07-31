@@ -1,17 +1,17 @@
-LIB_CFLAGS = -O3 -flto -std=c11
+LIB_CFLAGS = -I$(srcdir)/src -O3 -flto -std=c11
 
 if HAVE_FAT_LTO_OBJECTS
 LIB_CFLAGS += -ffat-lto-objects
 endif
 
-LIB_TEST_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs -std=c11 -I/opt/local/include
+LIB_TEST_CFLAGS = -I$(srcdir)/src -O0 -g -ftest-coverage -fprofile-arcs -std=c11 -I/opt/local/include
 LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmocka -L/opt/local/lib
 
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 
 SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/mapi.c src/map_str.c src/cfarmhash.c src/io.c
-HEADER_FILES = src/vector.h src/string.h src/buffer.h src/mapi.h src/map_str.h src/cfarmhash.h src/io.h
+HEADER_FILES = src/dynamic/vector.h src/dynamic/string.h src/dynamic/buffer.h src/dynamic/mapi.h src/dynamic/map_str.h src/dynamic/cfarmhash.h src/dynamic/io.h
 
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_CFLAGS = $(LIB_CFLAGS)
@@ -70,4 +70,4 @@ CLEANFILES = {./,src,test}/*.{gcno,gcda,gcov}
 MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libdynamic-*.tar.gz INSTALL
 
 maintainer-clean-local:
-	rm -rf autotools m4 libdynamic-0.1.0
+	rm -rf autotools m4 libdynamic-0.4.0

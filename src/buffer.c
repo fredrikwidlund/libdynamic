@@ -3,9 +3,10 @@
 #endif
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
-#include "buffer.h"
+#include "dynamic/buffer.h"
 
 /* allocators */
 

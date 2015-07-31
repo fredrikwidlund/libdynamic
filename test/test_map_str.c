@@ -7,7 +7,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../src/map_str.h"
+#include "../src/dynamic/map_str.h"
 
 void release_value(char *key, void *value)
 {

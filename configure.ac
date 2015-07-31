@@ -1,4 +1,4 @@
-AC_INIT([Dynamic C containers], [0.3.0], [fredrik.widlund@gmail.com], [libdynamic], [https://github.com/fredrikwidlund/libdynamic])
+AC_INIT([Dynamic C containers], [0.4.0], [fredrik.widlund@gmail.com], [libdynamic], [https://github.com/fredrikwidlund/libdynamic])
 AC_CONFIG_AUX_DIR(autotools)
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.12 -Wall -Werror no-define])
