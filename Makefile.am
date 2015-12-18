@@ -1,60 +1,26 @@
-LIB_CFLAGS = -I$(srcdir)/src -O3 -flto -std=c11
+ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
+AM_CFLAGS = -std=gnu11 -O3 -flto -fuse-linker-plugin
+AM_LDFLAGS = -static
 
-if HAVE_FAT_LTO_OBJECTS
-LIB_CFLAGS += -ffat-lto-objects
-endif
+SOURCE_FILES = \
+src/dynamic/vector.c \
+src/dynamic/string.c \
+src/dynamic/buffer.c \
+src/dynamic/mapi.c \
+src/dynamic/maps.c \
+src/dynamic/cfarmhash.c
 
-LIB_TEST_CFLAGS = -I$(srcdir)/src -O0 -g -ftest-coverage -fprofile-arcs -std=c11 -I/opt/local/include
-LDADD_TEST_FLAGS = -L. -ldynamic_test -lcmocka -L/opt/local/lib
+HEADER_FILES = \
+src/dynamic/vector.h \
+src/dynamic/string.h \
+src/dynamic/buffer.h \
+src/dynamic/mapi.h \
+src/dynamic/maps.h \
+src/dynamic/cfarmhash.h
 
 AUTOMAKE_OPTIONS = subdir-objects
-ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-
-SOURCE_FILES = src/vector.c src/string.c src/buffer.c src/mapi.c src/map_str.c src/cfarmhash.c src/io.c
-HEADER_FILES = src/dynamic/vector.h src/dynamic/string.h src/dynamic/buffer.h src/dynamic/mapi.h src/dynamic/map_str.h src/dynamic/cfarmhash.h src/dynamic/io.h
-
 lib_LTLIBRARIES= libdynamic.la
-libdynamic_la_CFLAGS = $(LIB_CFLAGS)
-libdynamic_la_LDFLAGS = -static
 libdynamic_la_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
-
-check_LIBRARIES = libdynamic_test.a
-libdynamic_test_a_CFLAGS = $(LIB_TEST_CFLAGS)
-libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
-
-BUILD_TESTS = test/test_buffer test/test_vector test/test_string test/test_mapi test/test_map_str
-
-TESTS = $(BUILD_TESTS) test/test_valgrind.sh test/test_coverage.sh
-
-check_PROGRAMS = $(BUILD_TESTS)
-check_SCRIPTS = test
-
-TEST_LD_WRAP = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc
-
-test_test_buffer_CFLAGS = $(LIB_TEST_CFLAGS)
-test_test_buffer_LDADD = $(LDADD_TEST_FLAGS)
-test_test_buffer_LDFLAGS = $(TEST_LD_WRAP)
-test_test_buffer_SOURCES = test/test_buffer.c test/test_util.c
-
-test_test_vector_CFLAGS = $(LIB_TEST_CFLAGS)
-test_test_vector_LDADD = $(LDADD_TEST_FLAGS)
-test_test_vector_LDFLAGS = $(TEST_LD_WRAP)
-test_test_vector_SOURCES = test/test_vector.c test/test_util.c
-
-test_test_string_CFLAGS = $(LIB_TEST_CFLAGS)
-test_test_string_LDADD = $(LDADD_TEST_FLAGS)
-test_test_string_LDFLAGS = $(TEST_LD_WRAP)
-test_test_string_SOURCES = test/test_string.c test/test_util.c
-
-test_test_mapi_CFLAGS =  $(LIB_TEST_CFLAGS)
-test_test_mapi_LDADD = $(LDADD_TEST_FLAGS)
-test_test_mapi_LDFLAGS = $(TEST_LD_WRAP)
-test_test_mapi_SOURCES = test/test_mapi.c test/test_util.c
-
-test_test_map_str_CFLAGS =  $(LIB_TEST_CFLAGS)
-test_test_map_str_LDADD = $(LDADD_TEST_FLAGS)
-test_test_map_str_LDFLAGS = $(TEST_LD_WRAP)
-test_test_map_str_SOURCES = test/test_map_str.c test/test_util.c
 
 headerfilesdir = $(includedir)/dynamic
 headerfiles_HEADERS = $(HEADER_FILES)
@@ -62,12 +28,51 @@ headerfiles_HEADERS = $(HEADER_FILES)
 mainheaderdir = $(includedir)
 mainheader_HEADERS = src/dynamic.h
 
-dist_man3_MANS = man/vector.3
+MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libdynamic-?.?.?.tar.gz
+maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
-dist_noinst_SCRIPTS = autogen.sh test/test_valgrind.sh test/test_coverage.sh
+### unit tests ###
 
-CLEANFILES = {./,src,test}/*.{gcno,gcda,gcov}
-MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libdynamic-*.tar.gz INSTALL
+CHECK_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs
+CHECK_LDADD = -L. -ldynamic_test -lcmocka
+CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc
 
-maintainer-clean-local:
-	rm -rf autotools m4 libdynamic-0.4.0
+check_LIBRARIES = libdynamic_test.a
+libdynamic_test_a_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs
+libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
+
+check_PROGRAMS = test/buffer
+test_buffer_CFLAGS = $(CHECK_CFLAGS)
+test_buffer_LDADD = $(CHECK_LDADD)
+test_buffer_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_buffer_SOURCES = test/buffer.c test/memory.c
+
+check_PROGRAMS += test/vector
+test_vector_CFLAGS = $(CHECK_CFLAGS)
+test_vector_LDADD = $(CHECK_LDADD)
+test_vector_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_vector_SOURCES = test/vector.c test/memory.c
+
+check_PROGRAMS += test/string
+test_string_CFLAGS = $(CHECK_CFLAGS)
+test_string_LDADD = $(CHECK_LDADD)
+test_string_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_string_SOURCES = test/string.c test/memory.c
+
+check_PROGRAMS += test/mapi
+test_mapi_CFLAGS = $(CHECK_CFLAGS)
+test_mapi_LDADD = $(CHECK_LDADD)
+test_mapi_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_mapi_SOURCES = test/mapi.c test/memory.c
+
+check_PROGRAMS += test/maps
+test_maps_CFLAGS = $(CHECK_CFLAGS)
+test_maps_LDADD = $(CHECK_LDADD)
+test_maps_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_maps_SOURCES = test/maps.c test/memory.c
+
+dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
+
+TESTS = $(check_PROGRAMS) test/coverage.sh test/valgrind.sh
+
+CLEANFILES = {.,src/dynamic,test}/*.{gcno,gcda,gcov}
