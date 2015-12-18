@@ -1,13 +1,8 @@
 #ifndef MAPI_H_INCLUDED
 #define MAPI_H_INCLUDED
 
-#ifdef DONT_HAVE_BUILTIN_EXPECT
 #define __unlikely(cond)        __builtin_expect(!!(cond), 0)
 #define __likely(cond)          __builtin_expect(!!(cond), 1)
-#else
-#define __unlikely(cond)        (cond)
-#define __likely(cond)          (cond)
-#endif /* DONT_HAVE_BUILTIN_EXPECT */
 
 #define MAPI_ROUNDUP(v, m)      (((v) + (m) - 1) & ~((m) - 1))
 #define MAPI_EMPTY_KEY          ((uint32_t) -1)
@@ -28,7 +23,7 @@ struct mapi
   size_t      size;
   size_t      capacity;
   uint32_t    empty_key;
-  void      (*release)(void *);  
+  void      (*release)(void *);
 };
 
 /* allocators */

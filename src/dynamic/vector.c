@@ -1,25 +1,21 @@
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
-#include "dynamic/buffer.h"
-#include "dynamic/vector.h"
+#include "buffer.h"
+#include "vector.h"
 
 /* allocators */
 
 vector *vector_new(size_t object_size)
 {
   vector *v;
-  
+
   v = malloc(sizeof *v);
   if (!v)
     return NULL;
-    
+
   vector_init(v, object_size);
 
   return v;
@@ -129,7 +125,7 @@ void vector_erase(vector *v, size_t from, size_t to)
   if (v->release)
     for (i = from; i < to; i ++)
       v->release(vector_at(v, i));
-  
+
   buffer_erase(&v->buffer, from * v->object_size, (to - from) * v->object_size);
 }
 
@@ -138,4 +134,3 @@ void vector_clear(vector *v)
   vector_erase(v, 0, vector_size(v));
   buffer_clear(&v->buffer);
 }
-

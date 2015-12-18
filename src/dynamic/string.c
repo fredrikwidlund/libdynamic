@@ -1,15 +1,11 @@
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
-#include "dynamic/buffer.h"
-#include "dynamic/vector.h"
-#include "dynamic/string.h"
+#include "buffer.h"
+#include "vector.h"
+#include "string.h"
 
 /* allocators */
 
@@ -123,12 +119,12 @@ int string_replace_all(string *s, char *find, char *sub)
 {
   size_t i;
   int e;
-  
+
   for (i = string_find(s, find, 0); i != (size_t) -1; i = string_find(s, find, i + strlen(sub)))
     {
       e = string_replace(s, i, strlen(find), sub);
       if (e == -1)
-	return -1;
+        return -1;
     }
 
   return 0;
@@ -148,7 +144,7 @@ int string_copy(string *s, char *data, size_t len, size_t pos, size_t *size)
 
   if (pos > l)
     return -1;
-  
+
   *size = l - pos < len ? l - pos : len;
   memcpy(data, string_data(s), *size);
 
@@ -173,13 +169,13 @@ string *string_substr(string *s, size_t pos, size_t len)
 
   if (pos > l)
     return NULL;
-  
+
   result = malloc(sizeof *result);
   if (!result)
     return NULL;
- 
+
   n = l - pos < len ? l - pos : len;
-  
+
   buffer_init(&result->buffer);
   buffer_reserve(&result->buffer, n + 1);
   buffer_insert(&result->buffer, 0, string_data(s) + pos, n);
@@ -199,7 +195,7 @@ vector *string_split(string *s, char *delim)
   char *token;
   string *copy = string_new(string_data(s));
   string *part;
-  
+
   v = vector_new(sizeof(string *));
   vector_release(v, string_split_release);
   for (token = strtok(string_data(copy), delim); token; token = strtok(NULL, delim))

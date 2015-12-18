@@ -1,67 +1,65 @@
-#ifndef MAP_STR_H_INCLUDED
-#define MAP_STR_H_INCLUDED
+#ifndef MAPS_H_INCLUDED
+#define MAPS_H_INCLUDED
 
-#define MAP_STR_MAX_LOAD_FACTOR        0.5
-#define MAP_STR_RESERVED_EMPTY         NULL
-#define MAP_STR_RESERVED_DELETED       ((char *) 1)
+#define MAPS_MAX_LOAD_FACTOR        0.5
+#define MAPS_RESERVED_EMPTY         NULL
+#define MAPS_RESERVED_DELETED       ((char *) 1)
 
-//#define map_str_insert_rvalue(m, k, v) do {__typeof__(v) __value[] = {(v)}; map_str_insert((m), (k), __value);} while (0)
+typedef struct maps_key maps_key_t;
+typedef struct maps maps;
 
-typedef struct map_str_key map_str_key_t;
-typedef struct map_str map_str;
-
-struct map_str
+struct maps
 {
-  char           **keys;
-  void            *values;
-  size_t           value_size;
-  size_t           size;
-  size_t           deleted;
-  size_t           capacity;
-  size_t           watermark;
-  double           max_load_factor;
-  void           (*release)(char *, void *);  
+  char   **keys;
+  void    *values;
+  size_t   value_size;
+  size_t   size;
+  size_t   deleted;
+  size_t   capacity;
+  size_t   watermark;
+  double   max_load_factor;
+  void   (*release)(char *, void *);
 };
 
 /* allocators */
-map_str        *map_str_new(size_t);
-void               map_str_init(map_str *, size_t);
-void               map_str_release(map_str *, void (*)(char *, void *));
-void               map_str_free(map_str *);
+maps   *maps_new(size_t);
+void    maps_init(maps *, size_t);
+void    maps_release(maps *, void (*)(char *, void *));
+void    maps_free(maps *);
 
 /* capacity */
-size_t             map_str_size(map_str *);
+size_t  maps_size(maps *);
 
 /* element access */
-void              *map_str_get(map_str *, size_t);
-void               map_str_put(map_str *, size_t, char *, void *);
-void              *map_str_at(map_str *, char *);
+void   *maps_get(maps *, size_t);
+void    maps_put(maps *, size_t, char *, void *);
+void   *maps_at(maps *, char *);
 
 /* element lookup */
-size_t             map_str_find(map_str *, char *);
+size_t  maps_find(maps *, char *);
 
 /* modifiers */
-void               map_str_insert(map_str *, char *, void *);
-void               map_str_erase(map_str *, char *);
-void               map_str_clear(map_str *);
+void    maps_insert(maps *, char *, void *);
+void    maps_erase(maps *, char *);
+void    maps_clear(maps *);
 
 /* buckets */
-size_t             map_str_bucket_count(map_str *);
+size_t  maps_bucket_count(maps *);
 
 /* hash policy */
-void               map_str_max_load_factor(map_str *, double);
-void               map_str_rehash(map_str *, size_t);
-void               map_str_reserve(map_str *, size_t);
+void    maps_max_load_factor(maps *, double);
+void    maps_rehash(maps *, size_t);
+void    maps_reserve(maps *, size_t);
 
 /* iterators */
-size_t             map_str_begin(map_str *);
-size_t             map_str_next(map_str *, size_t);
-size_t             map_str_end(map_str *);
+size_t  maps_begin(maps *);
+size_t  maps_next(maps *, size_t);
+size_t  maps_end(maps *);
 
 /* internals */
-size_t             map_str_find_free(map_str *, char *);
-size_t             map_str_next_inclusive(map_str *, size_t);
-size_t             map_str_roundup_size(size_t);
-void              *map_str_data_offset(void *, size_t);
+size_t  maps_find_free(maps *, char *);
+size_t  maps_next_inclusive(maps *, size_t);
+size_t  maps_roundup_size(size_t);
+void   *maps_data_offset(void *, size_t);
 
-#endif /* MAP_STR_H_INCLUDED */
+#endif /* MAPS_H_INCLUDED */

@@ -18,12 +18,13 @@ void core()
   assert_true(b);
   assert_int_equal(buffer_size(b), 0);
   assert_int_equal(buffer_capacity(b), 0);
-  
+  assert_int_equal(buffer_compact(b), 0);
+
   s = "some data";
   buffer_insert(b, 0, s, strlen(s) + 1);
   assert_int_equal(buffer_size(b), strlen(s) + 1);
   assert_int_equal(buffer_capacity(b), buffer_roundup(strlen(s) + 1));
-  
+
   s = "random ";
   buffer_insert(b, 5, s, strlen(s));
   buffer_insert(b, buffer_size(b) - 1, ".", 1);

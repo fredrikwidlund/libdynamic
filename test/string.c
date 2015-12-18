@@ -23,7 +23,7 @@ void core()
 
   s = string_new("hello world");
   assert_string_equal(string_data(s), "hello world");
-  
+
   /* string_clear() */
 
   string_clear(s);
@@ -36,14 +36,14 @@ void core()
   e = string_reserve(s, 20);
   assert_true(e == 0);
   assert_int_equal(string_capacity(s), 31);
-  
+
   /* string_shrink_to_fit() */
 
   e = string_shrink_to_fit(s);
   assert_true(e == 0);
   assert_int_equal(string_capacity(s), 0);
   assert_true(string_empty(s));
-  
+
   /* string_insert() */
 
   e = string_insert(s, 42, "overrun");
@@ -67,7 +67,7 @@ void core()
 
   e = string_erase(s, string_length(s) + 1, 0);
   assert_true(e == -1);
-  
+
   /* string_replace() */
 
   e = string_replace(s, 2, 2, "llo w");
@@ -75,7 +75,7 @@ void core()
   e = string_replace(s, string_length(s), 0, "rld");
   assert_true(e == 0);
   assert_string_equal(string_data(s), "hello world");
-  
+
   e = string_replace(s, string_length(s) + 1, 0, "llo w");
   assert_true(e == -1);
 
@@ -93,7 +93,7 @@ void core()
   cp[n] = 0;
   assert_string_equal(cp, "hello");
   free(cp);
-  
+
   /* string_find() */
 
   e = string_append(s, ", world");
@@ -107,7 +107,7 @@ void core()
   assert_int_equal(n, -1);
 
   /* string_substr() */
-  
+
   s2 = string_substr(s, 42, 11);
   assert_true(s2 == NULL);
 
