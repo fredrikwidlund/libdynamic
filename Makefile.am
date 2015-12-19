@@ -33,12 +33,12 @@ maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
 ### unit tests ###
 
-CHECK_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs
+CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs
 CHECK_LDADD = -L. -ldynamic_test -lcmocka
 CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc
 
 check_LIBRARIES = libdynamic_test.a
-libdynamic_test_a_CFLAGS = -O0 -g -ftest-coverage -fprofile-arcs
+libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
 check_PROGRAMS = test/buffer
