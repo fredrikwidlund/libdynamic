@@ -40,15 +40,15 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Jansson'
-copyright = u'2009-2016, Petri Lehtinen'
+project = u'libdynamic'
+copyright = u'2017, Fredrik Widlund'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '2.10-dev'
+version = '1.0-dev'
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -165,7 +165,7 @@ pygments_style = 'sphinx'
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Janssondoc'
+htmlhelp_basename = 'libreactordoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -179,8 +179,8 @@ htmlhelp_basename = 'Janssondoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Jansson.tex', u'Jansson Documentation',
-   u'Petri Lehtinen', 'manual'),
+  ('index', 'libreactor.tex', u'libreactor Documentation',
+   u'Fredrik Widlund', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -212,6 +212,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'jansson', u'Jansson Documentation',
-     [u'Petri Lehtinen'], 1)
+    ('index', 'libreactor', u'libreactor Documentation',
+     [u'Fredrik Widlund'], 1)
 ]
