@@ -6,21 +6,22 @@ This is the documentation for libreactor_ |release|, last updated |today|.
 Introduction
 ------------
 
-libreactor_ is a C library for blah blah ... Its main features and design principles are:
+libreactor_ is a C library for various dynamic container types. Its main features and design principles are:
 
-- Simple and intuitive API and data model
+- High performance/low overhead
 
-- Comprehensive documentation
+- Simplicity
 
-- No dependencies on other libraries
+- Uniformity
 
-- Full Unicode support (UTF-8)
+- Flexibility
 
-- Extensive test suite
+Where appropriate containers are modelled (roughly) after the stdc++ equivalents.
 
 libreactor is licensed under the `MIT license`_; see LICENSE in the
 source distribution for details.
 
+.. _libreactor: https://github.com/fredrikwidlund/libdynamic
 .. _`MIT license`: http://www.opensource.org/licenses/mit-license.php
 
 Contents
@@ -29,7 +30,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   bleh
+   gettingstarted
 
 
 Indices and Tables
