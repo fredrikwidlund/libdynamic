@@ -30,6 +30,9 @@ headerfiles_HEADERS = $(HEADER_FILES)
 mainheaderdir = $(includedir)
 mainheader_HEADERS = src/dynamic.h
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libdynamic.pc
+
 MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in docs/Makefile.in libdynamic-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
