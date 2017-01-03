@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# libreactor documentation build configuration file, built using the Jansson
+# libdynamic documentation build configuration file, built using the Jansson
 # project as a template
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -164,7 +164,7 @@ pygments_style = 'sphinx'
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'libreactordoc'
+htmlhelp_basename = 'libdynamicdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -178,7 +178,7 @@ htmlhelp_basename = 'libreactordoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'libreactor.tex', u'libreactor Documentation',
+  ('index', 'libdynamic.tex', u'libdynamic Documentation',
    u'Fredrik Widlund', 'manual'),
 ]
 
@@ -211,6 +211,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'libreactor', u'libreactor Documentation',
+    ('index', 'libdynamic', u'libdynamic Documentation',
      [u'Fredrik Widlund'], 1)
 ]

@@ -35,8 +35,8 @@ the ``--prefix=DIR`` argument to ``./configure``. See ``./configure
 --help`` for the list of all possible configuration options.
 
 The command ``make check`` runs the test suite distributed with
-libreactor. This step is not strictly necessary, but it may find possible
-problems that libreactor has on your platform. If any problems are found,
+libdynamic. This step is not strictly necessary, but it may find possible
+problems that libdynamic has on your platform. If any problems are found,
 please report them.
 
 If you obtained the source from a Git repository (or any other source

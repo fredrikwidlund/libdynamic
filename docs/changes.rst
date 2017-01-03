@@ -1,5 +1,5 @@
 *********************
-Changes in libreactor
+Changes in libdynamic
 *********************
 
 .. include:: ../CHANGES
