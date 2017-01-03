@@ -14,8 +14,8 @@ Unpack the source tarball and change to the source directory:
 
 .. parsed-literal::
 
-    tar xfz libdynamic-|release|.tar.gz
-    cd libdynamic-|release|
+    $ tar xfz libdynamic-|release|.tar.gz
+    $ cd libdynamic-|release|
 
 The source uses GNU Autotools (autoconf_, automake_, libtool_), so
 compiling and installing is extremely simple:
@@ -26,7 +26,7 @@ compiling and installing is extremely simple:
     $ make
     $ make install
 
-To run the test suite which requires cmocka_, invoke:
+To run the test suite which requires cmocka_ and valgrind_, invoke:
 
 .. code-block:: shell
 
@@ -52,6 +52,7 @@ to use the supplied autogen.sh script:
     $ ./autogen.sh
 
 .. _cmocka: https://cmocka.org/
+.. _valgrind: http://valgrind.org/
 .. _autoconf: http://www.gnu.org/software/autoconf/
 .. _automake: http://www.gnu.org/software/automake/
 .. _libtool: http://www.gnu.org/software/libtool/
