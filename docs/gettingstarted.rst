@@ -47,7 +47,7 @@ to use the supplied autogen.sh script::
 .. _libtool: http://www.gnu.org/software/libtool/
 
 Building the documentation
---------------------------
+==========================
 
 (This subsection describes how to build the HTML documentation you are
 currently reading, so it can be safely skipped.)

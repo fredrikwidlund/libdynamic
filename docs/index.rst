@@ -16,7 +16,7 @@ libreactor_ is a C library for various dynamic container types. Its main feature
 
 - Flexibility
 
-Where appropriate containers are modelled (roughly) after the stdc++ equivalents.
+Where appropriate, containers are modelled roughly after the stdc++ equivalents.
 
 libreactor is licensed under the `MIT license`_; see LICENSE in the
 source distribution for details.
