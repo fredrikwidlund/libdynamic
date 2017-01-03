@@ -2,6 +2,8 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AM_CFLAGS = -std=gnu11 -O3 -flto -fuse-linker-plugin
 AM_LDFLAGS = -static
 
+SUBDIRS = docs
+
 SOURCE_FILES = \
 src/dynamic/vector.c \
 src/dynamic/string.c \
@@ -28,7 +30,7 @@ headerfiles_HEADERS = $(HEADER_FILES)
 mainheaderdir = $(includedir)
 mainheader_HEADERS = src/dynamic.h
 
-MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in libdynamic-?.?.?.tar.gz
+MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in docs/Makefile.in libdynamic-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
 ### unit tests ###
