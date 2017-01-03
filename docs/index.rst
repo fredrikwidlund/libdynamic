@@ -1,5 +1,5 @@
 libreactor Documentation
-=====================
+========================
 
 This is the documentation for libreactor_ |release|, last updated |today|.
 
@@ -31,7 +31,8 @@ Contents
    :maxdepth: 2
 
    gettingstarted
-
+   tutorial
+   changes
 
 Indices and Tables
 ==================

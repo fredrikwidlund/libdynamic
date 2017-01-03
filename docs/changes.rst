@@ -1,5 +1,5 @@
-******************
-Changes in Jansson
-******************
+*********************
+Changes in libreactor
+*********************
 
 .. include:: ../CHANGES
