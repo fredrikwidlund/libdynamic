@@ -18,12 +18,19 @@ Unpack the source tarball and change to the source directory:
     cd libdynamic-|release|
 
 The source uses GNU Autotools (autoconf_, automake_, libtool_), so
-compiling and installing is extremely simple::
+compiling and installing is extremely simple:
 
-    ./configure
-    make
-    make check
-    make install
+.. code-block:: shell
+
+    $ ./configure
+    $ make
+    $ make install
+
+To run the test suite which requires cmocka_, invoke:
+
+.. code-block:: shell
+
+    $ make check
 
 To change the destination directory (``/usr/local`` by default), use
 the ``--prefix=DIR`` argument to ``./configure``. See ``./configure
@@ -38,10 +45,13 @@ If you obtained the source from a Git repository (or any other source
 control system), there's no ``./configure`` script as it's not kept in
 version control. To create the script, the build system needs to be
 bootstrapped. There are many ways to do this, but the easiest one is
-to use the supplied autogen.sh script::
+to use the supplied autogen.sh script:
 
-    ./autogen.sh
+.. code-block:: shell
 
+    $ ./autogen.sh
+
+.. _cmocka: https://cmocka.org/
 .. _autoconf: http://www.gnu.org/software/autoconf/
 .. _automake: http://www.gnu.org/software/automake/
 .. _libtool: http://www.gnu.org/software/libtool/
@@ -54,9 +64,11 @@ currently reading, so it can be safely skipped.)
 
 Documentation is in the ``docs/`` subdirectory. It's written in
 reStructuredText_ with Sphinx_ annotations. To generate the HTML
-documentation, invoke::
+documentation, invoke:
 
-   make html
+.. code-block:: shell
+
+    $ make html
 
 and point your browser to ``doc/_build/html/index.html``. Sphinx_ 1.0
 or newer is required to generate the documentation.
@@ -79,15 +91,17 @@ in the beginning of every source file that uses libdynamic.
 
 There's also just one library to link with, ``libdynamic``. libdynamic is built as a static library
 and should be compiled with LTO_ (link time optimization) to provide the best performance. Compile and
-link the program as follows::
+link the program as follows:
 
-    cc -o prog prog.c -flto -fuse-linker-plugin -ldynamic
+.. code-block:: shell
+
+    $ cc -o prog prog.c -flto -fuse-linker-plugin -ldynamic
 
 Use of pkg-config_ is supported and recommended:
 
 .. code-block:: shell
 
-    cc -o prog prog.c `pkg-config --cflags --libs libdynamic`
+    $ cc -o prog prog.c `pkg-config --cflags --libs libdynamic`
 
 .. _LTO: https://en.wikipedia.org/wiki/Interprocedural_optimization
 .. _pkg-config: http://pkg-config.freedesktop.org/
