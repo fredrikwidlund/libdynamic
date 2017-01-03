@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Jansson documentation build configuration file, created by
-# sphinx-quickstart on Sun Sep  5 21:47:20 2010.
+# libreactor documentation build configuration file, built using the Jansson
+# project as a template
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #

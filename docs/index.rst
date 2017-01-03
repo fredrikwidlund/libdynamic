@@ -31,7 +31,6 @@ Contents
    :maxdepth: 2
 
    gettingstarted
-   tutorial
    changes
 
 Indices and Tables
