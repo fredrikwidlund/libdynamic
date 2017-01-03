@@ -24,3 +24,6 @@
 
 # Documentation builds
 docs/_build/
+
+# macOS specific
+.DS_Store
