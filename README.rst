@@ -4,11 +4,8 @@ README
 .. image:: https://travis-ci.org/fredrikwidlund/libdynamic.png
   :target: https://travis-ci.org/fredrikwidlund/libdynamic
   
-.. image:: https://ci.appveyor.com/api/projects/status/lmhkkc4q8cwc65ko
-  :target: https://ci.appveyor.com/project/fredrikwidlund/libdynamic
-
-.. image:: https://coveralls.io/repos/fredrikwidlund/libdynamic/badge.png?branch=master
-  :target: https://coveralls.io/r/fredrikwidlund/libdynamic?branch=master
+.. image:: https://coveralls.io/repos/github/fredrikwidlund/libdynamic/badge.svg?branch=master
+  :target: https://coveralls.io/github/fredrikwidlund/libdynamic?branch=master
 
 Documentation is available at http://libdynamic.readthedocs.io/en/latest/.
 
