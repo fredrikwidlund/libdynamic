@@ -6,48 +6,42 @@
 #include "buffer.h"
 #include "vector.h"
 
-/* allocators */
+/* constructor/destructor */
 
-vector *vector_new(size_t object_size)
+void vector_construct(vector *v, size_t object_size)
 {
-  vector *v;
-
-  v = malloc(sizeof *v);
-  if (!v)
-    return NULL;
-
-  vector_init(v, object_size);
-
-  return v;
+  buffer_construct(&v->buffer);
+  v->object_size = object_size;
+  v->object_release = NULL;
+  v->object_copy= NULL;
 }
 
-void vector_free(vector *v)
+void vector_object_release(vector *v, void (*release)(void *))
+{
+  v->object_release = release;
+}
+
+void vector_object_copy(vector *v, void (*copy)(void *, void *))
+{
+  v->object_copy = copy;
+}
+
+void vector_destruct(vector *v)
 {
   vector_clear(v);
-  free(v);
 }
 
-void vector_init(vector *v, size_t object_size)
+void vector_copy(vector *v, vector *source)
 {
-  buffer_init(&v->buffer);
-  v->object_size = object_size;
-  v->release = NULL;
-}
+  size_t i;
 
-void vector_release(vector *v, void (*release)(void *))
-{
-  v->release = release;
-}
-
-void *vector_deconstruct(vector *v)
-{
-  void *data;
-
-  (void) vector_shrink_to_fit(v);
-  data = buffer_data(&v->buffer);
-  free(v);
-
-  return data;
+  vector_construct(v, source->object_size);
+  vector_object_release(v, source->object_release);
+  vector_object_copy(v, source->object_copy);
+  vector_insert(v, 0, vector_size(source), vector_data(source));
+  if (v->object_copy)
+    for (i = 0; i < vector_size(v); i ++)
+      v->object_copy(vector_at(v, i), vector_at(source, i));
 }
 
 /* capacity */
@@ -67,31 +61,31 @@ int vector_empty(vector *v)
   return vector_size(v) == 0;
 }
 
-int vector_reserve(vector *v, size_t capacity)
+void vector_reserve(vector *v, size_t capacity)
 {
-  return buffer_reserve(&v->buffer, capacity * v->object_size);
+  buffer_reserve(&v->buffer, capacity * v->object_size);
 }
 
-int vector_shrink_to_fit(vector *v)
+void vector_shrink_to_fit(vector *v)
 {
-  return buffer_compact(&v->buffer);
+  buffer_compact(&v->buffer);
 }
 
 /* element access */
 
 void *vector_at(vector *v, size_t position)
 {
-  return buffer_data(&v->buffer) + (position * v->object_size);
+  return (char *) buffer_data(&v->buffer) + (position * v->object_size);
 }
 
 void *vector_front(vector *v)
 {
-  return buffer_data(&v->buffer);
+  return vector_data(v);
 }
 
 void *vector_back(vector *v)
 {
-  return buffer_data(&v->buffer) + buffer_size(&v->buffer) - v->object_size;
+  return (char *) buffer_data(&v->buffer) + buffer_size(&v->buffer) - v->object_size;
 }
 
 void *vector_data(vector *v)
@@ -101,9 +95,9 @@ void *vector_data(vector *v)
 
 /* modifiers */
 
-int vector_push_back(vector *v, void *object)
+void vector_push_back(vector *v, void *object)
 {
-  return buffer_insert(&v->buffer, v->buffer.size, object, v->object_size);
+  buffer_insert(&v->buffer, v->buffer.size, object, v->object_size);
 }
 
 void vector_pop_back(vector *v)
@@ -113,18 +107,18 @@ void vector_pop_back(vector *v)
   vector_erase(v, size - 1, size);
 }
 
-int vector_insert(vector *v, size_t position, size_t size, void *object)
+void vector_insert(vector *v, size_t position, size_t size, void *object)
 {
-  return buffer_insert(&v->buffer, position * v->object_size, object, size * v->object_size);
+  buffer_insert(&v->buffer, position * v->object_size, object, size * v->object_size);
 }
 
 void vector_erase(vector *v, size_t from, size_t to)
 {
   size_t i;
 
-  if (v->release)
+  if (v->object_release)
     for (i = from; i < to; i ++)
-      v->release(vector_at(v, i));
+      v->object_release(vector_at(v, i));
 
   buffer_erase(&v->buffer, from * v->object_size, (to - from) * v->object_size);
 }
