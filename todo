@@ -1,3 +1,2 @@
+* refactored buffer/vector
 * releases
-* travis/apveyor
-* coveralls
