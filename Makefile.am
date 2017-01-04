@@ -76,6 +76,12 @@ test_maps_LDADD = $(CHECK_LDADD)
 test_maps_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_maps_SOURCES = test/maps.c test/memory.c
 
+check_PROGRAMS += test/cfarmhash
+test_cfarmhash_CFLAGS = $(CHECK_CFLAGS)
+test_cfarmhash_LDADD = $(CHECK_LDADD)
+test_cfarmhash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_cfarmhash_SOURCES = test/cfarmhash.c test/memory.c
+
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 
 TESTS = $(check_PROGRAMS) test/coverage.sh test/valgrind.sh
