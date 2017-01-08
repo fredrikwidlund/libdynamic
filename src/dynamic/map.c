@@ -171,12 +171,9 @@ void map_erase(map *m, void *element, size_t (*hash)(void *), int (*equal)(void 
 
 void map_clear(map *m, int (*equal)(void *, void *), void (*release)(void *))
 {
-  if (m->elements)
-    {
-      map_release_all(m, equal, release);
-      free(m->elements);
-      m->elements = NULL;
-    }
+  map_release_all(m, equal, release);
+  free(m->elements);
+  m->elements = NULL;
   m->elements_count = 0;
   m->elements_capacity = 0;
   map_rehash(m, MAP_ELEMENTS_CAPACITY_MIN, NULL, NULL);

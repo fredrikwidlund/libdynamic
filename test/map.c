@@ -107,10 +107,61 @@ void core()
   map_destruct(&m, string_equal, string_release);
 }
 
+void erase()
+{
+  map m;
+  uint32_t last = MAP_ELEMENTS_CAPACITY_MIN - 1, coll1 = 1 << 16, coll2 = 1 << 17 ;
+
+  map_construct(&m, sizeof(uint32_t), (uint32_t[]){0});
+
+  /* erase non-existing object */
+  map_erase(&m, (uint32_t[]){42}, hash, equal, NULL);
+  assert_int_equal(map_size(&m), 0);
+
+  /* erase object with duplicate */
+  map_insert(&m, (uint32_t[]){1}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){1 + coll1}, hash, equal, NULL);
+  map_erase(&m, (uint32_t[]){1}, hash, equal, NULL);
+  assert_int_equal(map_size(&m), 1);
+
+  /* erase object with empty succ */
+  map_clear(&m, equal, NULL);
+  map_insert(&m, (uint32_t[]){1}, hash, equal, NULL);
+  map_erase(&m, (uint32_t[]){5}, hash, equal, NULL);
+
+  /* erase when w wraps */
+  map_clear(&m, equal, NULL);
+  map_insert(&m, (uint32_t[]){last + coll1}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){last}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){last + coll2}, hash, equal, NULL);
+  map_erase(&m, (uint32_t[]){last}, hash, equal, NULL);
+
+  /* erase when i wraps */
+  map_clear(&m, equal, NULL);
+  map_insert(&m, (uint32_t[]){last}, hash, equal, NULL);
+  map_erase(&m, (uint32_t[]){last}, hash, equal, NULL);
+
+  /* erase when i wraps  and w < i */
+  map_clear(&m, equal, NULL);
+  map_insert(&m, (uint32_t[]){last}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){0}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){last + coll1}, hash, equal, NULL);
+  map_erase(&m, (uint32_t[]){last}, hash, equal, NULL);
+
+  /* erase when i wraps and w > o */
+  map_clear(&m, equal, NULL);
+  map_insert(&m, (uint32_t[]){last - 1}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){last}, hash, equal, NULL);
+  map_insert(&m, (uint32_t[]){last + coll1}, hash, equal, NULL);
+  map_erase(&m, (uint32_t[]){last - 1}, hash, equal, NULL);
+  map_destruct(&m, equal, NULL);
+}
+
 int main()
 {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(core),
+    cmocka_unit_test(erase),
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
