@@ -156,7 +156,7 @@ static inline pair64 weak_hash_len_32_with_seeds(const char *s, uint64_t a, uint
                                       fetch64(s + 24), a, b);
 }
 
-uint64_t cfarmhash(const char *s, size_t len)
+static uint64_t cfarmhash(const char *s, size_t len)
 {
   uint64_t mul;
   const uint64_t seed = 81;
@@ -209,4 +209,14 @@ uint64_t cfarmhash(const char *s, size_t len)
   return hash_len_16(hash_len_16(v.first, w.first, mul) + shift_mix(y) * k0 + z,
                      hash_len_16(v.second, w.second, mul) + x,
                      mul);
+}
+
+uint64_t hash_data(void *data, size_t size)
+{
+  return cfarmhash((const char *) data, size);
+}
+
+uint64_t hash_string(char *s)
+{
+  return hash_data(s, strlen(s));
 }

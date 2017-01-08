@@ -30,12 +30,6 @@ void buffer_destruct(buffer *b)
   buffer_clear(b);
 }
 
-void buffer_copy(buffer *b, buffer *original)
-{
-  buffer_construct(b);
-  buffer_insert(b, 0, buffer_data(original), buffer_size(original));
-}
-
 /* capacity */
 
 size_t buffer_size(buffer *b)
@@ -78,11 +72,23 @@ void buffer_compact(buffer *b)
 void buffer_insert(buffer *b, size_t position, void *data, size_t size)
 {
   buffer_reserve(b, b->size + size);
-
   if (position < b->size)
     memmove((char *) b->data + position + size, (char *) b->data + position, b->size - position);
   memcpy((char *) b->data + position, data, size);
   b->size += size;
+}
+
+void buffer_insert_fill(buffer *b, size_t position, size_t count, void *data, size_t size)
+{
+  size_t i;
+
+  buffer_reserve(b, b->size + (count * size));
+  if (position < b->size)
+    memmove((char *) b->data + position + (count * size), (char *) b->data + position, b->size - position);
+
+  for (i = 0; i < count; i ++)
+    memcpy((char *) b->data + position + (i * size), data, size);
+  b->size += count * size;
 }
 
 void buffer_erase(buffer *b, size_t position, size_t size)

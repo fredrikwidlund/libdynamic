@@ -12,7 +12,6 @@ struct buffer
 /* constructor/destructor */
 void    buffer_construct(buffer *);
 void    buffer_destruct(buffer *);
-void    buffer_copy(buffer *, buffer *);
 
 /* capacity */
 size_t  buffer_size(buffer *);
@@ -22,6 +21,7 @@ void    buffer_compact(buffer *);
 
 /* modifiers */
 void    buffer_insert(buffer *, size_t, void *, size_t);
+void    buffer_insert_fill(buffer *, size_t, size_t, void *, size_t);
 void    buffer_erase(buffer *, size_t, size_t);
 void    buffer_clear(buffer *);
 

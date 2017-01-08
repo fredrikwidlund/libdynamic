@@ -7,12 +7,10 @@
 #include "vector.h"
 #include "string.h"
 
-/*
 static void string_split_release(void *object)
 {
-  string_free(*(string **) object);
+  string_destruct((string *) object);
 }
-*/
 
 /* constructor/destructor */
 
@@ -25,11 +23,6 @@ void string_construct(string *s)
 void string_destruct(string *s)
 {
   buffer_destruct(&s->buffer);
-}
-
-void string_copy(string *s, string *source)
-{
-  buffer_copy(&s->buffer, &source->buffer);
 }
 
 /* capacity */
@@ -47,12 +40,6 @@ size_t string_capacity(string *s)
 void string_reserve(string *s, size_t size)
 {
   buffer_reserve(&s->buffer, size + 1);
-}
-
-void string_clear(string *s)
-{
-  buffer_clear(&s->buffer);
-  string_construct(s);
 }
 
 int string_empty(string *s)
@@ -75,11 +62,6 @@ void string_insert(string *s, size_t pos, char *data)
 void string_insert_buffer(string *s, size_t pos, char *data, size_t size)
 {
   buffer_insert(&s->buffer, pos, data, size);
-}
-
-void string_insert_substring(string *s, size_t pos, string *sub, size_t subpos, size_t size)
-{
-  string_insert_buffer(s, pos, string_data(sub) + subpos, size);
 }
 
 void string_prepend(string *s, char *data)
@@ -111,6 +93,12 @@ void string_replace_all(string *s, char *find, char *sub)
     string_replace(s, i, strlen(find), sub);
 }
 
+void string_clear(string *s)
+{
+  buffer_clear(&s->buffer);
+  string_construct(s);
+}
+
 /* string operations */
 
 char *string_data(string *s)
@@ -126,28 +114,25 @@ ssize_t string_find(string *s, char *data, size_t pos)
   return p ? p - string_data(s) : -1;
 }
 
-int string_compare(string *a, string *b)
+int string_compare(string *s1, string *s2)
 {
-  return strcmp(string_data(a), string_data(b));
+  return strcmp(string_data(s1), string_data(s2));
 }
 
-/*
-vector *string_split(string *s, char *delim)
+void string_split(string *s, char *delim, vector *v)
 {
-  vector *v;
-  char *token;
-  string *copy = string_new(string_data(s));
-  string *part;
+  string copy, token;
+  char *cp, *cp_saved;
 
-  v = vector_new(sizeof(string *));
-  vector_release(v, string_split_release);
-  for (token = strtok(string_data(copy), delim); token; token = strtok(NULL, delim))
+  vector_construct(v, sizeof(string));
+  vector_object_release(v, string_split_release);
+  string_construct(&copy);
+  string_append(&copy, string_data(s));
+  for (cp = strtok_r(string_data(&copy), delim, &cp_saved); cp; cp = strtok_r(NULL, delim, &cp_saved))
     {
-      part = string_new(token);
-      vector_push_back(v, &part);
+      string_construct(&token);
+      string_append(&token, cp);
+      vector_push_back(v, &token);
     }
-  string_free(copy);
-
-  return v;
+  string_destruct(&copy);
 }
-*/

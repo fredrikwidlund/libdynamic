@@ -8,17 +8,15 @@ SOURCE_FILES = \
 src/dynamic/vector.c \
 src/dynamic/string.c \
 src/dynamic/buffer.c \
-src/dynamic/mapi.c \
-src/dynamic/maps.c \
-src/dynamic/cfarmhash.c
+src/dynamic/map.c \
+src/dynamic/hash.c
 
 HEADER_FILES = \
 src/dynamic/vector.h \
 src/dynamic/string.h \
 src/dynamic/buffer.h \
-src/dynamic/mapi.h \
-src/dynamic/maps.h \
-src/dynamic/cfarmhash.h
+src/dynamic/map.h \
+src/dynamic/hash.h
 
 AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la
@@ -64,23 +62,17 @@ test_string_LDADD = $(CHECK_LDADD)
 test_string_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_string_SOURCES = test/string.c test/memory.c
 
-check_PROGRAMS += test/mapi
-test_mapi_CFLAGS = $(CHECK_CFLAGS)
-test_mapi_LDADD = $(CHECK_LDADD)
-test_mapi_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_mapi_SOURCES = test/mapi.c test/memory.c
+check_PROGRAMS += test/map
+test_map_CFLAGS = $(CHECK_CFLAGS)
+test_map_LDADD = $(CHECK_LDADD)
+test_map_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_map_SOURCES = test/map.c test/memory.c
 
-check_PROGRAMS += test/maps
-test_maps_CFLAGS = $(CHECK_CFLAGS)
-test_maps_LDADD = $(CHECK_LDADD)
-test_maps_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_maps_SOURCES = test/maps.c test/memory.c
-
-check_PROGRAMS += test/cfarmhash
-test_cfarmhash_CFLAGS = $(CHECK_CFLAGS)
-test_cfarmhash_LDADD = $(CHECK_LDADD)
-test_cfarmhash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_cfarmhash_SOURCES = test/cfarmhash.c test/memory.c
+check_PROGRAMS += test/hash
+test_hash_CFLAGS = $(CHECK_CFLAGS)
+test_hash_LDADD = $(CHECK_LDADD)
+test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_hash_SOURCES = test/hash.c test/memory.c
 
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 
