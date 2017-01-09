@@ -42,23 +42,20 @@ static void map_rehash(map *m, size_t size, size_t (*hash)(void *), int (*equal)
   size_t i;
 
   size = map_roundup(size);
-  if (size > m->elements_capacity)
+  new = *m;
+  new.elements_count = 0;
+  new.elements_capacity = size;
+  new.elements = malloc(new.elements_capacity * new.element_size);
+  for (i = 0; i < new.elements_capacity; i ++)
+    memcpy(map_element(&new, i), new.element_empty, new.element_size);
+  if (m->elements)
     {
-      new = *m;
-      new.elements_count = 0;
-      new.elements_capacity = size;
-      new.elements = malloc(new.elements_capacity * new.element_size);
-      for (i = 0; i < new.elements_capacity; i ++)
-        memcpy(map_element(&new, i), new.element_empty, new.element_size);
-      if (m->elements)
-        {
-          for (i = 0; i < m->elements_capacity; i ++)
-            if (!equal(map_element(m, i), m->element_empty))
-              map_insert(&new, map_element(m, i), hash, equal, NULL);
-          free(m->elements);
-        }
-      *m = new;
+      for (i = 0; i < m->elements_capacity; i ++)
+        if (!equal(map_element(m, i), m->element_empty))
+          map_insert(&new, map_element(m, i), hash, equal, NULL);
+      free(m->elements);
     }
+  *m = new;
 }
 
 static void map_reserve(map *m, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *))
@@ -157,7 +154,7 @@ void map_erase(map *m, void *element, size_t (*hash)(void *), int (*equal)(void 
       if (equal(map_element(m, j), m->element_empty))
         break;
 
-      k = hash(map_element(m, j));
+      k = hash(map_element(m, j)) & (m->elements_capacity - 1);
       if ((i < j && (k <= i || k > j)) ||
           (i > j && (k <= i && k > j)))
         {
@@ -168,6 +165,13 @@ void map_erase(map *m, void *element, size_t (*hash)(void *), int (*equal)(void 
 
   memcpy(map_element(m, i), m->element_empty, m->element_size);
 }
+
+/*
+-j-k-i- tt
+kj---i- tf
+-j---ik ft
+??????? ff
+*/
 
 void map_clear(map *m, int (*equal)(void *, void *), void (*release)(void *))
 {

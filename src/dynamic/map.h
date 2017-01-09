@@ -18,7 +18,7 @@ struct map
 /* constructor/destructor */
 
 void    map_construct(map *, size_t, void *);
-void    map_destruct(map *, int (*e)(void *, void *), void (*)(void *));
+void    map_destruct(map *, int (*)(void *, void *), void (*)(void *));
 
 /* capacity */
 
