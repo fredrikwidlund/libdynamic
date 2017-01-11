@@ -36,20 +36,20 @@ void unordered_map_insert(uint32_t *a, size_t n, double *insert, double *at)
 
 int main()
 {
-  size_t size, sizes[] = {100, 1000, 10000, 100000, 1000000, 10000000};
+  size_t max = 10000000;
   uint32_t s, i, n, *r;
   double insert, at;
 
-  for (s = 0; s < sizeof sizes / sizeof sizes[0]; s ++)
+  (void) fprintf(stdout, "size,insert,at\n");
+  for (s = 100; s < max; s *= 1.2)
     {
-      size = sizes[s];
-      r = (uint32_t *) malloc(size * sizeof n);
-      for (i = 0; i < size; i ++)
+      r = (uint32_t *) malloc(s * sizeof n);
+      for (i = 0; i < s; i ++)
         r[i] = rand();
 
-      unordered_map_insert(r, size, &insert, &at);
+      unordered_map_insert(r, s, &insert, &at);
 
       free(r);
-      (void) fprintf(stdout, "%lu %f %f\n", size, insert, at);
+      (void) fprintf(stdout, "%lu,%f,%f\n", s, insert * 1000000000 / (double) s, at * 1000000000 / (double) s);
     }
 }
