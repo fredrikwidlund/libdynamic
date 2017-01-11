@@ -9,7 +9,7 @@ API Reference
 Library Version
 ===============
 
-The libreactor version uses `Semantic Versioning`_ and is of the form *A.B.C*, where *A* is the major version, *B* is
+The libdynamic version uses `Semantic Versioning`_ and is of the form *A.B.C*, where *A* is the major version, *B* is
 the minor version and *C* is the patch version.
 
 When a new release only fixes bugs and doesn't add new features or functionality, the patch version is incremented.
@@ -19,11 +19,26 @@ zero.
 
 The following preprocessor constants specify the current version of the library:
 
-``LIBREACTOR_VERSION_MAJOR``, ``LIBREACTOR_VERSION_MINOR``, ``LIBREACTOR_VERSION_PATCH``
+``LIBDYNAMIC_VERSION_MAJOR``, ``LIBDYNAMIC_VERSION_MINOR``, ``LIBDYNAMIC_VERSION_PATCH``
   Integers specifying the major, minor and patch versions, respectively.
 
-``LIBREACTOR_VERSION``
+``LIBDYNAMIC_VERSION``
   A string representation of the current version, e.g. ``"1.2.1"``
+
+Design
+======
+
+Bounds checking
+---------------
+
+Since libdynamic is low-level high-performance library, bounds checking is left for the user to implement when and
+where needed.
+
+Memory allocation
+-----------------
+
+Since gracefully handling memory allocation errors is difficult at best and makes code difficult to optimize
+libdynamic will exit on memory allocation errors.
 
 Buffer
 ======
@@ -101,9 +116,6 @@ the end of the vector can be provided with amortized constant time complexity.
 
 Therefore, compared to arrays, vectors consume more memory in exchange for the ability to manage storage and grow
 dynamically in an efficient way.
-
-.. _`Semantic Versioning`: http://semver.org/
-.. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
 
 .. type:: vector
 
@@ -192,4 +204,103 @@ dynamically in an efficient way.
 .. function:: void vector_clear(vector *vector)
 
   Clears the *vector* of all elements.
+
+String
+======
+
+Strings are objects that represent sequences of characters. String objects are modelled roughly after the
+`C++ string`_ counterpart.
+
+.. type:: string
+
+  This data structure represents the string object.
+
+.. function:: void string_construct(string *string)
+
+  Constructs an empty *string*.
+
+.. function:: void string_destruct(string *string)
+
+  Releases all resources used by the *string*.
+
+.. function:: size_t string_length(string *string)
+
+  Returns the lenght of the *string*.
+  
+.. function:: size_t string_capacity(string *string)
+
+  Returns the amount of memory allocated for the *string*. 
+
+.. function:: int string_empty(string *string)
+
+  Returns 1 if the *string* is empty.
+  
+.. function:: void string_reserve(string *string, size_t size)
+              
+  Ensure that the allocated memory for the *string* is at least *size* bytes.
+
+.. function:: void string_shrink_to_fit(string *string)
+
+  Reduces the amount of allocated memory in the *string* to match the current string length.
+
+
+.. _`Semantic Versioning`: http://semver.org/
+.. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
+.. _`C++ string`: http://www.cplusplus.com/reference/string/string/
+
+.. function:: void string_insert(string *string, size_t position, char *characters)
+
+  Insert null-terminated *characters* into the *string* at the given *position*.
+
+.. function:: void string_insert_buffer(string *string, size_t position, char *data, size_t size)
+
+  Insert *data* of the given *size* into the *string* at the given *position*.
+
+.. function:: void string_prepend(string *string, char *characters)
+
+  Prepend null-terminated *characters* into the *string*.
+
+.. function:: void string_append(string *string, char *characters)
+              
+  Append null-terminated *characters* into the *string*.
+
+.. function:: void string_erase(string *string, size_t position, size_t size)
+
+  Remove *size* number of characters from the *string* at the given *position*.
+
+.. function:: void string_replace(string *string, size_t position, size_t size, char *characters)
+
+  Replace the portion of the *string* that begins at *position* and spans *size* positions with null-terminated
+  *characters*.
+
+.. function:: void string_replace_all(string *string, char *find, char *sub)
+
+  Replace all occurances of *find* with *sub*.
+
+.. function:: void string_clear(string *string)
+
+  Empty the *string*.
+
+.. function:: char *string_data(string *string)
+
+  Return null-terminated characters corresponding to the content of *string*.
+
+.. function:: ssize_t string_find(string *string, char *find, size_t position)
+
+  Find the first position of *find* in the *string* starting at the given *position*.
+
+  If no position can be found the function will return -1.
+
+.. function:: int string_compare(string *one, string *two)
+
+  Returns 1 if string *one* and string *two* contain the same characters.
+
+.. function:: void string_split(string *string, char *delimiters, vector *vector)
+
+  Splits the *string* at any character specified in *delimiers* into a *vector* of strings. Empty parts are not
+  included in the result. *vector* should point at allocated but uninitialized memory before being supplied to the
+  function.
+
+
+
 
