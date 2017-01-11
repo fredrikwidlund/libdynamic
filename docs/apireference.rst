@@ -143,7 +143,7 @@ dynamically in an efficient way.
 
 .. function:: void *vector_at(vector *vector, size_t position)
 
-  Returns a pointer to the element in given *position* in the *vector*.
+  Returns a pointer to the element in the given *position* in the *vector*.
 
 .. function:: void *vector_front(vector *vector)
 
@@ -160,6 +160,36 @@ dynamically in an efficient way.
   Because elements in the vector are guaranteed to be stored in contiguous storage locations in the same order as
   represented by the vector, the pointer retrieved can be offset to access any element in the array.
 
+.. function:: void vector_insert(vector *vector, size_t position, void *object)
+
+  Inserts the *object* into the *vector* at the given *position*.
+
+.. function:: void vector_insert_range(vector *vector, size_t position, void *first, void *last)
+
+  Inserts a range of sequential objects, specified by giving the *first* and *last* object, into the *vector* at the given *position*.
+
+.. function:: void vector_insert_fill(vector *vector, size_t position, size_t count, void *object)
+
+  Inserts *count* copies of the *object* into the *vector* at the given *position*.
+  
+.. function:: vector_erase(vector *vector, size_t position)
+
+  Removes the element in the given *position* in the *vector*.
+
+.. function:: vector_erase_range(vector *vector, size_t first, size_t last)
+
+  Removes the elements from the *vector* starting at the given *first* position and ending before the *last* position.
+  The element at the *last* position is not removed.
+
 .. function:: void vector_push_back(vector *vector, void *object)
 
   Appends the *object* to the end of the *vector*.
+
+.. function:: void vector_pop_back(vector *vector)
+
+  Removes the last element of the *vector*.
+
+.. function:: void vector_clear(vector *vector)
+
+  Clears the *vector* of all elements.
+
