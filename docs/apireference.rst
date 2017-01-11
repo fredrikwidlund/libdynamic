@@ -31,7 +31,7 @@ Design
 Bounds checking
 ---------------
 
-Since libdynamic is low-level high-performance library, bounds checking is left for the user to implement when and
+Since libdynamic is a low-level and high-performance library, bounds checking is left for the user to implement when and
 where needed.
 
 Memory allocation
@@ -225,7 +225,7 @@ Strings are objects that represent sequences of characters. String objects are m
 
 .. function:: size_t string_length(string *string)
 
-  Returns the lenght of the *string*.
+  Returns the length of the *string*.
   
 .. function:: size_t string_capacity(string *string)
 
@@ -237,7 +237,7 @@ Strings are objects that represent sequences of characters. String objects are m
   
 .. function:: void string_reserve(string *string, size_t size)
               
-  Ensure that the allocated memory for the *string* is at least *size* bytes.
+  Ensures that the allocated memory for the *string* is at least *size* bytes.
 
 .. function:: void string_shrink_to_fit(string *string)
 
@@ -258,11 +258,11 @@ Strings are objects that represent sequences of characters. String objects are m
 
 .. function:: void string_prepend(string *string, char *characters)
 
-  Prepend null-terminated *characters* into the *string*.
+  Prepend null-terminated *characters* onto the *string*.
 
 .. function:: void string_append(string *string, char *characters)
               
-  Append null-terminated *characters* into the *string*.
+  Append null-terminated *characters* onto the *string*.
 
 .. function:: void string_erase(string *string, size_t position, size_t size)
 
@@ -297,7 +297,7 @@ Strings are objects that represent sequences of characters. String objects are m
 
 .. function:: void string_split(string *string, char *delimiters, vector *vector)
 
-  Splits the *string* at any character specified in *delimiers* into a *vector* of strings. Empty parts are not
+  Splits the *string* at any character specified in *delimiters* into a *vector* of strings. Empty parts are not
   included in the result. *vector* should point at allocated but uninitialized memory before being supplied to the
   function.
 
