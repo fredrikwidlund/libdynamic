@@ -8,6 +8,7 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign no-define])
 AM_PROG_AR
 AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
+AC_PROG_CXX
 
-AC_CONFIG_FILES([Makefile docs/Makefile libdynamic.pc])
+AC_CONFIG_FILES([Makefile docs/Makefile benchmark/Makefile libdynamic.pc])
 AC_OUTPUT

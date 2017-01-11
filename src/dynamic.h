@@ -13,8 +13,8 @@ extern "C" {
 #include <dynamic/buffer.h>
 #include <dynamic/vector.h>
 #include <dynamic/string.h>
-#include <dynamic/map.h>
 #include <dynamic/hash.h>
+#include <dynamic/map.h>
 
 #ifdef __cplusplus
 }
