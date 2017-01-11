@@ -63,16 +63,24 @@ of memory actually allocated will grow exponentially to allow for amortized cons
 
 .. function:: void buffer_compact(buffer *buffer)
 
-  Reduces the amount to allocated memory to match the current buffer size.
+  Reduces the amount of allocated memory in the *buffer* to match the current buffer size.
 
 .. function:: void buffer_insert(buffer *buffer, size_t position, void *data, size_t size)
 
   Inserts *data* with a given *size* into the given *position* of the *buffer* 
 
-  Inserts the memory referenced by *data*, of size *size*, into the buffer memory at position *position*.
+.. function:: void buffer_insert_fill(buffer *buffer, size_t postion, size_t count, void *data, size_t size)
 
+  Inserts *count* copies of *data* with a given *size* into the given *position* of the *buffer*
+  
+.. function:: void buffer_erase(buffer *buffer, size_t position, size_t size)
 
-  void    buffer_insert_fill(buffer *, size_t, size_t, void *, size_t);
-void    buffer_erase(buffer *, size_t, size_t);
-void    buffer_clear(buffer *);
-void   *buffer_data(buffer *);
+  Removes *size* bytes from the data in the *buffer* at the given *position*.
+
+.. function:: void buffer_clear(buffer *buffer)
+
+  Clears the *buffer* of all content.
+
+.. function:: void *buffer_data(buffer *buffer)
+
+  Returns a pointer the the content of the *buffer*.
