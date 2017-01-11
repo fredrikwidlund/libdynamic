@@ -74,12 +74,6 @@ test_map_LDADD = $(CHECK_LDADD)
 test_map_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_map_SOURCES = test/map.c test/memory.c
 
-check_PROGRAMS += test/map_str
-test_map_str_CFLAGS = $(CHECK_CFLAGS)
-test_map_str_LDADD = $(CHECK_LDADD)
-test_map_str_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_map_str_SOURCES = test/map_str.c test/memory.c
-
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 
 TESTS = $(check_PROGRAMS) test/coverage.sh test/valgrind.sh
