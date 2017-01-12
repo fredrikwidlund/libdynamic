@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "dynamic.h"
+#include "map_custom.h"
 
 struct e {
   uint32_t k;
@@ -28,7 +29,7 @@ uint64_t ntime()
   return ((uint64_t) ts.tv_sec * 1000000000) + ((uint64_t) ts.tv_nsec);
 }
 
-void dynamic_map_insert(uint32_t *a, size_t n, double *insert, double *at)
+void map_dynamic(uint32_t *a, size_t n, double *insert, double *at)
 {
   map m;
   size_t i;
@@ -51,11 +52,20 @@ void dynamic_map_insert(uint32_t *a, size_t n, double *insert, double *at)
   map_destruct(&m, NULL, NULL);
 }
 
+size_t hash2(uint32_t k)
+{
+  return k;
+}
+
+int compare2(int32_t k1, uint32_t k2)
+{
+  return k2 - k1;
+}
+
 int main()
 {
-  map m;
   uint32_t s, i, n, *r, max = 10000000;
-  double insert, at;
+  double insert, insert2, at, at2;
 
   (void) fprintf(stdout, "size,insert,at\n");
   for (s = 1000; s < max; s *= 1.1)
@@ -64,10 +74,13 @@ int main()
       for (i = 0; i < s; i ++)
         r[i] = rand();
 
-      map_construct(&m, sizeof n, (uint32_t[]) {-1});
-      dynamic_map_insert(r, s, &insert, &at);
+      map_dynamic(r, s, &insert, &at);
+      //map_custom(r, s, &insert2, &at2);
+      map_custom2(r, s, &insert2, &at2, hash2, compare2);
 
       free(r);
-      (void) fprintf(stdout, "%u,%f,%f\n", s, insert * 1000000000 / (double) s, at * 1000000000 / (double) s);
+      (void) fprintf(stdout, "%u,%f,%f %f,%f\n", s,
+                     insert * 1000000000 / (double) s, at * 1000000000 / (double) s,
+                     insert2 * 1000000000 / (double) s, at2 * 1000000000 / (double) s);
     }
 }
