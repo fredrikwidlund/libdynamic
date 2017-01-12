@@ -1,0 +1,4 @@
+To build the benchmarks, invole
+    make benchmarks
+
+The benchmarks require R and the ggplot2, scales and sitools libraries.

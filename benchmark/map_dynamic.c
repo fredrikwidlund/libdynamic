@@ -58,7 +58,7 @@ int main()
   double insert, at;
 
   (void) fprintf(stdout, "size,insert,at\n");
-  for (s = 100; s < max; s *= 1.2)
+  for (s = 1000; s < max; s *= 1.1)
     {
       r = malloc(s * sizeof n);
       for (i = 0; i < s; i ++)

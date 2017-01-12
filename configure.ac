@@ -4,6 +4,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign no-define])
 
 : ${CFLAGS="-Wall -Wextra -Wpedantic"}
+: ${CXXFLAGS="-Wall -Wextra -Wpedantic"}
 
 AM_PROG_AR
 AC_PROG_LIBTOOL

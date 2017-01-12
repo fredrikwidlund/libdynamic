@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AM_CFLAGS = -std=gnu11 -O3 -flto -fuse-linker-plugin
 AM_LDFLAGS = -static
 
-SUBDIRS = docs
+DIST_SUBDIRS = docs benchmark
 
 SOURCE_FILES = \
 src/dynamic/vector.c \

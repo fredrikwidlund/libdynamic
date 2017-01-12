@@ -18,6 +18,7 @@ void unordered_map_insert(uint32_t *a, size_t n, double *insert, double *at)
   size_t i;
   uint64_t t1, t2;
 
+  m.max_load_factor(0.5);
   t1 = ntime();
   for (i = 0; i < n; i ++)
     m.insert({{a[i], 1}});
@@ -41,7 +42,7 @@ int main()
   double insert, at;
 
   (void) fprintf(stdout, "size,insert,at\n");
-  for (s = 100; s < max; s *= 1.2)
+  for (s = 1000; s < max; s *= 1.1)
     {
       r = (uint32_t *) malloc(s * sizeof n);
       for (i = 0; i < s; i ++)
@@ -50,6 +51,6 @@ int main()
       unordered_map_insert(r, s, &insert, &at);
 
       free(r);
-      (void) fprintf(stdout, "%lu,%f,%f\n", s, insert * 1000000000 / (double) s, at * 1000000000 / (double) s);
+      (void) fprintf(stdout, "%u,%f,%f\n", s, insert * 1000000000 / (double) s, at * 1000000000 / (double) s);
     }
 }
