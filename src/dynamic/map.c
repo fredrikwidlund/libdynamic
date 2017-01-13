@@ -58,13 +58,6 @@ static void map_rehash(map *m, size_t size, size_t (*hash)(void *), int (*equal)
   *m = new;
 }
 
-static void map_reserve(map *m, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *))
-{
-  size *= 2;
-  if (size > m->elements_capacity)
-    map_rehash(m, size, hash, equal);
-}
-
 /* constructor/destructor */
 
 void map_construct(map *m, size_t element_size, void *element_empty)
@@ -88,6 +81,13 @@ void map_destruct(map *m, int (*equal)(void *, void *), void (*release)(void *))
 size_t map_size(map *m)
 {
   return m->elements_count;
+}
+
+void map_reserve(map *m, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *))
+{
+  size *= 2;
+  if (size > m->elements_capacity)
+    map_rehash(m, size, hash, equal);
 }
 
 /* element access */
@@ -165,13 +165,6 @@ void map_erase(map *m, void *element, size_t (*hash)(void *), int (*equal)(void 
 
   memcpy(map_element(m, i), m->element_empty, m->element_size);
 }
-
-/*
--j-k-i- tt
-kj---i- tf
--j---ik ft
-??????? ff
-*/
 
 void map_clear(map *m, int (*equal)(void *, void *), void (*release)(void *))
 {

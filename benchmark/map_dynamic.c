@@ -4,83 +4,46 @@
 #include <time.h>
 
 #include "dynamic.h"
-#include "map_custom.h"
+#include "map.h"
 
-struct e {
-  uint32_t k;
-  uint32_t v;
+typedef struct map_element map_element;
+struct map_element
+{
+  uint32_t key;
+  uint32_t value;
 };
 
-size_t hash(void *e)
+static size_t hash(void *e)
 {
-  return ((struct e *) e)->k;
+  return *(uint32_t *) e;
 }
 
-int equal(void *e1, void *e2)
+static int equal(void *e1, void *e2)
 {
-  return ((struct e *) e1)->k == ((struct e *) e2)->k;
+  return *(uint32_t *) e1 == *(uint32_t *) e2;
 }
 
-uint64_t ntime()
-{
-  struct timespec ts;
-
-  (void) clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-  return ((uint64_t) ts.tv_sec * 1000000000) + ((uint64_t) ts.tv_nsec);
-}
-
-void map_dynamic(uint32_t *a, size_t n, double *insert, double *at)
+void map_dynamic(map_metric *metric, uint32_t *a, size_t n)
 {
   map m;
+  map_element *e;
   size_t i;
   uint64_t t1, t2;
 
-  map_construct(&m, sizeof (struct e), (struct e[]) {{-1, 0}});
-  t1 = ntime();
-  for (i = 0; i < n; i ++)
-    map_insert(&m, (struct e[]) {{.k = a[i], .v = 1}}, hash, equal, NULL);
-  t2 = ntime();
-  *insert = (double) (t2 - t1) / 1000000000.;
+  map_construct(&m, sizeof *e, (map_element[]) {{.key = -1}});
 
   t1 = ntime();
   for (i = 0; i < n; i ++)
-    if (((struct e *) map_at(&m, (struct e[]){{.k = a[i]}}, hash, equal))->v != 1)
+    map_insert(&m, (map_element[]) {{.key = a[i], .value = 1}}, hash, equal, NULL);
+  t2 = ntime();
+  metric->insert = (double) (t2 - t1) / n;
+
+  t1 = ntime();
+  for (i = 0; i < n; i ++)
+    if (((map_element *) map_at(&m, (map_element[]){{.key = a[i]}}, hash, equal))->value != 1)
       abort();
   t2 = ntime();
-  *at = (double) (t2 - t1) / 1000000000.;
+  metric->at = (double) (t2 - t1) / n;
 
   map_destruct(&m, NULL, NULL);
-}
-
-size_t hash2(uint32_t k)
-{
-  return k;
-}
-
-int compare2(int32_t k1, uint32_t k2)
-{
-  return k2 - k1;
-}
-
-int main()
-{
-  uint32_t s, i, n, *r, max = 10000000;
-  double insert, insert2, at, at2;
-
-  (void) fprintf(stdout, "size,insert,at\n");
-  for (s = 1000; s < max; s *= 1.1)
-    {
-      r = malloc(s * sizeof n);
-      for (i = 0; i < s; i ++)
-        r[i] = rand();
-
-      map_dynamic(r, s, &insert, &at);
-      //map_custom(r, s, &insert2, &at2);
-      map_custom2(r, s, &insert2, &at2, hash2, compare2);
-
-      free(r);
-      (void) fprintf(stdout, "%u,%f,%f %f,%f\n", s,
-                     insert * 1000000000 / (double) s, at * 1000000000 / (double) s,
-                     insert2 * 1000000000 / (double) s, at2 * 1000000000 / (double) s);
-    }
 }
