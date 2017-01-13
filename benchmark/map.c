@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <time.h>
+#include "dynamic.h"
 
 #include "map.h"
 #include "map_custom.h"
@@ -11,9 +13,9 @@
 
 static map_metric metrics[] = {
   {.name = "custom", .measure = map_custom},
+  {.name = "libdynamic", .measure = map_dynamic},
   {.name = "subclass", .measure = map_subclass},
-  {.name = "std::map_unordered", .measure = map_unordered},
-  {.name = "libdynamic", .measure = map_dynamic}
+  {.name = "std::map_unordered", .measure = map_unordered}
 };
 
 uint64_t ntime(void)
@@ -26,7 +28,7 @@ uint64_t ntime(void)
 
 int main()
 {
-  size_t i, n, n_min = 100, n_max = 10000000;
+  size_t i, n, n_min = 100, n_max = 1000000;
   double k = 1.1;
   uint32_t *a;
   map_metric *m;

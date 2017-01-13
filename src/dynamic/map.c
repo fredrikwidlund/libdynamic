@@ -46,8 +46,10 @@ static void map_rehash(map *m, size_t size, size_t (*hash)(void *), int (*equal)
   new.elements_count = 0;
   new.elements_capacity = size;
   new.elements = malloc(new.elements_capacity * new.element_size);
+
   for (i = 0; i < new.elements_capacity; i ++)
     memcpy(map_element(&new, i), new.element_empty, new.element_size);
+
   if (m->elements)
     {
       for (i = 0; i < m->elements_capacity; i ++)
@@ -55,6 +57,7 @@ static void map_rehash(map *m, size_t size, size_t (*hash)(void *), int (*equal)
           map_insert(&new, map_element(m, i), hash, equal, NULL);
       free(m->elements);
     }
+
   *m = new;
 }
 
