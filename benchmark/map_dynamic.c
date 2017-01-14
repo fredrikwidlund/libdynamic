@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <err.h>
 #include <time.h>
 
 #include "dynamic.h"
@@ -44,6 +45,14 @@ void map_dynamic(map_metric *metric, uint32_t *a, size_t n)
       abort();
   t2 = ntime();
   metric->at = (double) (t2 - t1) / n;
+
+  t1 = ntime();
+  for (i = 0; i < n; i ++)
+    map_erase(&m, (map_element[]){{.key = a[i]}}, hash, equal, NULL);
+  t2 = ntime();
+  if (map_size(&m))
+    errx(1, "inconsistency");
+  metric->erase = (double) (t2 - t1) / n;
 
   map_destruct(&m, NULL, NULL);
 }

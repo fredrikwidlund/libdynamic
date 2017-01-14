@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 #include <time.h>
 #include "dynamic.h"
 
@@ -12,10 +13,10 @@
 #include "map_dynamic.h"
 
 static map_metric metrics[] = {
-  {.name = "custom", .measure = map_custom},
+  {.name = "custom open addressing", .measure = map_custom},
   {.name = "libdynamic", .measure = map_dynamic},
-  {.name = "subclass", .measure = map_subclass},
-  {.name = "std::map_unordered", .measure = map_unordered}
+  {.name = "std::map_unordered", .measure = map_unordered},
+  {.name = "libdynamic (subclass)", .measure = map_subclass}
 };
 
 uint64_t ntime(void)
@@ -28,13 +29,13 @@ uint64_t ntime(void)
 
 int main()
 {
-  size_t i, n, n_min = 100, n_max = 1000000;
+  size_t i, n, n_min = 10, n_max = 1000000;
   double k = 1.1;
   uint32_t *a;
   map_metric *m;
 
-  (void) fprintf(stdout, "name,size,insert,at\n");
-  for (n = n_min; n < n_max; n *= k)
+  (void) fprintf(stdout, "name,size,insert,at,erase\n");
+  for (n = n_min; n < n_max; n = ceil(k * n))
     {
       a = calloc(n, sizeof *a);
       for (i = 0; i < n; i ++)
@@ -43,7 +44,7 @@ int main()
       for (m = metrics; m < &metrics[sizeof metrics / sizeof metrics[0]]; m ++)
         {
           m->measure(m, a, n);
-          (void) fprintf(stdout, "%s,%lu,%f,%f\n", m->name, n, m->insert, m->at);
+          (void) fprintf(stdout, "%s,%lu,%f,%f,%f\n", m->name, n, m->insert, m->at, m->erase);
         }
 
       free(a);

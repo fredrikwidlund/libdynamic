@@ -38,7 +38,7 @@ maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
 CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs
 CHECK_LDADD = -L. -ldynamic_test -lcmocka
-CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc
+CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc -Wl,--wrap=abort
 
 check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
@@ -48,31 +48,31 @@ check_PROGRAMS = test/buffer
 test_buffer_CFLAGS = $(CHECK_CFLAGS)
 test_buffer_LDADD = $(CHECK_LDADD)
 test_buffer_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_buffer_SOURCES = test/buffer.c test/memory.c
+test_buffer_SOURCES = test/buffer.c test/mock.c
 
 check_PROGRAMS += test/vector
 test_vector_CFLAGS = $(CHECK_CFLAGS)
 test_vector_LDADD = $(CHECK_LDADD)
 test_vector_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_vector_SOURCES = test/vector.c test/memory.c
+test_vector_SOURCES = test/vector.c test/mock.c
 
 check_PROGRAMS += test/string
 test_string_CFLAGS = $(CHECK_CFLAGS)
 test_string_LDADD = $(CHECK_LDADD)
 test_string_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_string_SOURCES = test/string.c test/memory.c
+test_string_SOURCES = test/string.c test/mock.c
 
 check_PROGRAMS += test/hash
 test_hash_CFLAGS = $(CHECK_CFLAGS)
 test_hash_LDADD = $(CHECK_LDADD)
 test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_hash_SOURCES = test/hash.c test/memory.c
+test_hash_SOURCES = test/hash.c test/mock.c
 
 check_PROGRAMS += test/map
 test_map_CFLAGS = $(CHECK_CFLAGS)
 test_map_LDADD = $(CHECK_LDADD)
 test_map_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_map_SOURCES = test/map.c test/memory.c
+test_map_SOURCES = test/map.c test/mock.c
 
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 

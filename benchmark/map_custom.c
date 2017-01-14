@@ -81,6 +81,38 @@ static void map_insert(map *m, uint32_t key, uint32_t value)
     }
 }
 
+static void map_erase(map *m, uint32_t key)
+{
+  map_element *e;
+  size_t i, j, k;
+
+  e = map_at(m, key);
+  if (e->key == (uint32_t) -1)
+    return;
+
+  m->elements_count --;
+
+  i = ((char *) e - (char *) m->elements) / sizeof *e;
+  j = i;
+  while (1)
+    {
+      j = (j + 1) & (m->elements_capacity - 1);
+      if (m->elements[j].key == (uint32_t) -1)
+        break;
+
+      k = m->elements[j].key & (m->elements_capacity - 1);
+      if ((i < j && (k <= i || k > j)) ||
+          (i > j && (k <= i && k > j)))
+        {
+          m->elements[i].key = m->elements[j].key;
+          m->elements[i].value = m->elements[j].value;
+          i = j;
+        }
+    }
+
+  m->elements[i].key = (uint32_t) -1;
+}
+
 static void map_rehash(map *m, size_t size)
 {
   map new;
@@ -130,6 +162,14 @@ void map_custom(map_metric *metric, uint32_t *a, size_t n)
       errx(1, "inconsistency");
   t2 = ntime();
   metric->at = (double) (t2 - t1) / n;
+
+  t1 = ntime();
+  for (i = 0; i < n; i ++)
+    map_erase(&m, a[i]);
+  t2 = ntime();
+  if (m.elements_count)
+    errx(1, "inconsistency");
+  metric->erase = (double) (t2 - t1) / n;
 
   map_destruct(&m);
 }

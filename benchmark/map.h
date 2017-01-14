@@ -8,6 +8,7 @@ struct map_metric
   void   (*measure)(map_metric *, uint32_t *, size_t);
   double   insert;
   double   at;
+  double   erase;
 };
 
 uint64_t ntime(void);

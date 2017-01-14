@@ -47,6 +47,16 @@ static void map_int_pair_insert(map_int_pair *m, uint32_t key, uint32_t value)
   map_insert(m,(map_int_pair_element[]){{.key = key, .value = value}}, hash, equal, NULL);
 }
 
+static void map_int_pair_erase(map_int_pair *m, uint32_t key)
+{
+  map_erase(m,(map_int_pair_element[]){{.key = key}}, hash, equal, NULL);
+}
+
+static size_t map_int_pair_size(map_int_pair *m)
+{
+  return map_size(m);
+}
+
 void map_subclass(map_metric *metric, uint32_t *a, size_t n)
 {
   map_int_pair m;
@@ -67,6 +77,15 @@ void map_subclass(map_metric *metric, uint32_t *a, size_t n)
       errx(1, "inconsistency");
   t2 = ntime();
   metric->at = (double) (t2 - t1) / n;
+
+  t1 = ntime();
+  for (i = 0; i < n; i ++)
+    map_int_pair_erase(&m, a[i]);
+  t2 = ntime();
+  if (map_int_pair_size(&m))
+    errx(1, "inconsistency");
+  metric->erase = (double) (t2 - t1) / n;
+
 
   map_int_pair_destruct(&m);
 }
