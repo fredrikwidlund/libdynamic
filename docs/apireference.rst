@@ -243,11 +243,6 @@ Strings are objects that represent sequences of characters. String objects are m
 
   Reduces the amount of allocated memory in the *string* to match the current string length.
 
-
-.. _`Semantic Versioning`: http://semver.org/
-.. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
-.. _`C++ string`: http://www.cplusplus.com/reference/string/string/
-
 .. function:: void string_insert(string *string, size_t position, char *characters)
 
   Insert null-terminated *characters* into the *string* at the given *position*.
@@ -301,6 +296,36 @@ Strings are objects that represent sequences of characters. String objects are m
   included in the result. *vector* should point at allocated but uninitialized memory before being supplied to the
   function.
 
+Map
+===
 
+Maps are associative containers that store elements formed by the combination of a key value and a mapped value,
+and which allows for fast retrieval of individual elements based on their keys. Map objects are modelled roughtly
+after the `C++ unordered_map`_ counterpart.
+
+For performance reasons some support callbacks need to be included in various calls.
+
+.. type:: int (*equal)(void *element1, void *element2)
+
+  The *equal* is called with a pointer to two elements, *element1* and *element2*, and should return 1 if the
+  elements are equal.
+
+.. type:: map
+
+  This data structure represents the map object.
+
+.. function:: void map_construct(map *map, size_t element_size, void *element_empty)
+
+  Constructs an empty *map*, where each element containing the key and value is of the size *element_size*, and
+  *element_empty* corresponds to an empty element.
+
+.. function:: void map_destruct(map *map, int (*equal)(void *, void *), void (*release)(void *))
+
+  Releases all resources used by the *map*. The *release* callback can be NULL, and if so *equal* is not required.
+
+.. _`Semantic Versioning`: http://semver.org/
+.. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
+.. _`C++ string`: http://www.cplusplus.com/reference/string/string/
+.. _`C++ unordered_map`: http://http://www.cplusplus.com/reference/unordered_map/unordered_map/
 
 

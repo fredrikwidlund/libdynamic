@@ -5,14 +5,6 @@
 #define MAP_ELEMENTS_CAPACITY_MIN 16
 #endif /* MAP_ELEMENTS_CAPACITY_MIN */
 
-typedef const struct map_type map_type;
-struct map_type
-{
-  size_t (*hash)(void *);
-  int    (*equal)(void *, void *);
-  void   (*release)(void *);
-};
-
 typedef struct map map;
 struct map
 {
@@ -40,9 +32,6 @@ void   *map_at(map *, void *, size_t (*)(void *), int (*)(void *, void *));
 
 /* modifiers */
 void    map_insert(map *, void *, size_t (*)(void *), int (*)(void *, void *), void (*)(void *));
-void    map_insert2(map *, void *, void (*)(void *));
-void    map_insert3(map *, void *, map_type *);
-
 void    map_clear(map *, int (*)(void *, void *), void (*)(void *));
 void    map_erase(map *, void *, size_t (*)(void *), int (*)(void *, void *), void (*)(void *));
 
