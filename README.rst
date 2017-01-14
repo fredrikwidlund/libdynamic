@@ -13,7 +13,7 @@ Compiling and installing
 ========================
 
 The source uses GNU Autotools (autoconf_, automake_, libtool_), so
-compiling and installing is extremely simple:
+compiling and installing is simple:
 
 .. code-block:: shell
 
