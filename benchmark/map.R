@@ -3,10 +3,11 @@
 library(ggplot2)
 library(scales)
 library(sitools)
+library(gridExtra)
 
 data.map <- read.csv("map.dat", head=TRUE, sep=",")
 
-graph <- ggplot(legend = TRUE) +
+g1 <- ggplot(legend = TRUE) +
   labs(list(title = "Insert", x = "Map size", y = "Time/Operation (ns)")) +
   theme(plot.title = element_text(size = 10),
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
@@ -15,10 +16,9 @@ graph <- ggplot(legend = TRUE) +
   scale_y_continuous(labels = comma) +
   expand_limits(y = 0) +
   scale_x_continuous(trans = log_trans(), breaks = 10^(0:10), labels = comma)
-graph$labels$colour <- "Implementation"
-ggsave(graph, file = "map_insert.pdf", width = 10, height = 5)
+g1$labels$colour <- "Implementation"
 
-graph <- ggplot(legend = TRUE) +
+g2 <- ggplot(legend = TRUE) +
   labs(list(title = "Lookup", x = "Map size", y = "Time/Operation (ns)")) +
   theme(plot.title = element_text(size = 10),
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
@@ -27,10 +27,9 @@ graph <- ggplot(legend = TRUE) +
   scale_y_continuous(labels = comma) +
   expand_limits(y = 0) +
   scale_x_continuous(trans = log_trans(), breaks = 10^(0:10), labels = comma)
-graph$labels$colour <- "Implementation"
-ggsave(graph, file = "map_lookup.pdf", width = 10, height = 5)
+g2$labels$colour <- "Implementation"
 
-graph <- ggplot(legend = TRUE) +
+g3 <- ggplot(legend = TRUE) +
   labs(list(title = "Delete", x = "Map size", y = "Time/Operation (ns)")) +
   theme(plot.title = element_text(size = 10),
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
@@ -39,5 +38,11 @@ graph <- ggplot(legend = TRUE) +
   scale_y_continuous(labels = comma) +
   expand_limits(y = 0) +
   scale_x_continuous(trans = log_trans(), breaks = 10^(0:10), labels = comma)
-graph$labels$colour <- "Implementation"
-ggsave(graph, file = "map_delete.pdf", width = 10, height = 5)
+g3$labels$colour <- "Implementation"
+
+pdf("map.pdf", width = 10, height = 10)
+grid.arrange(g1, g2, g3, ncol=1, top = "libdynamic map benchmark")
+#dev.off()
+        
+#        g4 <- grid.arrangeGrob(g1, g2, g3, ncol=1, top = "libdynamic map benchmark")
+#ggsave(g4, file = "map.pdf", width = 10, height = 10)

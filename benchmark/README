@@ -1,4 +1,4 @@
-To build the benchmark, invole
+To build the benchmark, invoke
     make benchmark
 
-The benchmark require R, and the ggplot2, scales and sitools libraries.
+Which will produce map.pfd and vector.pfd. The benchmark require R, and the ggplot2, scales and sitools libraries.
