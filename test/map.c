@@ -10,6 +10,9 @@
 #include "../src/dynamic/hash.h"
 #include "../src/dynamic/map.h"
 
+extern int debug_out_of_memory;
+extern int debug_abort;
+
 typedef struct element element;
 struct element
 {
@@ -178,11 +181,23 @@ void erase()
   map_destruct(&m, equal, NULL);
 }
 
+void alloc()
+{
+  map m;
+
+  debug_out_of_memory = 1;
+  debug_abort = 1;
+  expect_assert_failure(map_construct(&m, sizeof(uint32_t), (uint32_t[]){-1}));
+  debug_abort = 0;
+  debug_out_of_memory = 0;
+}
+
 int main()
 {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(core),
     cmocka_unit_test(erase),
+    cmocka_unit_test(alloc)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);

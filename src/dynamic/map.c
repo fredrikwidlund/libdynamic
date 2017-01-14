@@ -21,6 +21,12 @@ static size_t map_roundup(size_t s)
   return s;
 }
 
+static inline void map_assert(int value)
+{
+  if (!value)
+    abort();
+}
+
 static void map_release_all(map *m, int (*equal)(void *, void *), void (*release)(void *))
 {
   size_t i;
@@ -46,6 +52,7 @@ static void map_rehash(map *m, size_t size, size_t (*hash)(void *), int (*equal)
   new.elements_count = 0;
   new.elements_capacity = size;
   new.elements = malloc(new.elements_capacity * new.element_size);
+  map_assert(new.elements != NULL);
 
   for (i = 0; i < new.elements_capacity; i ++)
     memcpy(map_element(&new, i), new.element_empty, new.element_size);

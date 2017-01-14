@@ -18,6 +18,12 @@ static size_t buffer_roundup(size_t size)
   return size;
 }
 
+static inline void buffer_assert(int value)
+{
+  if (!value)
+    abort();
+}
+
 /* constructor/destructor */
 
 void buffer_construct(buffer *b)
@@ -50,6 +56,7 @@ void buffer_reserve(buffer *b, size_t capacity)
     {
       capacity = buffer_roundup(capacity);
       data = realloc(b->data, capacity);
+      buffer_assert(data != NULL);
       b->data = data;
       b->capacity = capacity;
     }
@@ -62,6 +69,8 @@ void buffer_compact(buffer *b)
   if (b->capacity > b->size)
     {
       data = realloc(b->data, b->size);
+      if (b->size)
+        buffer_assert(data != NULL);
       b->data = data;
       b->capacity = b->size;
     }
