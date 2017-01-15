@@ -2,7 +2,8 @@ EXTRA_DIST = \
 conf.py \
 index.rst \
 changes.rst \
-gettingstarted.rst
+gettingstarted.rst \
+apireference.rst
 
 SPHINXBUILD = sphinx-build
 SPHINXOPTS = -d _build/doctrees $(SPHINXOPTS_EXTRA)

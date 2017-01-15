@@ -9,11 +9,8 @@ Introduction
 libdynamic_ is a C library for various dynamic container types. Its main features and design principles are:
 
 - High performance/low overhead
-
 - Simplicity
-
 - Uniformity
-
 - Flexibility
 
 Where appropriate, containers are modelled roughly after the stdc++ equivalents.
@@ -31,6 +28,7 @@ Contents
    :maxdepth: 2
 
    gettingstarted
+   apireference
    changes
 
 Indices and Tables

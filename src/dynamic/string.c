@@ -7,36 +7,22 @@
 #include "vector.h"
 #include "string.h"
 
-/* allocators */
-
-string *string_new(char *data)
+static void string_split_release(void *object)
 {
-  string *s;
-
-  s = malloc(sizeof *s);
-  if (!s)
-    return NULL;
-
-  string_init(s, data);
-
-  return s;
+  string_destruct((string *) object);
 }
 
-void string_free(string *s)
+/* constructor/destructor */
+
+void string_construct(string *s)
 {
-  buffer_clear(&s->buffer);
-  free(s);
+  buffer_construct(&s->buffer);
+  buffer_insert(&s->buffer, 0, "", 1);
 }
 
-void string_init(string *s, char *data)
+void string_destruct(string *s)
 {
-  buffer_init(&s->buffer);
-  buffer_insert(&s->buffer, 0, data, strlen(data) + 1);
-}
-
-char *string_deconstruct(string *s)
-{
-  return buffer_deconstruct(&s->buffer);
+  buffer_destruct(&s->buffer);
 }
 
 /* capacity */
@@ -51,15 +37,9 @@ size_t string_capacity(string *s)
   return buffer_capacity(&s->buffer) - 1;
 }
 
-int string_reserve(string *s, size_t size)
+void string_reserve(string *s, size_t size)
 {
-  return buffer_reserve(&s->buffer, size + 1);
-}
-
-void string_clear(string *s)
-{
-  buffer_clear(&s->buffer);
-  buffer_insert(&s->buffer, 0, "", 1);
+  buffer_reserve(&s->buffer, size + 1);
 }
 
 int string_empty(string *s)
@@ -67,69 +47,57 @@ int string_empty(string *s)
   return string_length(s) == 0;
 }
 
-int string_shrink_to_fit(string *s)
+void string_shrink_to_fit(string *s)
 {
-  return buffer_compact(&s->buffer);
+  buffer_compact(&s->buffer);
 }
 
 /* modifiers */
 
-int string_prepend(string *s, char *data)
+void string_insert(string *s, size_t pos, char *data)
 {
-  return buffer_insert(&s->buffer, 0, data, strlen(data));
+  string_insert_buffer(s, pos, data, strlen(data));
 }
 
-int string_append(string *s, char *data)
+void string_insert_buffer(string *s, size_t pos, char *data, size_t size)
 {
-  return buffer_insert(&s->buffer, string_length(s), data, strlen(data));  
+  buffer_insert(&s->buffer, pos, data, size);
 }
 
-int string_insert(string *s, size_t pos, char *data)
+void string_prepend(string *s, char *data)
 {
-  if (pos > string_length(s))
-    return -1;
-
-  return buffer_insert(&s->buffer, pos, data, strlen(data));
+  buffer_insert(&s->buffer, 0, data, strlen(data));
 }
 
-int string_erase(string *s, size_t pos, size_t size)
+void string_append(string *s, char *data)
 {
-  size_t l = string_length(s);
-
-  if (pos > l)
-    return -1;
-
-  buffer_erase(&s->buffer, pos, size > l - pos ? l - pos : size);
-
-  return 0;
+  buffer_insert(&s->buffer, string_length(s), data, strlen(data));
 }
 
-int string_replace(string *s, size_t pos, size_t len, char *data)
+void string_erase(string *s, size_t pos, size_t size)
 {
-  int e;
-
-  e = string_erase(s, pos, len);
-  if (e == -1)
-    return -1;
-
-  return string_insert(s, pos, data);
+  buffer_erase(&s->buffer, pos, size);
 }
 
-int string_replace_all(string *s, char *find, char *sub)
+void string_replace(string *s, size_t pos, size_t size, char *data)
 {
-  size_t i;
-  int e;
-
-  for (i = string_find(s, find, 0); i != (size_t) -1; i = string_find(s, find, i + strlen(sub)))
-    {
-      e = string_replace(s, i, strlen(find), sub);
-      if (e == -1)
-        return -1;
-    }
-
-  return 0;
+  string_erase(s, pos, size);
+  string_insert(s, pos, data);
 }
 
+void string_replace_all(string *s, char *find, char *sub)
+{
+  ssize_t i;
+
+  for (i = string_find(s, find, 0); i >= 0; i = string_find(s, find, i + strlen(sub)))
+    string_replace(s, i, strlen(find), sub);
+}
+
+void string_clear(string *s)
+{
+  buffer_clear(&s->buffer);
+  string_construct(s);
+}
 
 /* string operations */
 
@@ -138,50 +106,12 @@ char *string_data(string *s)
   return buffer_data(&s->buffer);
 }
 
-int string_copy(string *s, char *data, size_t len, size_t pos, size_t *size)
-{
-  size_t l = string_length(s);
-
-  if (pos > l)
-    return -1;
-
-  *size = l - pos < len ? l - pos : len;
-  memcpy(data, string_data(s), *size);
-
-  return 0;
-}
-
-size_t string_find(string *s, char *data, size_t pos)
+ssize_t string_find(string *s, char *data, size_t pos)
 {
   char *p;
 
-  if (pos > string_length(s))
-    return -1;
-
   p = strstr(string_data(s) + pos, data);
   return p ? p - string_data(s) : -1;
-}
-
-string *string_substr(string *s, size_t pos, size_t len)
-{
-  string *result;
-  size_t n, l = string_length(s);
-
-  if (pos > l)
-    return NULL;
-
-  result = malloc(sizeof *result);
-  if (!result)
-    return NULL;
-
-  n = l - pos < len ? l - pos : len;
-
-  buffer_init(&result->buffer);
-  buffer_reserve(&result->buffer, n + 1);
-  buffer_insert(&result->buffer, 0, string_data(s) + pos, n);
-  string_data(result)[n] = 0;
-
-  return result;
 }
 
 int string_compare(string *s1, string *s2)
@@ -189,26 +119,20 @@ int string_compare(string *s1, string *s2)
   return strcmp(string_data(s1), string_data(s2));
 }
 
-vector *string_split(string *s, char *delim)
+void string_split(string *s, char *delim, vector *v)
 {
-  vector *v;
-  char *token;
-  string *copy = string_new(string_data(s));
-  string *part;
+  string copy, token;
+  char *cp, *cp_saved;
 
-  v = vector_new(sizeof(string *));
-  vector_release(v, string_split_release);
-  for (token = strtok(string_data(copy), delim); token; token = strtok(NULL, delim))
+  vector_construct(v, sizeof(string));
+  vector_object_release(v, string_split_release);
+  string_construct(&copy);
+  string_append(&copy, string_data(s));
+  for (cp = strtok_r(string_data(&copy), delim, &cp_saved); cp; cp = strtok_r(NULL, delim, &cp_saved))
     {
-      part = string_new(token);
-      vector_push_back(v, &part);
+      string_construct(&token);
+      string_append(&token, cp);
+      vector_push_back(v, &token);
     }
-  string_free(copy);
-
-  return v;
-}
-
-void string_split_release(void *object)
-{
-  string_free(*(string **) object);
+  string_destruct(&copy);
 }

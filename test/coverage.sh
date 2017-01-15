@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for file in buffer vector string mapi maps cfarmhash
+for file in buffer vector string map hash
 do
     echo [$file]
     test=`gcov -b src/dynamic/libdynamic_test_a-$file | grep -A4 File.*$file`

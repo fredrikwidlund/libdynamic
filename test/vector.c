@@ -10,108 +10,66 @@
 #include "../src/dynamic/buffer.h"
 #include "../src/dynamic/vector.h"
 
-void release(void *object)
+static void s_release(void *object)
 {
   free(*(char **) object);
 }
 
-void *copy(void *data, size_t size)
-{
-  void *p;
-
-  p = malloc(size);
-  if (!p)
-    return NULL;
-
-  memcpy(p, data, size);
-  return p;
-}
-
 void core()
 {
-  vector *v;
-  char *s[] = {"a", "list", "of", "string", "pointers"}, *s2, **s3;
-  int e;
+  vector v;
+  char *a[] = {"a", "list", "of", "string", "pointers"}, *s;
+  size_t a_len, i;
 
-  v = vector_new(sizeof(char *));
-  assert_true(v);
-  assert_true(vector_empty(v));
-  assert_int_equal(vector_size(v), 0);
-  assert_int_equal(vector_capacity(v), 0);
+  vector_construct(&v, sizeof(char *));
+  assert_true(vector_empty(&v));
+  assert_int_equal(vector_size(&v), 0);
+  assert_int_equal(vector_capacity(&v), 0);
 
-  vector_insert(v, 0, sizeof s / sizeof *s, s);
-  assert_int_equal(vector_size(v), sizeof s / sizeof *s);
+  vector_reserve(&v, 1024);
+  assert_int_equal(vector_capacity(&v), 1024);
+  vector_shrink_to_fit(&v);
+  assert_int_equal(vector_capacity(&v), 0);
 
-  vector_erase(v, 0, 1);
-  assert_string_equal(*(char **) vector_front(v), "list");
-  assert_string_equal(*(char **) vector_back(v), "pointers");
+  vector_insert_fill(&v, 0, 5, (char *[]){"foo"});
+  for (i = 0; i < 5; i++)
+    assert_string_equal("foo", *(char **) vector_at(&v, i));
+  vector_erase_range(&v, 0, 5);
 
-  vector_erase(v, vector_size(v) - 1, vector_size(v));
-  assert_string_equal(*(char **) vector_back(v), "string");
+  a_len = sizeof a / sizeof a[0];
+  vector_insert_range(&v, 0, &a[0], &a[a_len]);
+  for (i = 0; i < a_len; i++)
+    assert_string_equal(a[i], *(char **) vector_at(&v, i));
 
-  vector_pop_back(v);
-  s2 = "something";
-  vector_push_back(v, &s2);
-  assert_string_equal(*(char **) vector_at(v, vector_size(v) - 1), s2);
-  vector_free(v);
+  assert_string_equal(a[0], *(char **) vector_front(&v));
+  assert_string_equal(a[a_len - 1], *(char **) vector_back(&v));
+  vector_erase(&v, 0);
+  assert_string_equal(a[1], *(char **) vector_front(&v));
 
-  v = vector_new(sizeof(char *));
-  assert_true(v);
-  vector_release(v, release);
+  vector_push_back(&v, (char *[]){"pushed"});
+  assert_string_equal("pushed", *(char **) vector_back(&v));
+  vector_pop_back(&v);
+  assert_string_equal(a[a_len - 1], *(char **) vector_back(&v));
+  vector_clear(&v);
 
-  e = vector_reserve(v, 16);
-  assert_int_equal(e, 0);
-  assert_int_equal(vector_size(v), 0);
-  assert_int_equal(vector_capacity(v), 16);
+  vector_object_release(&v, s_release);
+  for (i = 0; i < a_len; i++)
+    {
+      s = strdup(a[i]);
+      vector_insert(&v, i, &s);
+    }
+  for (i = 0; i < a_len; i++)
+    assert_string_equal(a[i], *(char **) vector_at(&v, i));
+  vector_erase(&v, 0);
+  assert_string_equal(a[1], *(char **) vector_front(&v));
 
-  s2 = copy(s[0], strlen(s[0]) + 1);
-  e = vector_push_back(v, &s2);
-  assert_int_equal(e, 0);
-
-  s2 = copy(s[1], strlen(s[1]) + 1);
-  e = vector_push_back(v, &s2);
-  assert_int_equal(e, 0);
-
-  s3 = vector_data(v);
-  assert_string_equal(s3[0], "a");
-
-  e = vector_shrink_to_fit(v);
-  assert_int_equal(e, 0);
-  assert_int_equal(vector_size(v), vector_capacity(v));
-
-  vector_clear(v);
-  assert_int_equal(vector_size(v), 0);
-
-  s3 = vector_deconstruct(v);
-  assert_true(s3 == NULL);
-}
-
-extern int debug_out_of_memory;
-
-void memory()
-{
-  vector *v;
-  int e;
-
-  debug_out_of_memory = 1;
-  v = vector_new(1);
-  assert_false(v);
-  debug_out_of_memory = 0;
-
-  v = vector_new(1);
-  assert_true(v);
-  debug_out_of_memory = 1;
-  e = vector_push_back(v, "x");
-  assert_int_equal(e, -1);
-  debug_out_of_memory = 0;
-  vector_free(v);
+  vector_destruct(&v);
 }
 
 int main()
 {
   const struct CMUnitTest tests[] = {
-    cmocka_unit_test(core),
-    cmocka_unit_test(memory)
+    cmocka_unit_test(core)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
