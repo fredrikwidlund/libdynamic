@@ -17,6 +17,8 @@ struct map_int_pair_element
   uint32_t value;
 };
 
+static map_int_pair_element empty = {.key = -1};
+
 static size_t hash(void *e)
 {
   return *(uint32_t *) e;
@@ -29,7 +31,7 @@ static int equal(void *e1, void *e2)
 
 static void map_int_pair_construct(map_int_pair *m)
 {
-  map_construct(m, sizeof(map_int_pair_element), (map_int_pair_element[]){{.key = -1}});
+  map_construct(m, sizeof(map_int_pair_element), &empty);
 }
 
 static void map_int_pair_destruct(map_int_pair *m)

@@ -22,7 +22,7 @@ void map_unordered(map_metric *metric, uint32_t *a, size_t n)
 
   t1 = ntime();
   for (i = 0; i < n; i ++)
-    m.insert({{a[i], 1}});
+    m[a[i]] = 1;
   t2 = ntime();
   metric->insert = (double) (t2 - t1) / n;
 
