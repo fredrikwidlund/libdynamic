@@ -4,6 +4,11 @@ AM_LDFLAGS = -static
 
 DIST_SUBDIRS = docs benchmark
 
+EXTRA_DIST = \
+CHANGES \
+LICENSE \
+README.rst
+
 SOURCE_FILES = \
 src/dynamic/vector.c \
 src/dynamic/string.c \
