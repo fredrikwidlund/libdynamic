@@ -300,15 +300,23 @@ Map
 ===
 
 Maps are associative containers that store elements formed by the combination of a key value and a mapped value,
-and which allows for fast retrieval of individual elements based on their keys. Map objects are modelled roughtly
+and which allows for fast retrieval of individual elements based on their keys. Map objects are modelled roughly
 after the `C++ unordered_map`_ counterpart.
 
-For performance reasons some support callbacks need to be included in various calls.
+For performance reasons some support callbacks need to be included in various calls rather than as map properties.
+
+.. type:: size_t (*hash)(void *element)
+
+  The *hash* callback is called with a pointer a map element and should return a hash value of the map element key.
 
 .. type:: int (*equal)(void *element1, void *element2)
 
-  The *equal* is called with a pointer to two elements, *element1* and *element2*, and should return 1 if the
-  elements are equal.
+  The *equal* callback is called with a pointer to two elements, *element1* and *element2*, and should return 1 if
+  the elements are equal.
+
+.. type:: void (*release)(void *element)
+
+  The *release* callback is called with a pointer a map element when it is removed from the map.
 
 .. type:: map
 
@@ -322,6 +330,35 @@ For performance reasons some support callbacks need to be included in various ca
 .. function:: void map_destruct(map *map, int (*equal)(void *, void *), void (*release)(void *))
 
   Releases all resources used by the *map*. The *release* callback can be NULL, and if so *equal* is not required.
+
+.. function:: size_t map_size(map *map)
+
+  Returns the number of elements in the *map*.
+
+.. function:: void map_reserve(map *map, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *))
+
+  Reserves space in the *map* for *size* number of elements.
+
+.. function:: void *map_element_empty(map *map)
+
+  Returns the defined empty element of the *map*.
+
+.. function:: void *map_at(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *))
+
+  Returns a pointer to the element in the *map* that has a key that corrensponds to the key in *element*. If
+  the key is not found a pointer to an empty element is returned.
+
+.. function:: void map_insert(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *), void (*release)(void *))
+
+  Insert an *element* into the *map*. If the key of the element already exists in the map the element will be released.
+
+.. function:: void map_erase(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *), void (*release)(void *))
+
+  Removes an *element* from the *map*.
+
+.. function:: void map_clear(map *map, int (*equal)(void *, void *), void (*release)(void *))
+
+  Clears the *map* of all the elements.
 
 .. _`Semantic Versioning`: http://semver.org/
 .. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
