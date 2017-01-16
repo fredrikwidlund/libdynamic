@@ -24,6 +24,11 @@ static size_t hash(void *e)
   return *(uint32_t *) e;
 }
 
+static void set(void *dst, void *src)
+{
+  *(uint64_t *) dst = *(uint64_t *) src;
+}
+
 static int equal(void *e1, void *e2)
 {
   return *(uint32_t *) e1 == *(uint32_t *) e2;
@@ -31,7 +36,7 @@ static int equal(void *e1, void *e2)
 
 static void map_int_pair_construct(map_int_pair *m)
 {
-  map_construct(m, sizeof(map_int_pair_element), &empty);
+  map_construct(m, sizeof(map_int_pair_element), &empty, set);
 }
 
 static void map_int_pair_destruct(map_int_pair *m)
@@ -46,12 +51,12 @@ static uint32_t map_int_pair_at(map_int_pair *m, uint32_t key)
 
 static void map_int_pair_insert(map_int_pair *m, uint32_t key, uint32_t value)
 {
-  map_insert(m,(map_int_pair_element[]){{.key = key, .value = value}}, hash, equal, NULL);
+  map_insert(m,(map_int_pair_element[]){{.key = key, .value = value}}, hash, equal, set, NULL);
 }
 
 static void map_int_pair_erase(map_int_pair *m, uint32_t key)
 {
-  map_erase(m,(map_int_pair_element[]){{.key = key}}, hash, equal, NULL);
+  map_erase(m,(map_int_pair_element[]){{.key = key}}, hash, equal, set, NULL);
 }
 
 static size_t map_int_pair_size(map_int_pair *m)
