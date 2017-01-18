@@ -12,7 +12,7 @@ g1 <- ggplot(legend = TRUE) +
   theme(plot.title = element_text(size = 10),
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
         axis.text.x = element_text(size = 8), axis.text.y = element_text(size = 8)) +
-  geom_smooth(method = "loess", span = 0.1, data = data.map, aes(x = size, y = insert, colour = name)) +
+  geom_line(data = data.map, aes(x = size, y = insert, colour = name)) +
   scale_y_continuous(labels = comma) +
   expand_limits(y = 0) +
   scale_x_continuous(trans = log_trans(), breaks = 10^(0:10), labels = comma)
@@ -23,7 +23,7 @@ g2 <- ggplot(legend = TRUE) +
   theme(plot.title = element_text(size = 10),
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
         axis.text.x = element_text(size = 8), axis.text.y = element_text(size = 8)) +
-  geom_smooth(method = "loess", span = 0.1, data = data.map, aes(x = size, y = at, colour = name)) +
+  geom_line(data = data.map, aes(x = size, y = at, colour = name)) +
   scale_y_continuous(labels = comma) +
   expand_limits(y = 0) +
   scale_x_continuous(trans = log_trans(), breaks = 10^(0:10), labels = comma)
@@ -34,7 +34,7 @@ g3 <- ggplot(legend = TRUE) +
   theme(plot.title = element_text(size = 10),
         axis.title.x = element_text(size = 8), axis.title.y = element_text(size = 8),
         axis.text.x = element_text(size = 8), axis.text.y = element_text(size = 8)) +
-  geom_smooth(method = "loess", span = 0.1, data = data.map, aes(x = size, y = erase, colour = name)) +
+  geom_line(data = data.map, aes(x = size, y = erase, colour = name)) +
   scale_y_continuous(labels = comma) +
   expand_limits(y = 0) +
   scale_x_continuous(trans = log_trans(), breaks = 10^(0:10), labels = comma)

@@ -24,6 +24,11 @@ static int equal(void *e1, void *e2)
   return *(uint32_t *) e1 == *(uint32_t *) e2;
 }
 
+static void set(void *e1, void *e2)
+{
+  *(uint64_t *) e1 = *(uint64_t *) e2;
+}
+
 void map_dynamic(map_metric *metric, uint32_t *a, size_t n)
 {
   map m;
@@ -31,11 +36,11 @@ void map_dynamic(map_metric *metric, uint32_t *a, size_t n)
   size_t i;
   uint64_t t1, t2;
 
-  map_construct(&m, sizeof *e, (map_element[]) {{.key = -1}});
+  map_construct(&m, sizeof *e, (map_element[]) {{.key = -1}}, set);
 
   t1 = ntime();
   for (i = 0; i < n; i ++)
-    map_insert(&m, (map_element[]) {{.key = a[i], .value = 1}}, hash, equal, NULL);
+    map_insert(&m, (map_element[]) {{.key = a[i], .value = 1}}, hash, equal, set, NULL);
   t2 = ntime();
   metric->insert = (double) (t2 - t1) / n;
 
@@ -48,7 +53,7 @@ void map_dynamic(map_metric *metric, uint32_t *a, size_t n)
 
   t1 = ntime();
   for (i = 0; i < n; i ++)
-    map_erase(&m, (map_element[]){{.key = a[i]}}, hash, equal, NULL);
+    map_erase(&m, (map_element[]){{.key = a[i]}}, hash, equal, set, NULL);
   t2 = ntime();
   if (map_size(&m))
     errx(1, "inconsistency");
