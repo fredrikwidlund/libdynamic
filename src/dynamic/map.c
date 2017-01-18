@@ -27,19 +27,19 @@ static inline void map_assert(int value)
     abort();
 }
 
+static void *map_element(map *m, size_t position)
+{
+  return (char *) m->elements + (position * m->element_size);
+}
+
 static void map_release_all(map *m, int (*equal)(void *, void *), void (*release)(void *))
 {
   size_t i;
 
   if (release)
     for (i = 0; i < m->elements_capacity; i ++)
-      if (equal((char *) m->elements + (i * m->element_size), m->element_empty))
-        release((char *) m->elements + (i * m->element_size));
-}
-
-static void *map_element(map *m, size_t position)
-{
-  return (char *) m->elements + (position * m->element_size);
+      if (!equal(map_element(m, i), m->element_empty))
+        release(map_element(m, i));
 }
 
 static void map_rehash(map *m, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *), void (*set)(void *, void *))
@@ -151,13 +151,13 @@ void map_erase(map *m, void *element, size_t (*hash)(void *), int (*equal)(void 
       i &= m->elements_capacity - 1;
       test = map_element(m, i);
       if (equal(test, m->element_empty))
+        return;
+      if (equal(test, element))
         {
           if (release)
             release(test);
-          return;
+          break;
         }
-      if (equal(test, element))
-        break;
       i ++;
     }
   m->elements_count --;
