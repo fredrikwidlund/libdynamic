@@ -49,11 +49,11 @@ to use the supplied autogen.sh script:
 Benchmarks
 ==========
 
-The library uses a separate repository for benchmarks_.
+The library uses a separate repository for some additional benchmarks_.
 
-.. figure:: https://cloud.githubusercontent.com/assets/2116262/22069446/bdd60120-dd98-11e6-87d9-9eb789e6fa9f.png
+.. figure:: https://cloud.githubusercontent.com/assets/2116262/22109447/122bd2da-de58-11e6-95c2-2281ab06e0ea.png
    
-   ``Intel(R) Xeon(R) CPU E5-2623 v3 @ 3.00GHz``
+   ``Intel(R) Core(TM) i5-4308U CPU @ 2.80GHz``
 
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
