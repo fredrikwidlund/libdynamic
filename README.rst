@@ -45,9 +45,19 @@ to use the supplied autogen.sh script:
 .. code-block:: shell
 
     $ ./autogen.sh
+    
+Benchmarks
+==========
+
+The library uses a separate repository for benchmarks_.
+
+.. figure:: https://cloud.githubusercontent.com/assets/2116262/22069446/bdd60120-dd98-11e6-87d9-9eb789e6fa9f.png
+   
+   ``Intel(R) Xeon(R) CPU E5-2623 v3 @ 3.00GHz``
 
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
 .. _autoconf: http://www.gnu.org/software/autoconf/
 .. _automake: http://www.gnu.org/software/automake/
 .. _libtool: http://www.gnu.org/software/libtool/
+.. _benchmarks: https://github.com/fredrikwidlund/libdynamic_benchmark
