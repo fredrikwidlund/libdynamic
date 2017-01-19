@@ -314,6 +314,11 @@ For performance reasons some support callbacks need to be included in various ca
   The *equal* callback is called with a pointer to two elements, *element1* and *element2*, and should return 1 if
   the elements are equal.
 
+.. type:: void (*set)(void *destination, void *source)
+
+  The *set* callback is called with a pointer to a *source* element from where the element data is read, and a
+  *destination* element where the data is written.
+
 .. type:: void (*release)(void *element)
 
   The *release* callback is called with a pointer a map element when it is removed from the map.
@@ -322,7 +327,7 @@ For performance reasons some support callbacks need to be included in various ca
 
   This data structure represents the map object.
 
-.. function:: void map_construct(map *map, size_t element_size, void *element_empty)
+.. function:: void map_construct(map *map, size_t element_size, void *element_empty, int (*set)(void *, void *))
 
   Constructs an empty *map*, where each element containing the key and value is of the size *element_size*, and
   *element_empty* corresponds to an empty element.
@@ -335,7 +340,7 @@ For performance reasons some support callbacks need to be included in various ca
 
   Returns the number of elements in the *map*.
 
-.. function:: void map_reserve(map *map, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *))
+.. function:: void map_reserve(map *map, size_t size, size_t (*hash)(void *), int (*equal)(void *, void *), int (*set)(void *, void *))
 
   Reserves space in the *map* for *size* number of elements.
 
@@ -348,21 +353,35 @@ For performance reasons some support callbacks need to be included in various ca
   Returns a pointer to the element in the *map* that has a key that corrensponds to the key in *element*. If
   the key is not found a pointer to an empty element is returned.
 
-.. function:: void map_insert(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *), void (*release)(void *))
+.. function:: void map_insert(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *), int (*set)(void *, void *), void (*release)(void *))
 
   Insert an *element* into the *map*. If the key of the element already exists in the map the element will be released.
 
-.. function:: void map_erase(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *), void (*release)(void *))
+.. function:: void map_erase(map *map, void *element, size_t (*hash)(void *), int (*equal)(void *, void *), int (*set)(void *, void *), void (*release)(void *))
 
   Removes an *element* from the *map*.
 
-.. function:: void map_clear(map *map, int (*equal)(void *, void *), void (*release)(void *))
+.. function:: void map_clear(map *map, int (*equal)(void *, void *), int (*)(void *set, void *), void (*release)(void *))
 
   Clears the *map* of all the elements.
+
+Hash
+====
+
+A few hash function are included in libdynamic.
+
+.. function:: uint64_t hash_data(void *data, size_t size)
+
+   Returns a 64-bit hash of *size* bytes of memory pointed to by *data*. The library uses a `C port`_ of `Google Farmhash`_.
+
+.. function:: uint64_t hash_string(char *string)
+
+   Returns a 64-bit hash of the null-terminated *string*.
 
 .. _`Semantic Versioning`: http://semver.org/
 .. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
 .. _`C++ string`: http://www.cplusplus.com/reference/string/string/
 .. _`C++ unordered_map`: http://http://www.cplusplus.com/reference/unordered_map/unordered_map/
-
+.. _`C port`: https://github.com/fredrikwidlund/cfarmhash
+.. _`Google Farmhash`: https://github.com/google/farmhash
 
