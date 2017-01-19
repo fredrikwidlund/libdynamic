@@ -14,18 +14,21 @@ struct map_element
   uint32_t value;
 };
 
-static size_t hash(void *e)
+static size_t hash(map *m, void *e)
 {
+  (void) m;
   return *(uint32_t *) e;
 }
 
-static int equal(void *e1, void *e2)
+static int equal(map *m, void *e1, void *e2)
 {
+  (void) m;
   return *(uint32_t *) e1 == *(uint32_t *) e2;
 }
 
-static void set(void *e1, void *e2)
+static void set(map *m, void *e1, void *e2)
 {
+  (void) m;
   *(uint64_t *) e1 = *(uint64_t *) e2;
 }
 

@@ -11,12 +11,14 @@
 #include "map_subclass.h"
 #include "map_unordered.h"
 #include "map_dynamic.h"
+#include "map_dynamic_int.h"
 
 static map_metric metrics[] = {
-  {.name = "std::map_unordered", .measure = map_unordered},
+  //  {.name = "std::map_unordered", .measure = map_unordered},
+  {.name = "libdynamic (map_int)", .measure = map_dynamic_int},
   {.name = "custom open addressing", .measure = map_custom},
-  {.name = "libdynamic", .measure = map_dynamic},
-  {.name = "libdynamic (subclass)", .measure = map_subclass}
+  {.name = "libdynamic (map)", .measure = map_dynamic},
+  {.name = "libdynamic (map subclass)", .measure = map_subclass}
 };
 
 struct result

@@ -14,6 +14,7 @@ src/dynamic/vector.c \
 src/dynamic/string.c \
 src/dynamic/buffer.c \
 src/dynamic/map.c \
+src/dynamic/map_int.c \
 src/dynamic/hash.c
 
 HEADER_FILES = \
@@ -21,6 +22,7 @@ src/dynamic/vector.h \
 src/dynamic/string.h \
 src/dynamic/buffer.h \
 src/dynamic/map.h \
+src/dynamic/map_int.h \
 src/dynamic/hash.h
 
 AUTOMAKE_OPTIONS = subdir-objects

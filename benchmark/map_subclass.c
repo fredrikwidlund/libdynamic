@@ -19,18 +19,21 @@ struct map_int_pair_element
 
 static map_int_pair_element empty = {.key = -1};
 
-static size_t hash(void *e)
+static size_t hash(map *m, void *e)
 {
+  (void) m;
   return *(uint32_t *) e;
 }
 
-static void set(void *dst, void *src)
+static void set(map *m, void *dst, void *src)
 {
+  (void) m;
   *(uint64_t *) dst = *(uint64_t *) src;
 }
 
-static int equal(void *e1, void *e2)
+static int equal(map *m, void *e1, void *e2)
 {
+  (void) m;
   return *(uint32_t *) e1 == *(uint32_t *) e2;
 }
 
