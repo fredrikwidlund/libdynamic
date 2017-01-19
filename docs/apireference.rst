@@ -360,9 +360,23 @@ For performance reasons some support callbacks need to be included in various ca
 
   Clears the *map* of all the elements.
 
+Hash
+====
+
+A few hash function are included in libdynamic.
+
+.. function:: uint64_t hash_data(void *data, size_t size)
+
+   Returns a 64-bit hash of *size* bytes of memory pointed to by *data*. The library uses a `C port`_ of `Google Farmhash`_.
+
+.. function:: uint64_t hash_string(char *string)
+
+   Returns a 64-bit hash of the null-terminated *string*.
+
 .. _`Semantic Versioning`: http://semver.org/
 .. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
 .. _`C++ string`: http://www.cplusplus.com/reference/string/string/
 .. _`C++ unordered_map`: http://http://www.cplusplus.com/reference/unordered_map/unordered_map/
-
+.. _`C port`: https://github.com/fredrikwidlund/cfarmhash
+.. _`Google Farmhash`: https://github.com/google/farmhash
 
