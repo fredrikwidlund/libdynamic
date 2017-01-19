@@ -15,7 +15,6 @@ extern "C" {
 #include <dynamic/string.h>
 #include <dynamic/hash.h>
 #include <dynamic/map.h>
-#include <dynamic/map_int.h>
 
 #ifdef __cplusplus
 }

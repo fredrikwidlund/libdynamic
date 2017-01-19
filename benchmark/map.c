@@ -11,11 +11,9 @@
 #include "map_subclass.h"
 #include "map_unordered.h"
 #include "map_dynamic.h"
-#include "map_dynamic_int.h"
 
 static map_metric metrics[] = {
-  //  {.name = "std::map_unordered", .measure = map_unordered},
-  {.name = "libdynamic (map_int)", .measure = map_dynamic_int},
+  {.name = "std::map_unordered", .measure = map_unordered},
   {.name = "custom open addressing", .measure = map_custom},
   {.name = "libdynamic (map)", .measure = map_dynamic},
   {.name = "libdynamic (map subclass)", .measure = map_subclass}
