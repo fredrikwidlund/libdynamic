@@ -154,24 +154,3 @@ int main()
 
   vector_destruct(&metrics);
 }
-
-/*
-        {
-          metric = (struct metric) {.name = m->name, .size = n};
-          for (round = 0; round < rounds; round ++)
-            {
-              m->measure(m, a, n, 6);
-              if (!metric.insert || m->insert < metric.insert)
-                metric.insert = m->insert;
-              if (!metric.at || m->at < metric.at)
-                metric.at = m->at;
-              if (!metric.erase || m->erase < metric.erase)
-                metric.erase = m->erase;
-            }
-          vector_push_back(&metrics, &metric);
-        }
-      free(a);
-    }
-
-}
-*/

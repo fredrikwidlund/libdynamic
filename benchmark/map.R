@@ -41,4 +41,4 @@ g3 <- ggplot(legend = TRUE) +
 g3$labels$colour <- "Library"
 
 pdf("map.pdf", width = 10, height = 10)
-grid.arrange(g1, g2, g3, ncol=1, top = "Hash map benchmark (random integer keys)")
+grid.arrange(g1, g2, g3, ncol=1, top = "libdynamic map benchmark (random integer keys)")
