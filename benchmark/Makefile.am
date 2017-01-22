@@ -9,8 +9,8 @@ vector_CXXFLAGS = -I../src -g -O3 -flto -fuse-linker-plugin
 vector_LDADD = ../libdynamic.la
 
 map_SOURCES = \
-map.c map_std_unordered.cpp map_custom.c map_dynamic.c \
-map.h map_std_unordered.h map_custom.h map_dynamic.h \
+map.c map_std_unordered.cpp map_custom.c map_libdynamic.c map_libdynamic_subclass.c \
+map.h map_std_unordered.h map_custom.h map_libdynamic.h  map_libdynamic_subclass.h \
 map.R
 #map.c map_custom.c map_subclass.c map_dynamic.c map_unordered.cpp \
 #map.h map_custom.h map_subclass.h map_dynamic.h map_unordered.h \

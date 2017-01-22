@@ -6,11 +6,10 @@
 #include <time.h>
 #include "dynamic.h"
 
-//#include "map.h"
-//#include "map_subclass.h"
 #include "map_std_unordered.h"
 #include "map_custom.h"
-//#include "map_dynamic.h"
+#include "map_libdynamic.h"
+#include "map_libdynamic_subclass.h"
 
 typedef struct library library;
 struct library
@@ -43,7 +42,7 @@ static library libraries[] = {
   {.name = "std::map_unordered", .measure = map_std_unordered},
   {.name = "custom open addressing", .measure = map_custom},
   {.name = "libdynamic", .measure = map_libdynamic},
-  //{.name = "libdynamic map (subclass)", .measure = map_libdynamic_subclass}
+  {.name = "libdynamic (subclass)", .measure = map_libdynamic_subclass}
 };
 static const size_t libraries_len = sizeof libraries / sizeof libraries[0];
 
@@ -146,11 +145,11 @@ int main()
     }
 
   /* output resulting metrics */
-  (void) fprintf(stdout, "name,size,insert,lookup,delete\n");
+  (void) fprintf(stdout, "name,size,insert,lookup,delete,checksum\n");
   for (i = 0; i < vector_size(&metrics); i ++)
     {
       mp = vector_at(&metrics, i);
-      (void) fprintf(stdout, "%s,%lu,%f,%f,%f\n", mp->name, mp->size, mp->insert, mp->lookup, mp->delete);
+      (void) fprintf(stdout, "%s,%lu,%f,%f,%f,%lu\n", mp->name, mp->size, mp->insert, mp->lookup, mp->delete, mp->sum);
     }
 
   vector_destruct(&metrics);

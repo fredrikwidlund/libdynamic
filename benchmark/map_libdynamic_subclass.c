@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <string.h>
+#include <sys/param.h>
 #include <time.h>
 #include <err.h>
 
@@ -64,35 +64,37 @@ static size_t map_int_pair_size(map_int_pair *m)
   return map_size(m);
 }
 
-void map_subclass(map_metric *metric, uint32_t *a, size_t n)
+void map_libdynamic_subclass(int *keys, int *keys_shuffled, int *values, size_t size, size_t lookups,
+                             double *insert, double *lookup, double *erase, uint64_t *sum)
 {
-  map_int_pair m;
-  uint64_t t1, t2;
-  size_t i;
+  map m;
+  uint64_t t1, t2, s;
+  size_t i, n;
 
   map_int_pair_construct(&m);
 
   t1 = ntime();
-  for (i = 0; i < n; i ++)
-    map_int_pair_insert(&m, a[i], 1);
+  for (i = 0; i < size; i ++)
+    map_int_pair_insert(&m, keys[i], values[i]);
   t2 = ntime();
-  metric->insert = (double) (t2 - t1) / n;
+  *insert = (double) (t2 - t1) / size;
+
+  s = 0;
+  t1 = ntime();
+  for (n = lookups; n; n -= i)
+    for (i = 0; i < MIN(size, n); i ++)
+      s += map_int_pair_at(&m, keys_shuffled[i]);
+  t2 = ntime();
+  *sum = s;
+  *lookup = (double) (t2 - t1) / lookups;
 
   t1 = ntime();
-  for (i = 0; i < n; i ++)
-    if (map_int_pair_at(&m, a[i]) != 1)
-      errx(1, "inconsistency");
-  t2 = ntime();
-  metric->at = (double) (t2 - t1) / n;
-
-  t1 = ntime();
-  for (i = 0; i < n; i ++)
-    map_int_pair_erase(&m, a[i]);
+  for (i = 0; i < size; i ++)
+    map_int_pair_erase(&m, keys[i]);
   t2 = ntime();
   if (map_int_pair_size(&m))
     errx(1, "inconsistency");
-  metric->erase = (double) (t2 - t1) / n;
-
+  *erase = (double) (t2 - t1) / size;
 
   map_int_pair_destruct(&m);
 }
