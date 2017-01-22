@@ -71,20 +71,50 @@ static void shuffle(int *array, size_t n)
     }
 }
 
+static int set_int_empty = -1;
+
+static size_t set_int_hash(map *m, void *e)
+{
+  (void) m;
+  return *(int *) e;
+}
+
+static int set_int_equal(map *m, void *e1, void *e2)
+{
+  (void) m;
+  return *(int *) e1 == *(int *) e2;
+}
+
+static void set_int_set(map *m, void *e1, void *e2)
+{
+  (void) m;
+  *(int *) e1 = *(int *) e2;
+}
+
 static void input_construct(input *input, size_t size)
 {
+  map m;
+
   input->size = 0;
   input->keys = malloc(size * sizeof input->keys[0]);
   input->keys_shuffled = malloc(size * sizeof input->keys_shuffled[0]);
   input->values = malloc(size * sizeof input->values[0]);
 
+  map_construct(&m, sizeof(int), &set_int_empty, set_int_set);
+
   while (input->size < size)
     {
       input->keys[input->size] = random();
+      if (*(int *) map_at(&m, &input->keys[input->size], set_int_hash, set_int_equal) != -1)
+        continue;
+      map_insert(&m, &input->keys[input->size], set_int_hash, set_int_equal, set_int_set, NULL);
+
       input->keys_shuffled[input->size] = input->keys[input->size];
       input->values[input->size] = random();
       input->size ++;
     }
+
+  map_destruct(&m, NULL, NULL);
 
   shuffle(input->keys_shuffled, input->size);
 }
