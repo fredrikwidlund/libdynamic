@@ -25,12 +25,12 @@ uint64_t ntime(void)
 
 int main()
 {
-  size_t n, n_min = 1000, n_max = 100000000;
+  size_t n, n_min = 100, n_max = 100000000;
   double k = 1.1;
   vector_metric *m;
 
   (void) fprintf(stdout, "name,size,insert\n");
-  for (n = n_min; n < n_max; n = ceil(k * n))
+  for (n = n_max; n > n_min; n = floor(n / k))
     {
       for (m = metrics; m < &metrics[sizeof metrics / sizeof metrics[0]]; m ++)
         {

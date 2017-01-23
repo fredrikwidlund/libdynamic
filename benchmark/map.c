@@ -146,7 +146,7 @@ int main()
   metric metric, mr, *mp;
 
   /* benchmark settings */
-  size_min = 10;
+  size_min = 100;
   size_max = 1000000;
   size_factor = 1.1;
   rounds = 5;
@@ -155,7 +155,7 @@ int main()
   vector_construct(&metrics, sizeof metric);
 
   /* iterate through libraries */
-  for (size = size_min; size < size_max; size = ceil(size_factor * size))
+  for (size = size_max; size >= size_min; size = floor(size / size_factor))
     {
       input_construct(&input, size);
 
