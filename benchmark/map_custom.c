@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <sys/param.h>
 #include <time.h>
 #include <err.h>
 
@@ -9,8 +10,8 @@
 typedef struct map_element map_element;
 struct map_element
 {
-  uint32_t key;
-  uint32_t value;
+  int key;
+  int value;
 };
 
 typedef struct map map;
@@ -51,7 +52,7 @@ static size_t map_roundup(size_t s)
   return s;
 }
 
-static map_element *map_at(map *m, uint32_t key)
+static map_element *map_at(map *m, int key)
 {
   size_t i;
   map_element *e;
@@ -61,19 +62,19 @@ static map_element *map_at(map *m, uint32_t key)
     {
       i &= m->elements_capacity - 1;
       e = &m->elements[i];
-      if (e->key == key || e->key == (uint32_t) -1)
+      if (e->key == key || e->key == -1)
         return e;
       i ++;
     }
 }
 
-static void map_insert(map *m, uint32_t key, uint32_t value)
+static void map_insert(map *m, int key, int value)
 {
   map_element *e;
 
   map_reserve(m, m->elements_count + 1);
   e = map_at(m, key);
-  if (e->key == (uint32_t) -1)
+  if (e->key == -1)
     {
       e->key = key;
       e->value = value;
@@ -81,13 +82,13 @@ static void map_insert(map *m, uint32_t key, uint32_t value)
     }
 }
 
-static void map_erase(map *m, uint32_t key)
+static void map_erase(map *m, int key)
 {
   map_element *e;
   size_t i, j, k;
 
   e = map_at(m, key);
-  if (e->key == (uint32_t) -1)
+  if (e->key == -1)
     return;
 
   m->elements_count --;
@@ -97,7 +98,7 @@ static void map_erase(map *m, uint32_t key)
   while (1)
     {
       j = (j + 1) & (m->elements_capacity - 1);
-      if (m->elements[j].key == (uint32_t) -1)
+      if (m->elements[j].key == -1)
         break;
 
       k = m->elements[j].key & (m->elements_capacity - 1);
@@ -110,7 +111,7 @@ static void map_erase(map *m, uint32_t key)
         }
     }
 
-  m->elements[i].key = (uint32_t) -1;
+  m->elements[i].key = -1;
 }
 
 static void map_rehash(map *m, size_t size)
@@ -124,11 +125,11 @@ static void map_rehash(map *m, size_t size)
   new.elements_capacity = size;
   new.elements = malloc(new.elements_capacity * sizeof(map_element));
   for (i = 0; i < new.elements_capacity; i ++)
-    new.elements[i] = (map_element) {(uint32_t) -1, 0};
+    new.elements[i] = (map_element) {-1, 0};
   if (m->elements)
     {
       for (i = 0; i < m->elements_capacity; i ++)
-        if (m->elements[i].key != (uint32_t) -1)
+        if (m->elements[i].key != -1)
           map_insert(&new, m->elements[i].key, m->elements[i].value);
       free(m->elements);
     }
@@ -142,34 +143,36 @@ static void map_reserve(map *m, size_t size)
     map_rehash(m, size);
 }
 
-void map_custom(map_metric *metric, uint32_t *a, size_t n)
+void map_custom(int *keys, int *keys_shuffled, int *values, size_t size, size_t lookups, double *insert, double *lookup, double *erase, uint64_t *sum)
 {
   map m;
-  uint64_t t1, t2;
-  size_t i;
+  uint64_t t1, t2, s;
+  size_t i, n;
 
   map_construct(&m);
 
   t1 = ntime();
-  for (i = 0; i < n; i ++)
-    map_insert(&m, a[i], 1);
+  for (i = 0; i < size; i ++)
+    map_insert(&m, keys[i], values[i]);
   t2 = ntime();
-  metric->insert = (double) (t2 - t1) / n;
+  *insert = (double) (t2 - t1) / size;
+
+  s = 0;
+  t1 = ntime();
+  for (n = lookups; n; n -= i)
+    for (i = 0; i < MIN(size, n); i ++)
+      s += map_at(&m, keys_shuffled[i])->value;
+  t2 = ntime();
+  *sum = s;
+  *lookup = (double) (t2 - t1) / lookups;
 
   t1 = ntime();
-  for (i = 0; i < n; i ++)
-    if (map_at(&m, a[i])->value != 1)
-      errx(1, "inconsistency");
-  t2 = ntime();
-  metric->at = (double) (t2 - t1) / n;
-
-  t1 = ntime();
-  for (i = 0; i < n; i ++)
-    map_erase(&m, a[i]);
+  for (i = 0; i < size; i ++)
+    map_erase(&m, keys[i]);
   t2 = ntime();
   if (m.elements_count)
     errx(1, "inconsistency");
-  metric->erase = (double) (t2 - t1) / n;
+  *erase = (double) (t2 - t1) / size;
 
   map_destruct(&m);
 }

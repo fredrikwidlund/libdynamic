@@ -305,21 +305,21 @@ after the `C++ unordered_map`_ counterpart.
 
 For performance reasons some support callbacks need to be included in various calls rather than as map properties.
 
-.. type:: size_t (*hash)(void *element)
+.. type:: size_t (*hash)(map *map, void *element)
 
-  The *hash* callback is called with a pointer a map element and should return a hash value of the map element key.
+  The *hash* callback is called with a pointer a map *element* and should return a hash value of the key of the element.
 
-.. type:: int (*equal)(void *element1, void *element2)
+.. type:: int (*equal)(map *map, void *element1, void *element2)
 
   The *equal* callback is called with a pointer to two elements, *element1* and *element2*, and should return 1 if
   the elements are equal.
 
-.. type:: void (*set)(void *destination, void *source)
+.. type:: void (*set)(map *map, void *destination, void *source)
 
   The *set* callback is called with a pointer to a *source* element from where the element data is read, and a
   *destination* element where the data is written.
 
-.. type:: void (*release)(void *element)
+.. type:: void (*release)(map *map, void *element)
 
   The *release* callback is called with a pointer a map element when it is removed from the map.
 
