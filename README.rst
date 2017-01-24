@@ -7,6 +7,10 @@ README
 .. image:: https://coveralls.io/repos/github/fredrikwidlund/libdynamic/badge.svg?branch=master
   :target: https://coveralls.io/github/fredrikwidlund/libdynamic?branch=master
 
+.. image:: https://readthedocs.org/projects/libdynamic/badge/?version=latest
+  :target: http://libdynamic.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Status
+
 Documentation is available at http://libdynamic.readthedocs.io/en/latest/.
 
 Compiling and installing
