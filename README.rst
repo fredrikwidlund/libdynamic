@@ -51,9 +51,9 @@ Benchmarks
 
 The library uses a separate repository for some additional benchmarks_.
 
-.. figure:: https://cloud.githubusercontent.com/assets/2116262/22109447/122bd2da-de58-11e6-95c2-2281ab06e0ea.png
+.. figure:: https://cloud.githubusercontent.com/assets/2116262/22250690/1e9e74ca-e248-11e6-8366-6356e8611c06.png
    
-   ``Intel(R) Core(TM) i5-4308U CPU @ 2.80GHz``
+   ``Intel(R) Xeon(R) CPU E5-2623 v3 @ 3.00GHz``
 
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
