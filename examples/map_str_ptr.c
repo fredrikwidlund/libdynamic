@@ -27,7 +27,6 @@ static void set(map *m, void *dst, void *src)
 {
   map_str_ptr_element *d = dst, *s = src;
 
-  //printf("set %s\n", s->key ? s->key : "<null>");
   (void) m;
   *d = *s;
 }
@@ -39,7 +38,6 @@ static int equal(map *m, void *p1, void *p2)
 
   (void) m;
   p = e1->key == e2->key || (e1->key && e2->key && strcmp(e1->key, e2->key) == 0);
-  //printf("%d %p ? %s == %s\n", p, e1, e1->key ? e1->key : "<null>", e2->key ? e2->key : "<null>");
   return p;
 }
 
