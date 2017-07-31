@@ -11,5 +11,5 @@ AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
 AC_PROG_CXX
 
-AC_CONFIG_FILES([Makefile docs/Makefile benchmark/Makefile libdynamic.pc])
+AC_CONFIG_FILES([Makefile docs/Makefile benchmark/Makefile examples/Makefile libdynamic.pc])
 AC_OUTPUT

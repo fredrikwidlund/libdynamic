@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AM_CFLAGS = -std=gnu11 -g -O3 -flto -fuse-linker-plugin
 AM_LDFLAGS = -static
 
-DIST_SUBDIRS = docs benchmark
+DIST_SUBDIRS = docs benchmark examples
 
 EXTRA_DIST = \
 CHANGES \
@@ -36,7 +36,7 @@ mainheader_HEADERS = src/dynamic.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libdynamic.pc
 
-MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in docs/Makefile.in benchmark/Makefile.in libdynamic-?.?.?.tar.gz
+MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in docs/Makefile.in benchmark/Makefile.in examples/Makefile.in libdynamic-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
 ### unit tests ###
