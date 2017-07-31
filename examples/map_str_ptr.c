@@ -34,11 +34,9 @@ static void set(map *m, void *dst, void *src)
 static int equal(map *m, void *p1, void *p2)
 {
   map_str_ptr_element *e1 = p1, *e2 = p2;
-  int p;
 
   (void) m;
-  p = e1->key == e2->key || (e1->key && e2->key && strcmp(e1->key, e2->key) == 0);
-  return p;
+  return e1->key == e2->key || (e1->key && e2->key && strcmp(e1->key, e2->key) == 0);
 }
 
 void map_str_ptr_construct(map_str_ptr *m)
