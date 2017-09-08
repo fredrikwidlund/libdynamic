@@ -10,18 +10,20 @@ LICENSE \
 README.rst
 
 SOURCE_FILES = \
+src/dynamic/hash.c \
+src/dynamic/buffer.c \
+src/dynamic/list.c \
 src/dynamic/vector.c \
 src/dynamic/string.c \
-src/dynamic/buffer.c \
-src/dynamic/map.c \
-src/dynamic/hash.c
+src/dynamic/map.c
 
 HEADER_FILES = \
+src/dynamic/hash.h \
+src/dynamic/buffer.h \
+src/dynamic/list.h \
 src/dynamic/vector.h \
 src/dynamic/string.h \
-src/dynamic/buffer.h \
-src/dynamic/map.h \
-src/dynamic/hash.h
+src/dynamic/map.h
 
 AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la

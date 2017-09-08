@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <time.h>
 #include <string.h>
 #include <assert.h>
 
@@ -14,12 +15,21 @@ struct value
   u_int number;
 };
 
+static uint64_t nano_time(void)
+{
+  struct timespec ts;
+
+  (void) clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+  return ((uint64_t) ts.tv_sec * 1000000000) + ((uint64_t) ts.tv_nsec);
+}
+
 int main(int argc, char **argv)
 {
   char **keys, buffer[256];
   value **values;
   map_str_ptr m;
-  u_int n, i;
+  u_int n, i, r;
+  uint64_t t1, t2;
 
   if (argc != 2)
     exit(1);
@@ -40,8 +50,13 @@ int main(int argc, char **argv)
   map_str_ptr_construct(&m);
 
   // insert key->value mappings
-  for (i = 0; i < n; i ++)
-    map_str_ptr_insert(&m, keys[i], values[i]);
+
+  t1 = nano_time();
+  for (r = 0; r < 10; r ++)
+    for (i = 0; i < n; i ++)
+      map_str_ptr_insert(&m, keys[i], values[i]);
+  t2 = nano_time();
+  printf("%lu\n", t2 - t1);
 
   // lookup key and validate value
   for (i = 0; i < n; i ++)
