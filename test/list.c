@@ -34,9 +34,8 @@ void core()
   for (i = 0; i < sizeof a / sizeof *a; i ++)
     list_push_back(&l, &a[i], sizeof (char *));
 
-  s = list_begin(&l);
+  s = list_front(&l);
   assert_string_equal(*s, "a");
-
 
   list_push_front(&l, (char*[]){"test"}, sizeof (char *));
   s = list_front(&l);

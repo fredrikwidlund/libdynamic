@@ -74,11 +74,6 @@ void *list_back(list *l)
   return l->previous->object;
 }
 
-void *list_begin(list *l)
-{
-  return list_front(l);
-}
-
 void *list_end(list *l)
 {
   return ((list_item *) l)->object;

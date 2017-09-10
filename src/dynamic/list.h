@@ -30,13 +30,11 @@ void   *list_next(void *);
 void   *list_previous(void *);
 
 /* capacity */
-size_t  list_size(list *);
 int     list_empty(list *);
 
 /* object access */
 void   *list_front(list *);
 void   *list_back(list *);
-void   *list_begin(list *);
 void   *list_end(list *);
 
 /* modifiers */
