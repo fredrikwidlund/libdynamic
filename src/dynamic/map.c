@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "buffer.h"
-#include "vector.h"
 #include "map.h"
 
 static size_t map_roundup(size_t s)
