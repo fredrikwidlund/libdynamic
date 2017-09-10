@@ -9,6 +9,9 @@
 
 #include "../src/dynamic/list.h"
 
+extern int debug_out_of_memory;
+extern int debug_abort;
+
 static void release(void *object)
 {
   free(*(char **) object);
@@ -57,7 +60,7 @@ void core()
   list_destruct(&l, NULL);
 }
 
-void alloc()
+void object_release()
 {
   list l;
   char *s;
@@ -72,6 +75,19 @@ void alloc()
   list_push_back(&l, &s, sizeof s);
 
   list_destruct(&l, release);
+}
+
+void alloc()
+{
+  list l;
+
+  list_construct(&l);
+  debug_out_of_memory = 1;
+  debug_abort = 1;
+  expect_assert_failure(list_insert(list_front(&l), (int[]){1}, sizeof (int)));
+  debug_abort = 0;
+  debug_out_of_memory = 0;
+  list_destruct(&l, NULL);
 }
 
 void unit()
@@ -113,6 +129,7 @@ int main()
 {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(core),
+    cmocka_unit_test(object_release),
     cmocka_unit_test(alloc),
     cmocka_unit_test(unit)
   };

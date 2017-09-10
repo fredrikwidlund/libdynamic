@@ -8,6 +8,12 @@
 
 /* internals */
 
+static inline void list_assert(int value)
+{
+  if (!value)
+    abort();
+}
+
 static list_item *list_object_item(void *object)
 {
   return (list_item *) ((uintptr_t) object - offsetof(list_item, object));
@@ -18,6 +24,7 @@ static list_item *list_item_new(void *object, size_t size)
   list_item *item;
 
   item = malloc(sizeof (list_item) + size);
+  list_assert(item != NULL);
   memcpy(item->object, object, size);
 
   return item;
