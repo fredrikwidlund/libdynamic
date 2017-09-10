@@ -94,6 +94,91 @@ actually allocated will grow exponentially to allow for amortized constant time 
 
   Returns a pointer the the content of the *buffer*.
 
+List
+====
+
+Lists are sequence containers that allow constant time insert and erase operations anywhere within the sequence, and
+iteration in both directions.
+
+List containers are implemented as doubly-linked lists; Doubly linked lists can store each of the elements they contain
+in different and unrelated storage locations. The ordering is kept internally by the association to each element of a
+link to the element preceding it and a link to the element following it.
+
+Lists are modelled roughtly after the `C++ list`_ counterpart.
+
+.. type:: list
+
+  This data structure represents the list object.
+
+.. type:: void (*list_object_release)(void *)
+
+  This type defines a function reference to a user defined callback that release resources associated with an object
+
+.. type:: int (*list_object_compare)(void *first, void *second)
+
+  This type defines a function reference to a user defined callback that compares the *first* and the *second* object,
+  and returns a negative value if *first* is smaller, a positive value if *first* is larger, and 0 if they are the same.
+
+.. function:: void list_construct(list *list)
+
+  Constructs an empty *list*.
+
+.. function:: void list_destruct(list *list, list_object_release release)
+
+  Releases all resources used by the *list*. If object has resources that needs to be released the *release* callback
+  optionally can be defined.
+
+.. function:: void *list_next(void *object)
+
+  Returns a pointer to the next object after *object*.
+
+.. function:: void *list_previous(void *object)
+
+  Returns a pointer to the previous object before *object*.
+
+.. function:: int list_empty(list *list)
+
+  Returns 1 if the *list* is empty.
+
+.. function:: void *list_front(list *list)
+
+  Returns a pointer to the first object in *list*.
+
+.. function:: void *list_back(list *list)
+
+  Returns a pointer to the last object in *list*.
+
+.. function:: void *list_end(list *list)
+
+  Returns a pointer to the watch dog object at the end of the *list*.
+
+.. function:: void *list_push_front(list *list, void *object, size_t size)
+
+  Copies the contents of *object* of size *size* to the front of the *list*.
+
+.. function:: void *list_push_back(list *list, void *object, size_t size)
+
+  Copies the contents of *object* of size *size* to the back of the *list*.
+
+.. function:: void list_insert(void *list_object, void *object, size_t size)
+
+  Copies the contents of *object* of size *size* before *list_object*.
+
+.. function:: void list_erase(void *object, list_object_release release)
+
+  Deletes *object* from the list. If the object has resources that needs to be released the *release* callback
+  optionally can be defined.
+
+.. function:: void list_clear(list *list, list_object_release release)
+
+  Deletes all objects from *list*. If the objects has resources that needs to be released the *release* callback
+  optionally can be defined.
+
+.. function:: void *list_find(list *list, list_object_compare compare, void *object)
+
+  Finds an object in *list* where the contents are the same as for *object*. The callback function *compare* needs
+  to be defined accordingly.
+
 Vector
 ======
 
@@ -379,6 +464,7 @@ A few hash function are included in libdynamic.
    Returns a 64-bit hash of the null-terminated *string*.
 
 .. _`Semantic Versioning`: http://semver.org/
+.. _`C++ list`: http://www.cplusplus.com/reference/list/list/
 .. _`C++ vector`: http://www.cplusplus.com/reference/vector/vector/
 .. _`C++ string`: http://www.cplusplus.com/reference/string/string/
 .. _`C++ unordered_map`: http://http://www.cplusplus.com/reference/unordered_map/unordered_map/
