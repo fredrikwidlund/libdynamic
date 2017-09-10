@@ -51,11 +51,24 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-check_PROGRAMS = test/buffer
+
+check_PROGRAMS = test/hash
+test_hash_CFLAGS = $(CHECK_CFLAGS)
+test_hash_LDADD = $(CHECK_LDADD)
+test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_hash_SOURCES = test/hash.c test/mock.c
+
+check_PROGRAMS += test/buffer
 test_buffer_CFLAGS = $(CHECK_CFLAGS)
 test_buffer_LDADD = $(CHECK_LDADD)
 test_buffer_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_buffer_SOURCES = test/buffer.c test/mock.c
+
+check_PROGRAMS += test/list
+test_list_CFLAGS = $(CHECK_CFLAGS)
+test_list_LDADD = $(CHECK_LDADD)
+test_list_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_list_SOURCES = test/list.c test/mock.c
 
 check_PROGRAMS += test/vector
 test_vector_CFLAGS = $(CHECK_CFLAGS)
@@ -68,12 +81,6 @@ test_string_CFLAGS = $(CHECK_CFLAGS)
 test_string_LDADD = $(CHECK_LDADD)
 test_string_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_string_SOURCES = test/string.c test/mock.c
-
-check_PROGRAMS += test/hash
-test_hash_CFLAGS = $(CHECK_CFLAGS)
-test_hash_LDADD = $(CHECK_LDADD)
-test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_hash_SOURCES = test/hash.c test/mock.c
 
 check_PROGRAMS += test/map
 test_map_CFLAGS = $(CHECK_CFLAGS)
