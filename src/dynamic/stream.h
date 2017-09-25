@@ -4,11 +4,14 @@
 typedef struct stream stream;
 struct stream
 {
-  buffer *buffer;
-  size_t  begin;
+  buffer  *buffer;
+  uint8_t *data;
+  size_t   begin;
+  size_t   end;
 };
 
-void      stream_construct(stream *, buffer *);
+void      stream_construct(stream *, void *, size_t);
+void      stream_construct_buffer(stream *, buffer *);
 void      stream_destruct(stream *);
 int       stream_valid(stream *);
 size_t    stream_size(stream *);

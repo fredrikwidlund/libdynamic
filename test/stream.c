@@ -10,13 +10,13 @@
 #include "../src/dynamic/buffer.h"
 #include "../src/dynamic/stream.h"
 
-void core()
+void writable()
 {
   buffer b;
   stream s;
 
   buffer_construct(&b);
-  stream_construct(&s, &b);
+  stream_construct_buffer(&s, &b);
   stream_write8(&s, 42);
   stream_write16(&s, 4711);
   stream_write32(&s, 1048576);
@@ -52,10 +52,26 @@ void core()
   buffer_destruct(&b);
 }
 
+void readable()
+{
+  stream s;
+  uint8_t data[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+
+  stream_construct(&s, data, sizeof data);
+  assert_int_equal(stream_read32(&s), 0x00010203);
+  assert_true(stream_valid(&s));
+
+  stream_write32(&s, 0);
+  assert_false(stream_valid(&s));
+
+  stream_destruct(&s);
+}
+
 int main()
 {
   const struct CMUnitTest tests[] = {
-    cmocka_unit_test(core),
+    cmocka_unit_test(writable),
+    cmocka_unit_test(readable)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
