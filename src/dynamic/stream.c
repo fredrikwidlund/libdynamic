@@ -50,6 +50,11 @@ int stream_valid(stream *stream)
   return stream->buffer != NULL || stream->data != NULL;
 }
 
+void *stream_data(stream *stream)
+{
+  return stream->data;
+}
+
 size_t stream_size(stream *stream)
 {
   return stream->end - stream->begin;
@@ -60,7 +65,8 @@ void stream_read(stream *stream, void *data, size_t size)
   if (!stream_need(stream, size))
     return;
 
-  memcpy(data, stream->data + stream->begin, size);
+  if (data)
+    memcpy(data, stream->data + stream->begin, size);
   stream->begin += size;
 }
 

@@ -14,6 +14,7 @@ void      stream_construct(stream *, void *, size_t);
 void      stream_construct_buffer(stream *, buffer *);
 void      stream_destruct(stream *);
 int       stream_valid(stream *);
+void     *stream_data(stream *);
 size_t    stream_size(stream *);
 
 void      stream_read(stream *, void *, size_t);

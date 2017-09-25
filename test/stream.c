@@ -47,6 +47,7 @@ void writable()
   (void) stream_write32(&s, 0);
   (void) stream_write64(&s, 0);
   assert_false(stream_valid(&s));
+  assert_true(stream_data(&s) == NULL);
 
   stream_destruct(&s);
   buffer_destruct(&b);
@@ -59,6 +60,7 @@ void readable()
 
   stream_construct(&s, data, sizeof data);
   assert_int_equal(stream_read32(&s), 0x00010203);
+  stream_read(&s, NULL, 4);
   assert_true(stream_valid(&s));
 
   stream_write32(&s, 0);
