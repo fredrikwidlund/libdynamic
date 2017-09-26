@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <dynamic.h>
 
+#include "buffer.h"
 #include "stream.h"
 
 static int stream_need(stream *stream, size_t size)
