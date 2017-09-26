@@ -52,7 +52,7 @@ int stream_valid(stream *stream)
 
 void *stream_data(stream *stream)
 {
-  return stream->data;
+  return stream->data + stream->begin;
 }
 
 size_t stream_size(stream *stream)
