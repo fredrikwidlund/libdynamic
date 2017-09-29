@@ -37,7 +37,7 @@ void stream_construct_buffer(stream *stream, buffer *buffer)
   stream->buffer = buffer;
   stream->data = buffer_data(stream->buffer);
   stream->begin = 0;
-  stream->end = 0;
+  stream->end = buffer_size(stream->buffer);
 }
 
 void stream_destruct(stream *stream)
