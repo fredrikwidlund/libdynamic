@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <dynamic.h>
 
+#include "buffer.h"
 #include "stream.h"
 
 static int stream_need(stream *stream, size_t size)
@@ -52,7 +52,7 @@ int stream_valid(stream *stream)
 
 void *stream_data(stream *stream)
 {
-  return stream->data;
+  return stream->data + stream->begin;
 }
 
 size_t stream_size(stream *stream)
