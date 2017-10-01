@@ -6,34 +6,16 @@
 #include "buffer.h"
 #include "stream.h"
 
-static int stream_need(stream *stream, size_t size)
-{
-  if (stream_valid(stream) && size <= stream_size(stream))
-    return 1;
-
-  stream_destruct(stream);
-  return 0;
-}
-
-static int stream_writable(stream *stream)
-{
-  if (stream_valid(stream) && stream->buffer)
-    return 1;
-
-  stream_destruct(stream);
-  return 0;
-}
-
 void stream_construct(stream *stream, void *data, size_t size)
 {
-  *stream = (struct stream) {0};
+  stream->buffer = NULL;
   stream->data = data;
+  stream->begin = 0;
   stream->end = size;
 }
 
 void stream_construct_buffer(stream *stream, buffer *buffer)
 {
-  *stream = (struct stream) {0};
   stream->buffer = buffer;
   stream->data = buffer_data(stream->buffer);
   stream->begin = 0;
@@ -47,12 +29,12 @@ void stream_destruct(stream *stream)
 
 int stream_valid(stream *stream)
 {
-  return stream->buffer != NULL || stream->data != NULL;
+  return stream->data != NULL;
 }
 
 void *stream_data(stream *stream)
 {
-  return stream->data + stream->begin;
+  return stream_valid(stream) ? stream->data + stream->begin : NULL;
 }
 
 size_t stream_size(stream *stream)
@@ -62,8 +44,13 @@ size_t stream_size(stream *stream)
 
 void stream_read(stream *stream, void *data, size_t size)
 {
-  if (!stream_need(stream, size))
-    return;
+  if (size > stream_size(stream) || !stream_valid(stream))
+    {
+      if (data)
+        memset(data, 0, size);
+      stream_destruct(stream);
+      return;
+    }
 
   if (data)
     memcpy(data, stream->data + stream->begin, size);
@@ -75,10 +62,7 @@ uint8_t stream_read8(stream *stream)
   uint8_t value;
 
   stream_read(stream, &value, sizeof value);
-  if (!stream_valid(stream))
-    return 0;
-
-  return value;
+  return stream_valid(stream) ? value : 0;
 }
 
 uint16_t stream_read16(stream *stream)
@@ -86,10 +70,7 @@ uint16_t stream_read16(stream *stream)
   uint16_t value;
 
   stream_read(stream, &value, sizeof value);
-  if (!stream_valid(stream))
-    return 0;
-
-  return be16toh(value);
+  return stream_valid(stream) ? be16toh(value) : 0;
 }
 
 uint32_t stream_read32(stream *stream)
@@ -97,10 +78,7 @@ uint32_t stream_read32(stream *stream)
   uint32_t value;
 
   stream_read(stream, &value, sizeof value);
-  if (!stream_valid(stream))
-    return 0;
-
-  return be32toh(value);
+  return stream_valid(stream) ? be32toh(value) : 0;
 }
 
 uint64_t stream_read64(stream *stream)
@@ -108,10 +86,7 @@ uint64_t stream_read64(stream *stream)
   uint64_t value;
 
   stream_read(stream, &value, sizeof value);
-  if (!stream_valid(stream))
-    return 0;
-
-  return be64toh(value);
+  return stream_valid(stream) ? be64toh(value) : 0;
 }
 
 uint64_t stream_read_bits(uint64_t value, int size, int offset, int bits)
@@ -123,7 +98,7 @@ uint64_t stream_read_bits(uint64_t value, int size, int offset, int bits)
 
 void stream_write(stream *stream, void *data, size_t size)
 {
-  if (!stream_writable(stream))
+  if (!stream->buffer)
     return;
 
   buffer_insert(stream->buffer, buffer_size(stream->buffer), data, size);
