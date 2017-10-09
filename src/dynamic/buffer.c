@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "buffer.h"
 
@@ -117,4 +119,54 @@ void buffer_clear(buffer *b)
 void *buffer_data(buffer *b)
 {
   return b->data;
+}
+
+/* utility */
+
+int buffer_load(buffer *b, char *path)
+{
+  int fd;
+  char block[1048576];
+  ssize_t n;
+
+  fd = open(path, O_RDONLY);
+  if (fd == -1)
+    return -1;
+
+  while (1)
+    {
+      n = read(fd, block, sizeof block);
+      if (n <= 0)
+        break;
+      buffer_insert(b, buffer_size(b), block, n);
+    }
+  (void) close(fd);
+
+  return n;
+}
+
+int buffer_save(buffer *b, char *path)
+{
+  int fd;
+  char *base;
+  size_t size;
+  ssize_t n;
+
+  fd = open(path, O_CREAT | O_WRONLY, 0644);
+  if (fd == -1)
+    return -1;
+
+  base = buffer_data(b);
+  size = buffer_size(b);
+  while (size)
+    {
+      n = write(fd, base, size);
+      if (n == -1)
+        break;
+      base += n;
+      size -= n;
+    }
+  (void) close(fd);
+
+  return size ? -1 : 0;
 }
