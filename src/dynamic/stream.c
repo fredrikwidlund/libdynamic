@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <endian.h>
 
 #include "buffer.h"
 #include "stream.h"
