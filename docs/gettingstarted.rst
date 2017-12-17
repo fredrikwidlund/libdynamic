@@ -8,7 +8,7 @@ Compiling and installing libdynamic
 ===================================
 
 The libdynamic source is available at
-https://github.com/fredrikwidlund/libdynamic/releases/download/v1.0.0/libdynamic-1.0.0.tar.gz
+https://github.com/fredrikwidlund/libdynamic/releases/download/v1.1.0/libdynamic-1.1.0.tar.gz
 
 Unpack the source tarball and change to the source directory:
 

@@ -70,6 +70,10 @@ actually allocated will grow exponentially to allow for amortized constant time 
               
   Ensure that the *buffer* capacity is at least *size* bytes large.
 
+.. function:: void buffer_resize(buffer *buffer, size_t size)
+
+  Set the buffer size of *buffer* to be *size*. If the buffer is enlarged the added buffer data is undefined.
+
 .. function:: void buffer_compact(buffer *buffer)
 
   Reduces the amount of allocated memory in the *buffer* to match the current buffer size.
@@ -110,11 +114,11 @@ Lists are modelled roughtly after the `C++ list`_ counterpart.
 
   This data structure represents the list object.
 
-.. type:: void (*list_object_release)(void *)
+.. type:: void list_release_callback(void *)
 
   This type defines a function reference to a user defined callback that release resources associated with an object
 
-.. type:: int (*list_object_compare)(void *first, void *second)
+.. type:: int list_compare_callback(void *first, void *second)
 
   This type defines a function reference to a user defined callback that compares the *first* and the *second* object,
   and returns a negative value if *first* is smaller, a positive value if *first* is larger, and 0 if they are the same.
@@ -123,7 +127,7 @@ Lists are modelled roughtly after the `C++ list`_ counterpart.
 
   Constructs an empty *list*.
 
-.. function:: void list_destruct(list *list, list_object_release release)
+.. function:: void list_destruct(list *list, list_release_callback *release)
 
   Releases all resources used by the *list*. If object has resources that needs to be released the *release* callback
   optionally can be defined.
@@ -164,17 +168,17 @@ Lists are modelled roughtly after the `C++ list`_ counterpart.
 
   Copies the contents of *object* of size *size* before *list_object*.
 
-.. function:: void list_erase(void *object, list_object_release release)
+.. function:: void list_erase(void *object, list_release_callback *release)
 
   Deletes *object* from the list. If the object has resources that needs to be released the *release* callback
   optionally can be defined.
 
-.. function:: void list_clear(list *list, list_object_release release)
+.. function:: void list_clear(list *list, list_release_callback *release)
 
   Deletes all objects from *list*. If the objects has resources that needs to be released the *release* callback
   optionally can be defined.
 
-.. function:: void *list_find(list *list, list_object_compare compare, void *object)
+.. function:: void *list_find(list *list, list_compare_callback *compare, void *object)
 
   Finds an object in *list* where the contents are the same as for *object*. The callback function *compare* needs
   to be defined accordingly.
@@ -206,17 +210,18 @@ dynamically in an efficient way.
 
   This data structure represents the vector object.
 
+.. type:: void vector_release_callback(void *)
+
+  This type defines a function reference to a user defined callback that release resources associated with an object
+
 .. function:: void vector_construct(vector *vector, size_t size)
 
   Constructs an empty *vector* for elements of the given *size*.
 
-.. function:: void vector_object_release(vector *vector, void (*release)(void *))
+.. function:: void vector_destruct(vector *vector, vector_release_callback *release)
 
-  Defines a *release* callback function that is called whenever an element is removed from the *vector*.
-
-.. function:: void vector_destruct(vector *vector)
-
-  Releases all resources used by the *vector*.
+  Releases all resources used by the *vector*, optionally calling *release* to release resources associated with each
+  object.
 
 .. function:: size_t vector_size(vector *vector)
 
@@ -263,19 +268,23 @@ dynamically in an efficient way.
 
 .. function:: void vector_insert_range(vector *vector, size_t position, void *first, void *last)
 
-  Inserts a range of sequential objects, specified by giving the *first* and *last* object, into the *vector* at the given *position*.
+  Inserts a range of sequential objects, specified by giving the *first* and *last* object, into the *vector* at the
+  given *position*.
 
 .. function:: void vector_insert_fill(vector *vector, size_t position, size_t count, void *object)
 
   Inserts *count* copies of the *object* into the *vector* at the given *position*.
   
-.. function:: vector_erase(vector *vector, size_t position)
+.. function:: vector_erase(vector *vector, size_t position, vector_release_callback *release)
 
-  Removes the element in the given *position* in the *vector*.
+  Removes the element in the given *position* in the *vector*, optionally calling *release* to release resources
+  associated with the object.
 
-.. function:: vector_erase_range(vector *vector, size_t first, size_t last)
+.. function:: vector_erase_range(vector *vector, size_t first, size_t last, vector_release_callback *release)
 
-  Removes the elements from the *vector* starting at the given *first* position and ending before the *last* position.
+  Removes the elements from the *vector* starting at the given *first* position and ending before the *last* position,
+  optionally calling *release* to release resources associated with each object.
+
   The element at the *last* position is not removed.
 
 .. function:: void vector_push_back(vector *vector, void *object)
@@ -286,9 +295,9 @@ dynamically in an efficient way.
 
   Removes the last element of the *vector*.
 
-.. function:: void vector_clear(vector *vector)
+.. function:: void vector_clear(vector *vector, vector_release_callback *release)
 
-  Clears the *vector* of all elements.
+  Clears the *vector* of all elements, optionally calling *release* to release resources associated with each object.
 
 String
 ======
@@ -390,23 +399,23 @@ after the `C++ unordered_map`_ counterpart.
 
 For performance reasons some support callbacks need to be included in various calls rather than as map properties.
 
-.. type:: size_t (*hash)(map *map, void *element)
+.. type:: size_t map_hash_callback(void *element)
 
-  The *hash* callback is called with a pointer a map *element* and should return a hash value of the key of the element.
+  The *map_hash_callback* function should return a hash value of the key of the element.
 
-.. type:: int (*equal)(map *map, void *element1, void *element2)
+.. type:: int map_equal_callback(void *element1, void *element2)
 
-  The *equal* callback is called with a pointer to two elements, *element1* and *element2*, and should return 1 if
+  The *map_equal_callback* function is called with a pointer to two elements, *element1* and *element2*, and should return 1 if
   the elements are equal.
 
-.. type:: void (*set)(map *map, void *destination, void *source)
+.. type:: void map_set_callback(void *destination, void *source)
 
-  The *set* callback is called with a pointer to a *source* element from where the element data is read, and a
+  The *map_set_callback* function is called with a pointer to a *source* element from where the element data is read, and a
   *destination* element where the data is written.
 
-.. type:: void (*release)(map *map, void *element)
+.. type:: void map_release_callback(void *element)
 
-  The *release* callback is called with a pointer a map element when it is removed from the map.
+  The *map_release_callback* function is called with a pointer a map element when it is removed from the map.
 
 .. type:: map
 

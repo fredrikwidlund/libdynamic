@@ -1,4 +1,4 @@
-AC_INIT([libdynamic], [1.0.0], [fredrik.widlund@gmail.com])
+AC_INIT([libdynamic], [1.1.0], [fredrik.widlund@gmail.com])
 AC_CONFIG_AUX_DIR(autotools)
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign no-define])
