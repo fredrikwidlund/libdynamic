@@ -21,7 +21,7 @@ compiling and installing is simple:
 
 .. code-block:: shell
 
-    $ ./configure
+    $ ./configure AR=gcc-ar NM=gcc-nm RANLIB=gcc-ranlib
     $ make
     $ make install
 
