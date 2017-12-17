@@ -28,6 +28,7 @@ void     string_erase(string *, size_t, size_t);
 void     string_replace(string *, size_t, size_t, char *);
 void     string_replace_all(string *, char *, char *);
 void     string_clear(string *);
+void     string_release(void *);
 
 /* string operations */
 char    *string_data(string *);

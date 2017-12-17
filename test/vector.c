@@ -10,7 +10,7 @@
 #include "../src/dynamic/buffer.h"
 #include "../src/dynamic/vector.h"
 
-static void s_release(void *object)
+static void release(void *object)
 {
   free(*(char **) object);
 }
@@ -34,7 +34,7 @@ void core()
   vector_insert_fill(&v, 0, 5, (char *[]){"foo"});
   for (i = 0; i < 5; i++)
     assert_string_equal("foo", *(char **) vector_at(&v, i));
-  vector_erase_range(&v, 0, 5);
+  vector_erase_range(&v, 0, 5, NULL);
 
   a_len = sizeof a / sizeof a[0];
   vector_insert_range(&v, 0, &a[0], &a[a_len]);
@@ -43,16 +43,15 @@ void core()
 
   assert_string_equal(a[0], *(char **) vector_front(&v));
   assert_string_equal(a[a_len - 1], *(char **) vector_back(&v));
-  vector_erase(&v, 0);
+  vector_erase(&v, 0, NULL);
   assert_string_equal(a[1], *(char **) vector_front(&v));
 
   vector_push_back(&v, (char *[]){"pushed"});
   assert_string_equal("pushed", *(char **) vector_back(&v));
-  vector_pop_back(&v);
+  vector_pop_back(&v, NULL);
   assert_string_equal(a[a_len - 1], *(char **) vector_back(&v));
-  vector_clear(&v);
+  vector_clear(&v, NULL);
 
-  vector_object_release(&v, s_release);
   for (i = 0; i < a_len; i++)
     {
       s = strdup(a[i]);
@@ -60,10 +59,10 @@ void core()
     }
   for (i = 0; i < a_len; i++)
     assert_string_equal(a[i], *(char **) vector_at(&v, i));
-  vector_erase(&v, 0);
+  vector_erase(&v, 0, release);
   assert_string_equal(a[1], *(char **) vector_front(&v));
 
-  vector_destruct(&v);
+  vector_destruct(&v, release);
 }
 
 int main()

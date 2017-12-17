@@ -62,6 +62,13 @@ void buffer_reserve(buffer *b, size_t capacity)
     }
 }
 
+void buffer_resize(buffer *b, size_t size)
+{
+  if (size > buffer_capacity(b))
+    buffer_reserve(b, size);
+  b->size = size;
+}
+
 void buffer_compact(buffer *b)
 {
   void *data;

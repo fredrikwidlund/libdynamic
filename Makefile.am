@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AM_CFLAGS = -std=gnu11 -g -O3 -flto -fuse-linker-plugin
 AM_LDFLAGS = -static
 
-DIST_SUBDIRS = docs benchmark
+DIST_SUBDIRS = docs benchmark examples
 
 EXTRA_DIST = \
 CHANGES \
@@ -10,18 +10,20 @@ LICENSE \
 README.rst
 
 SOURCE_FILES = \
+src/dynamic/hash.c \
+src/dynamic/buffer.c \
+src/dynamic/list.c \
 src/dynamic/vector.c \
 src/dynamic/string.c \
-src/dynamic/buffer.c \
-src/dynamic/map.c \
-src/dynamic/hash.c
+src/dynamic/map.c
 
 HEADER_FILES = \
+src/dynamic/hash.h \
+src/dynamic/buffer.h \
+src/dynamic/list.h \
 src/dynamic/vector.h \
 src/dynamic/string.h \
-src/dynamic/buffer.h \
-src/dynamic/map.h \
-src/dynamic/hash.h
+src/dynamic/map.h
 
 AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la
@@ -36,7 +38,7 @@ mainheader_HEADERS = src/dynamic.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libdynamic.pc
 
-MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in docs/Makefile.in benchmark/Makefile.in libdynamic-?.?.?.tar.gz
+MAINTAINERCLEANFILES = aclocal.m4 config.h.in configure Makefile.in docs/Makefile.in benchmark/Makefile.in examples/Makefile.in libdynamic-?.?.?.tar.gz
 maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
 ### unit tests ###
@@ -49,11 +51,24 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-check_PROGRAMS = test/buffer
+
+check_PROGRAMS = test/hash
+test_hash_CFLAGS = $(CHECK_CFLAGS)
+test_hash_LDADD = $(CHECK_LDADD)
+test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_hash_SOURCES = test/hash.c test/mock.c
+
+check_PROGRAMS += test/buffer
 test_buffer_CFLAGS = $(CHECK_CFLAGS)
 test_buffer_LDADD = $(CHECK_LDADD)
 test_buffer_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_buffer_SOURCES = test/buffer.c test/mock.c
+
+check_PROGRAMS += test/list
+test_list_CFLAGS = $(CHECK_CFLAGS)
+test_list_LDADD = $(CHECK_LDADD)
+test_list_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_list_SOURCES = test/list.c test/mock.c
 
 check_PROGRAMS += test/vector
 test_vector_CFLAGS = $(CHECK_CFLAGS)
@@ -66,12 +81,6 @@ test_string_CFLAGS = $(CHECK_CFLAGS)
 test_string_LDADD = $(CHECK_LDADD)
 test_string_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_string_SOURCES = test/string.c test/mock.c
-
-check_PROGRAMS += test/hash
-test_hash_CFLAGS = $(CHECK_CFLAGS)
-test_hash_LDADD = $(CHECK_LDADD)
-test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_hash_SOURCES = test/hash.c test/mock.c
 
 check_PROGRAMS += test/map
 test_map_CFLAGS = $(CHECK_CFLAGS)

@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "buffer.h"
-#include "vector.h"
 #include "map.h"
 
 static size_t map_roundup(size_t s)
@@ -32,17 +30,17 @@ static void *map_element(map *m, size_t position)
   return (char *) m->elements + (position * m->element_size);
 }
 
-static void map_release_all(map *m, map_equal_callback equal, map_release_callback release)
+static void map_release_all(map *m, map_equal_callback *equal, map_release_callback *release)
 {
   size_t i;
 
   if (release)
     for (i = 0; i < m->elements_capacity; i ++)
-      if (!equal(m, map_element(m, i), m->element_empty))
-        release(m, map_element(m, i));
+      if (!equal(map_element(m, i), m->element_empty))
+        release(map_element(m, i));
 }
 
-static void map_rehash(map *m, size_t size, map_hash_callback hash, map_equal_callback equal, map_set_callback set)
+static void map_rehash(map *m, size_t size, map_hash_callback *hash, map_equal_callback *equal, map_set_callback *set)
 {
   map new;
   size_t i;
@@ -55,12 +53,12 @@ static void map_rehash(map *m, size_t size, map_hash_callback hash, map_equal_ca
   map_assert(new.elements != NULL);
 
   for (i = 0; i < new.elements_capacity; i ++)
-    set(m, map_element(&new, i), new.element_empty);
+    set(map_element(&new, i), new.element_empty);
 
   if (m->elements)
     {
       for (i = 0; i < m->elements_capacity; i ++)
-        if (!equal(m, map_element(m, i), m->element_empty))
+        if (!equal(map_element(m, i), m->element_empty))
           map_insert(&new, map_element(m, i), hash, equal, set, NULL);
       free(m->elements);
     }
@@ -70,7 +68,7 @@ static void map_rehash(map *m, size_t size, map_hash_callback hash, map_equal_ca
 
 /* constructor/destructor */
 
-void map_construct(map *m, size_t element_size, void *element_empty, map_set_callback set)
+void map_construct(map *m, size_t element_size, void *element_empty, map_set_callback *set)
 {
   m->elements = NULL;
   m->elements_count = 0;
@@ -80,7 +78,7 @@ void map_construct(map *m, size_t element_size, void *element_empty, map_set_cal
   map_rehash(m, MAP_ELEMENTS_CAPACITY_MIN, NULL, NULL, set);
 }
 
-void map_destruct(map *m, map_equal_callback equal, map_release_callback release)
+void map_destruct(map *m, map_equal_callback *equal, map_release_callback *release)
 {
   map_release_all(m, equal, release);
   free(m->elements);
@@ -93,7 +91,7 @@ size_t map_size(map *m)
   return m->elements_count;
 }
 
-void map_reserve(map *m, size_t size, map_hash_callback hash, map_equal_callback equal, map_set_callback set)
+void map_reserve(map *m, size_t size, map_hash_callback *hash, map_equal_callback *equal, map_set_callback *set)
 {
   size *= 2;
   if (size > m->elements_capacity)
@@ -107,17 +105,17 @@ void *map_element_empty(map *m)
   return m->element_empty;
 }
 
-void *map_at(map *m, void *element, map_hash_callback hash, map_equal_callback equal)
+void *map_at(map *m, void *element, map_hash_callback *hash, map_equal_callback *equal)
 {
   size_t i;
   void *test;
 
-  i = hash(m, element);
+  i = hash(element);
   while (1)
     {
       i &= m->elements_capacity - 1;
       test = map_element(m, i);
-      if (equal(m, test, element) || equal(m, test, m->element_empty))
+      if (equal(test, element) || equal(test, m->element_empty))
         return test;
       i ++;
     }
@@ -125,62 +123,64 @@ void *map_at(map *m, void *element, map_hash_callback hash, map_equal_callback e
 
 /* modifiers */
 
-void map_insert(map *m, void *element, map_hash_callback hash, map_equal_callback equal, map_set_callback set, map_release_callback release)
+void map_insert(map *m, void *element, map_hash_callback *hash, map_equal_callback *equal, map_set_callback *set,
+                map_release_callback *release)
 {
   void *test;
 
   map_reserve(m, m->elements_count + 1, hash, equal, set);
   test = map_at(m, element, hash, equal);
-  if (equal(m, test, m->element_empty))
+  if (equal(test, m->element_empty))
     {
-      set(m, test, element);
+      set(test, element);
       m->elements_count ++;
     }
   else if (release)
-    release(m, element);
+    release(element);
 }
 
-void map_erase(map *m, void *element, map_hash_callback hash, map_equal_callback equal, map_set_callback set, map_release_callback release)
+void map_erase(map *m, void *element, map_hash_callback *hash, map_equal_callback *equal, map_set_callback *set,
+               map_release_callback *release)
 {
   void *test;
   size_t i, j, k;
 
-  i = hash(m, element);
+  i = hash(element);
   while (1)
     {
       i &= m->elements_capacity - 1;
       test = map_element(m, i);
-      if (equal(m, test, m->element_empty))
+      if (equal(test, m->element_empty))
         return;
-      if (equal(m, test, element))
+      if (equal(test, element))
         break;
       i ++;
     }
 
   if (release)
-    release(m, test);
+    release(test);
   m->elements_count --;
 
   j = i;
   while (1)
     {
       j = (j + 1) & (m->elements_capacity - 1);
-      if (equal(m, map_element(m, j), m->element_empty))
+      if (equal(map_element(m, j), m->element_empty))
         break;
 
-      k = hash(m, map_element(m, j)) & (m->elements_capacity - 1);
+      k = hash(map_element(m, j)) & (m->elements_capacity - 1);
       if ((i < j && (k <= i || k > j)) ||
           (i > j && (k <= i && k > j)))
         {
-          set(m, map_element(m, i), map_element(m, j));
+          set(map_element(m, i), map_element(m, j));
           i = j;
         }
     }
 
-  set(m, map_element(m, i), m->element_empty);
+  set(map_element(m, i), m->element_empty);
 }
 
-void map_clear(map *m, map_equal_callback equal, map_set_callback set, map_release_callback release)
+void map_clear(map *m, map_equal_callback *equal, map_set_callback *set, map_release_callback *release)
 {
   map_release_all(m, equal, release);
   free(m->elements);

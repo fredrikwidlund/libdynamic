@@ -73,21 +73,18 @@ static void shuffle(int *array, size_t n)
 
 static int set_int_empty = -1;
 
-static size_t set_int_hash(map *m, void *e)
+static size_t set_int_hash(void *e)
 {
-  (void) m;
   return *(int *) e;
 }
 
-static int set_int_equal(map *m, void *e1, void *e2)
+static int set_int_equal(void *e1, void *e2)
 {
-  (void) m;
   return *(int *) e1 == *(int *) e2;
 }
 
-static void set_int_set(map *m, void *e1, void *e2)
+static void set_int_set(void *e1, void *e2)
 {
-  (void) m;
   *(int *) e1 = *(int *) e2;
 }
 
@@ -182,5 +179,5 @@ int main()
       (void) fprintf(stdout, "%s,%lu,%f,%f,%f,%lu\n", mp->name, mp->size, mp->insert, mp->lookup, mp->delete, mp->sum);
     }
 
-  vector_destruct(&metrics);
+  vector_destruct(&metrics, NULL);
 }

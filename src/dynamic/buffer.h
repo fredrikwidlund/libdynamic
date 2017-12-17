@@ -17,6 +17,7 @@ void    buffer_destruct(buffer *);
 size_t  buffer_size(buffer *);
 size_t  buffer_capacity(buffer *);
 void    buffer_reserve(buffer *, size_t);
+void    buffer_resize(buffer *, size_t);
 void    buffer_compact(buffer *);
 
 /* modifiers */

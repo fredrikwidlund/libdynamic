@@ -20,59 +20,51 @@ struct element
   char     *value;
 };
 
-static void element_set(map *m, void *o1, void *o2)
+static void element_set(void *o1, void *o2)
 {
   element *e1 = o1, *e2 = o2;
 
-  (void) m;
   *e1 = *e2;
 }
 
-static size_t hash(map *m, void *e)
+static size_t hash(void *e)
 {
-  (void) m;
   return ((element *) e)->key;
 }
 
-static int equal(map *m, void *e1, void *e2)
+static int equal(void *e1, void *e2)
 {
-  (void) m;
   return *(uint32_t *) e1 == *(uint32_t *) e2;
 }
 
-static void set(map *m, void *e1, void *e2)
+static void set(void *e1, void *e2)
 {
-  (void) m;
   *(uint32_t *) e1 = *(uint32_t *) e2;
 }
 
-static uint64_t string_hash(map *m, void *s)
+static uint64_t string_hash(void *s)
 {
-  (void) m;
   return hash_string(*(char **) s);
 }
 
-static int string_equal(map *m, void *e1, void *e2)
+static int string_equal(void *e1, void *e2)
 {
   char *s1, *s2;
 
-  (void) m;
   s1 = *(char **) e1;
   s2 = *(char **) e2;
   return s1 == s2 || (s1 && s2 && strcmp(s1, s2) == 0);
 }
 
-static void string_set(map *m, void *o1, void *o2)
+static void string_set(void *o1, void *o2)
 {
   char **s1 = o1, **s2 = o2;
 
-  (void) m;
   *s1 = *s2;
 }
 
-static void string_release(map *m, void *e)
+static void string_release(void *e)
 {
-  (void) m;
   free(*(char **) e);
 }
 
@@ -86,7 +78,7 @@ void core()
   /* insert/at */
   map_construct(&m, sizeof *e, (element[]){{.key = 0}}, element_set);
   e = map_at(&m, (element[]){{.key = 4711}}, hash, equal);
-  assert_true(equal(&m, e, map_element_empty(&m)));
+  assert_true(equal(e, map_element_empty(&m)));
   map_insert(&m, (element[]){{.key = 16, .value = "value"}}, hash, equal, element_set, NULL);
   e = map_at(&m, (element[]){{.key = 16}}, hash, equal);
   assert_string_equal(((element *) e)->value, "value");
@@ -103,7 +95,7 @@ void core()
   for (i = 500; i < 1500; i ++)
     map_insert(&m, (uint32_t[]){i}, hash, equal, set, NULL);
   for (i = 500; i < 1500; i ++)
-    assert_false(equal(&m, map_at(&m, (uint32_t[]){i}, hash, equal), map_element_empty(&m)));
+    assert_false(equal(map_at(&m, (uint32_t[]){i}, hash, equal), map_element_empty(&m)));
   assert_int_equal(map_size(&m), 1000);
   for (i = 500; i < 1500; i ++)
     map_erase(&m, (uint32_t[]){i}, hash, equal, set, NULL);
@@ -129,7 +121,7 @@ void core()
   /* erase should release */
   s = strdup("test2");
   map_insert(&m, &s, string_hash, string_equal, string_set, string_release);
-  map_erase(&m, (char*[]){"test2"}, string_hash, string_equal, string_set, string_release);
+  map_erase(&m, (char *[]){"test2"}, string_hash, string_equal, string_set, string_release);
   assert_int_equal(map_size(&m), 1);
 
   /* cleanup */
@@ -159,7 +151,7 @@ void erase()
   map_clear(&m, equal, set, NULL);
   map_insert(&m, (uint32_t[]){1}, hash, equal, set, NULL);
   map_erase(&m, (uint32_t[]){5}, hash, equal, set, NULL);
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){1}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){1}, hash, equal), map_element_empty(&m)));
 
   /* erase when w wraps */
   map_clear(&m, equal, set, NULL);
@@ -167,14 +159,14 @@ void erase()
   map_insert(&m, (uint32_t[]){last}, hash, equal, set, NULL);
   map_insert(&m, (uint32_t[]){last + coll2}, hash, equal, set, NULL);
   map_erase(&m, (uint32_t[]){last}, hash, equal, set, NULL);
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){last + coll1}, hash, equal), map_element_empty(&m)));
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){last + coll2}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){last + coll1}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){last + coll2}, hash, equal), map_element_empty(&m)));
 
   /* erase when i wraps */
   map_clear(&m, equal, set, NULL);
   map_insert(&m, (uint32_t[]){last}, hash, equal, set, NULL);
   map_erase(&m, (uint32_t[]){last}, hash, equal, set, NULL);
-  assert_true(equal(&m, map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
+  assert_true(equal(map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
 
   /* erase when i wraps  and w < i */
   map_clear(&m, equal, set, NULL);
@@ -182,9 +174,9 @@ void erase()
   map_insert(&m, (uint32_t[]){0}, hash, equal, set, NULL);
   map_insert(&m, (uint32_t[]){last + coll1}, hash, equal, set, NULL);
   map_erase(&m, (uint32_t[]){last}, hash, equal, set, NULL);
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){0}, hash, equal), map_element_empty(&m)));
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){last + coll1}, hash, equal), map_element_empty(&m)));
-  assert_true(equal(&m, map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){0}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){last + coll1}, hash, equal), map_element_empty(&m)));
+  assert_true(equal(map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
 
   /* erase when i wraps and w > o */
   map_clear(&m, equal, set, NULL);
@@ -192,9 +184,9 @@ void erase()
   map_insert(&m, (uint32_t[]){last}, hash, equal, set, NULL);
   map_insert(&m, (uint32_t[]){last + coll1}, hash, equal, set, NULL);
   map_erase(&m, (uint32_t[]){last - 1}, hash, equal, set, NULL);
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){last + coll1}, hash, equal), map_element_empty(&m)));
-  assert_true(equal(&m, map_at(&m, (uint32_t[]){last - 1}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){last + coll1}, hash, equal), map_element_empty(&m)));
+  assert_true(equal(map_at(&m, (uint32_t[]){last - 1}, hash, equal), map_element_empty(&m)));
 
   /* erase when j wraps and */
   map_clear(&m, equal, set, NULL);
@@ -202,9 +194,9 @@ void erase()
   map_insert(&m, (uint32_t[]){0}, hash, equal, set, NULL);
   map_insert(&m, (uint32_t[]){0 + coll1}, hash, equal, set, NULL);
   map_erase(&m, (uint32_t[]){last}, hash, equal, set, NULL);
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){0}, hash, equal), map_element_empty(&m)));
-  assert_false(equal(&m, map_at(&m, (uint32_t[]){0 + coll1}, hash, equal), map_element_empty(&m)));
-  assert_true(equal(&m, map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){0}, hash, equal), map_element_empty(&m)));
+  assert_false(equal(map_at(&m, (uint32_t[]){0 + coll1}, hash, equal), map_element_empty(&m)));
+  assert_true(equal(map_at(&m, (uint32_t[]){last}, hash, equal), map_element_empty(&m)));
 
   map_destruct(&m, equal, NULL);
 }

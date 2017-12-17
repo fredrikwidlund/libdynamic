@@ -21,5 +21,5 @@ void vector_dynamic(vector_metric *metric, size_t n)
   t2 = ntime();
   metric->insert = (double) (t2 - t1) / n;
 
-  vector_destruct(&v);
+  vector_destruct(&v, NULL);
 }
