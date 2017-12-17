@@ -20,6 +20,11 @@ void core()
   assert_int_equal(buffer_size(&b), 0);
   assert_int_equal(buffer_capacity(&b), 0);
 
+  buffer_resize(&b, 100);
+  assert_int_equal(buffer_size(&b), 100);
+  buffer_resize(&b, 0);
+  assert_int_equal(buffer_size(&b), 0);
+
   buffer_reserve(&b, 0);
   buffer_reserve(&b, 1024);
   assert_int_equal(buffer_capacity(&b), 1024);

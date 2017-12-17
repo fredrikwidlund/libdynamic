@@ -4,3 +4,13 @@ Version 1.0
 Released 2017-01-03
 
 * Initial release
+
+Version 1.1
+===========
+
+Released 2017-12-17
+
+* New features:
+
+  - List type
+  - More uniform interfaces

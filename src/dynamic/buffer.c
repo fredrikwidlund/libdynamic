@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
 
 #include "buffer.h"
 
@@ -62,6 +60,13 @@ void buffer_reserve(buffer *b, size_t capacity)
       b->data = data;
       b->capacity = capacity;
     }
+}
+
+void buffer_resize(buffer *b, size_t size)
+{
+  if (size > buffer_capacity(b))
+    buffer_reserve(b, size);
+  b->size = size;
 }
 
 void buffer_compact(buffer *b)
