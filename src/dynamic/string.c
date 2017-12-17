@@ -7,11 +7,6 @@
 #include "vector.h"
 #include "string.h"
 
-static void string_split_release(void *object)
-{
-  string_destruct((string *) object);
-}
-
 /* constructor/destructor */
 
 void string_construct(string *s)
@@ -99,6 +94,11 @@ void string_clear(string *s)
   string_construct(s);
 }
 
+void string_release(void *object)
+{
+  string_destruct((string *) object);
+}
+
 /* string operations */
 
 char *string_data(string *s)
@@ -125,7 +125,6 @@ void string_split(string *s, char *delim, vector *v)
   char *cp, *cp_saved;
 
   vector_construct(v, sizeof(string));
-  vector_object_release(v, string_split_release);
   string_construct(&copy);
   string_append(&copy, string_data(s));
   for (cp = strtok_r(string_data(&copy), delim, &cp_saved); cp; cp = strtok_r(NULL, delim, &cp_saved))

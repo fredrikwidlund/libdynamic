@@ -38,7 +38,7 @@ void list_construct(list *l)
   l->previous = (list_item *) l;
 }
 
-void list_destruct(list *l, list_object_release release)
+void list_destruct(list *l, list_release_callback *release)
 {
   list_clear(l, release);
 }
@@ -104,7 +104,7 @@ void list_insert(void *list_object, void *object, size_t size)
   item->list.next->list.previous = item;
 }
 
-void list_erase(void *object, list_object_release release)
+void list_erase(void *object, list_release_callback *release)
 {
   list_item *item = list_object_item(object);
 
@@ -117,7 +117,7 @@ void list_erase(void *object, list_object_release release)
   free(item);
 }
 
-void list_clear(list *l, list_object_release release)
+void list_clear(list *l, list_release_callback *release)
 {
   while (!list_empty(l))
     list_erase(list_front(l), release);
@@ -125,7 +125,7 @@ void list_clear(list *l, list_object_release release)
 
 /* operations */
 
-void *list_find(list *l, list_object_compare compare, void *object)
+void *list_find(list *l, list_compare_callback *compare, void *object)
 {
   void *list_object;
 

@@ -54,7 +54,7 @@ void core()
   assert_string_equal(string_data(vector_at(&v, 1)), "space");
   assert_string_equal(string_data(vector_at(&v, 2)), "delimited");
   assert_string_equal(string_data(vector_at(&v, 3)), "string");
-  vector_destruct(&v);
+  vector_destruct(&v, string_release);
   string_destruct(&s);
 }
 
