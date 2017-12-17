@@ -12,7 +12,6 @@ README.rst
 SOURCE_FILES = \
 src/dynamic/hash.c \
 src/dynamic/buffer.c \
-src/dynamic/stream.c \
 src/dynamic/list.c \
 src/dynamic/vector.c \
 src/dynamic/string.c \
@@ -21,7 +20,6 @@ src/dynamic/map.c
 HEADER_FILES = \
 src/dynamic/hash.h \
 src/dynamic/buffer.h \
-src/dynamic/stream.h \
 src/dynamic/list.h \
 src/dynamic/vector.h \
 src/dynamic/string.h \
@@ -65,12 +63,6 @@ test_buffer_CFLAGS = $(CHECK_CFLAGS)
 test_buffer_LDADD = $(CHECK_LDADD)
 test_buffer_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_buffer_SOURCES = test/buffer.c test/mock.c
-
-check_PROGRAMS += test/stream
-test_stream_CFLAGS = $(CHECK_CFLAGS)
-test_stream_LDADD = $(CHECK_LDADD)
-test_stream_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
-test_stream_SOURCES = test/stream.c test/mock.c
 
 check_PROGRAMS += test/list
 test_list_CFLAGS = $(CHECK_CFLAGS)

@@ -12,7 +12,6 @@ extern "C" {
 
 #include <dynamic/hash.h>
 #include <dynamic/buffer.h>
-#include <dynamic/stream.h>
 #include <dynamic/list.h>
 #include <dynamic/vector.h>
 #include <dynamic/string.h>

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for file in hash buffer stream list vector string map
+for file in hash buffer list vector string map
 do
     echo [$file]
     test=`gcov -b src/dynamic/libdynamic_test_a-$file | grep -A4 File.*$file`

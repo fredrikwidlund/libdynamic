@@ -28,8 +28,4 @@ void    buffer_clear(buffer *);
 /* element access */
 void   *buffer_data(buffer *);
 
-/* utility */
-int     buffer_load(buffer *, char *);
-int     buffer_save(buffer *, char *);
-
 #endif /* BUFFER_H_INCLUDED */
