@@ -220,3 +220,13 @@ uint64_t hash_string(char *s)
 {
   return hash_data(s, strlen(s));
 }
+
+uint64_t hash_uint64(uint64_t v)
+{
+  v ^= v >> 33;
+  v *= 0xff51afd7ed558ccdULL;
+  v ^= v >> 33;
+  v *= 0xc4ceb9fe1a85ec53ULL;
+  v ^= v >> 33;
+  return v;
+}

@@ -5,13 +5,17 @@ AM_CXXFLAGS = -std=gnu++11
 AM_CPPFLAGS = $(COMMON_FLAGS)
 AM_LDFLAGS = $(COMMON_FLAGS)
 
-bin_PROGRAMS = string_map list
+bin_PROGRAMS = maps mapi list
 
-string_map_SOURCES = \
-map_str_ptr.c \
-string_map.c
+maps_SOURCES = \
+maps.c
 
-string_map_LDADD = ../libdynamic.la
+maps_LDADD = ../libdynamic.la
+
+mapi_SOURCES = \
+mapi.c
+
+mapi_LDADD = ../libdynamic.la
 
 list_SOURCES = \
 list.c

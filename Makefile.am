@@ -15,7 +15,9 @@ src/dynamic/buffer.c \
 src/dynamic/list.c \
 src/dynamic/vector.c \
 src/dynamic/string.c \
-src/dynamic/map.c
+src/dynamic/map.c \
+src/dynamic/maps.c \
+src/dynamic/mapi.c
 
 HEADER_FILES = \
 src/dynamic/hash.h \
@@ -23,7 +25,9 @@ src/dynamic/buffer.h \
 src/dynamic/list.h \
 src/dynamic/vector.h \
 src/dynamic/string.h \
-src/dynamic/map.h
+src/dynamic/map.h \
+src/dynamic/maps.h \
+src/dynamic/mapi.h
 
 AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la
@@ -43,14 +47,13 @@ maintainer-clean-local:; rm -rf autotools m4 libdynamic-?.?.?
 
 ### unit tests ###
 
-CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs
-CHECK_LDADD = -L. -ldynamic_test -lcmocka
-CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc -Wl,--wrap=abort
-
 check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
+CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs
+CHECK_LDADD = libdynamic_test.a -lcmocka
+CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc -Wl,--wrap=abort
 
 check_PROGRAMS = test/hash
 test_hash_CFLAGS = $(CHECK_CFLAGS)
@@ -81,6 +84,18 @@ test_string_CFLAGS = $(CHECK_CFLAGS)
 test_string_LDADD = $(CHECK_LDADD)
 test_string_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_string_SOURCES = test/string.c test/mock.c
+
+check_PROGRAMS += test/maps
+test_maps_CFLAGS = $(CHECK_CFLAGS)
+test_maps_LDADD = $(CHECK_LDADD)
+test_maps_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_maps_SOURCES = test/maps.c test/mock.c
+
+check_PROGRAMS += test/mapi
+test_mapi_CFLAGS = $(CHECK_CFLAGS)
+test_mapi_LDADD = $(CHECK_LDADD)
+test_mapi_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_mapi_SOURCES = test/mapi.c test/mock.c
 
 check_PROGRAMS += test/map
 test_map_CFLAGS = $(CHECK_CFLAGS)

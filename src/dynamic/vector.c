@@ -14,7 +14,7 @@ void vector_construct(vector *v, size_t object_size)
   v->object_size = object_size;
 }
 
-void vector_destruct(vector *v, vector_release_callback *release)
+void vector_destruct(vector *v, vector_release *release)
 {
   vector_clear(v, release);
 }
@@ -85,7 +85,7 @@ void vector_insert_fill(vector *v, size_t position, size_t count, void *object)
   buffer_insert_fill(&v->buffer, position * v->object_size, count, object, v->object_size);
 }
 
-void vector_erase(vector *v, size_t position, vector_release_callback *release)
+void vector_erase(vector *v, size_t position, vector_release *release)
 {
   if (release)
     release(vector_at(v, position));
@@ -93,7 +93,7 @@ void vector_erase(vector *v, size_t position, vector_release_callback *release)
   buffer_erase(&v->buffer, position * v->object_size, v->object_size);
 }
 
-void vector_erase_range(vector *v, size_t first, size_t last, vector_release_callback *release)
+void vector_erase_range(vector *v, size_t first, size_t last, vector_release *release)
 {
   size_t i;
 
@@ -104,7 +104,7 @@ void vector_erase_range(vector *v, size_t first, size_t last, vector_release_cal
   buffer_erase(&v->buffer, first * v->object_size, (last - first) * v->object_size);
 }
 
-void vector_clear(vector *v, vector_release_callback *release)
+void vector_clear(vector *v, vector_release *release)
 {
   vector_erase_range(v, 0, vector_size(v), release);
   buffer_clear(&v->buffer);
@@ -115,7 +115,7 @@ void vector_push_back(vector *v, void *object)
   buffer_insert(&v->buffer, buffer_size(&v->buffer), object, v->object_size);
 }
 
-void vector_pop_back(vector *v, vector_release_callback *release)
+void vector_pop_back(vector *v, vector_release *release)
 {
   vector_erase(v, vector_size(v) - 1, release);
 }

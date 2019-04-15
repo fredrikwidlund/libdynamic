@@ -5,36 +5,34 @@
 #define MAP_ELEMENTS_CAPACITY_MIN 16
 #endif /* MAP_ELEMENTS_CAPACITY_MIN */
 
-typedef struct map map;
+typedef size_t           map_hash(void *);
+typedef int              map_equal(void *, void *);
+typedef void             map_set(void *, void *);
+typedef void             map_release(void *);
+typedef struct map       map;
+
 struct map
 {
   void   *elements;
-  void   *element_empty;
   size_t  elements_count;
   size_t  elements_capacity;
   size_t  element_size;
 };
 
-typedef size_t map_hash_callback(void *);
-typedef int    map_equal_callback(void *, void *);
-typedef void   map_set_callback(void *, void *);
-typedef void   map_release_callback(void *);
-
 /* constructor/destructor */
-void    map_construct(map *, size_t, void *, map_set_callback *);
-void    map_destruct(map *, map_equal_callback *, map_release_callback *);
+void    map_construct(map *, size_t, map_set *);
+void    map_destruct(map *, map_equal *, map_release *);
 
 /* capacity */
 size_t  map_size(map *);
-void    map_reserve(map *, size_t, map_hash_callback *, map_equal_callback *, map_set_callback *);
+void    map_reserve(map *, size_t, map_hash *, map_set *, map_equal *);
 
 /* element access */
-void   *map_element_empty(map *);
-void   *map_at(map *, void *, map_hash_callback *, map_equal_callback *);
+void   *map_at(map *, void *, map_hash *, map_equal *);
 
 /* modifiers */
-void    map_insert(map *, void *, map_hash_callback *, map_equal_callback *, map_set_callback *, map_release_callback *);
-void    map_erase(map *, void *, map_hash_callback *, map_equal_callback *, map_set_callback *, map_release_callback *);
-void    map_clear(map *, map_equal_callback *, map_set_callback *, map_release_callback *);
+void    map_insert(map *, void *, map_hash *, map_set *, map_equal *, map_release *);
+void    map_erase(map *, void *,  map_hash *, map_set *, map_equal *, map_release *);
+void    map_clear(map *, map_set *, map_equal *, map_release *);
 
 #endif /* MAP_H_INCLUDED */

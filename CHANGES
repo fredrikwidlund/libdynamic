@@ -14,3 +14,13 @@ Released 2017-12-17
 
   - List type
   - More uniform interfaces
+
+Version 1.2
+===========
+
+Released 2019-04-19
+
+* New features:
+
+  - Add maps (string map) and mapi (uint64_t) abstractions
+  - Refactor map interface
