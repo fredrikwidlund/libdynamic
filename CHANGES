@@ -24,3 +24,12 @@ Released 2019-04-19
 
   - Add maps (string map) and mapi (uint64_t) abstractions
   - Refactor map interface
+
+Version 1.3
+===========
+
+Released 2019-09-02
+
+* New features:
+
+  - Add list splicing

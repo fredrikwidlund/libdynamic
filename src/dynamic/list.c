@@ -104,6 +104,22 @@ void list_insert(void *list_object, void *object, size_t size)
   item->list.next->list.previous = item;
 }
 
+void list_splice(void *object1, void *object2)
+{
+  list_item *to, *from;
+
+  to = list_object_item(object1);
+  from = list_object_item(object2);
+
+  from->list.previous->list.next = from->list.next;
+  from->list.next->list.previous = from->list.previous;
+
+  from->list.previous = to->list.previous;
+  from->list.next = to;
+  from->list.previous->list.next = from;
+  from->list.next->list.previous = from;
+}
+
 void list_erase(void *object, list_release *release)
 {
   list_item *item = list_object_item(object);

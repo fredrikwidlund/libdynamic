@@ -91,7 +91,7 @@ void alloc()
 
 void unit()
 {
-  list l;
+  list l, l2;
   int *p;
 
   list_construct(&l);
@@ -120,6 +120,17 @@ void unit()
   list_erase(p, NULL);
   p = list_next(list_front(&l));
   assert_int_equal(*p, 3);
+
+  list_clear(&l, NULL);
+  list_construct(&l2);
+  list_push_back(&l, (int[]){1}, sizeof (int));
+  list_push_back(&l, (int[]){2}, sizeof (int));
+  list_push_back(&l, (int[]){3}, sizeof (int));
+  assert_true(list_empty(&l2));
+  list_splice(list_front(&l2), list_next(list_front(&l)));
+  assert_int_equal(*(int *) list_front(&l2), 2);
+  assert_int_equal(*(int *) list_next(list_front(&l)), 3);
+  list_destruct(&l2, NULL);
 
   list_destruct(&l, NULL);
 }
