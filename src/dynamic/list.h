@@ -38,9 +38,9 @@ void   *list_back(list *);
 void   *list_end(list *);
 
 /* modifiers */
-void    list_push_front(list *, void *, size_t);
-void    list_push_back(list *, void *, size_t);
-void    list_insert(void *, void *, size_t);
+void   *list_push_front(list *, void *, size_t);
+void   *list_push_back(list *, void *, size_t);
+void   *list_insert(void *, void *, size_t);
 void    list_splice(void *, void *);
 void    list_erase(void *, list_release *);
 void    list_clear(list *, list_release *);

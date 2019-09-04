@@ -8,12 +8,6 @@
 
 /* internals */
 
-static inline void list_assert(int value)
-{
-  if (!value)
-    abort();
-}
-
 static list_item *list_object_item(void *object)
 {
   return (list_item *) ((uintptr_t) object - offsetof(list_item, object));
@@ -23,9 +17,12 @@ static list_item *list_item_new(void *object, size_t size)
 {
   list_item *item;
 
-  item = malloc(sizeof (list_item) + size);
-  list_assert(item != NULL);
-  memcpy(item->object, object, size);
+  item = calloc(1, sizeof (list_item) + size);
+  if (!item)
+    abort();
+
+  if (object)
+    memcpy(item->object, object, size);
 
   return item;
 }
@@ -81,17 +78,17 @@ void *list_end(list *l)
 
 /* modifiers */
 
-void list_push_front(list *l, void *object, size_t size)
+void *list_push_front(list *l, void *object, size_t size)
 {
-  list_insert(list_front(l), object, size);
+  return list_insert(list_front(l), object, size);
 }
 
-void list_push_back(list *l, void *object, size_t size)
+void *list_push_back(list *l, void *object, size_t size)
 {
-  list_insert(list_end(l), object, size);
+  return list_insert(list_end(l), object, size);
 }
 
-void list_insert(void *list_object, void *object, size_t size)
+void *list_insert(void *list_object, void *object, size_t size)
 {
   list_item *after, *item;
 
@@ -102,6 +99,8 @@ void list_insert(void *list_object, void *object, size_t size)
   item->list.next = after;
   item->list.previous->list.next = item;
   item->list.next->list.previous = item;
+
+  return item->object;
 }
 
 void list_splice(void *object1, void *object2)
