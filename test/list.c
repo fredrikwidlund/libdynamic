@@ -100,6 +100,11 @@ void unit()
   assert_int_equal(*(int *) list_front(&l), 1);
   list_clear(&l, NULL);
 
+  p = list_insert(list_front(&l), NULL, sizeof (int));
+  *p  = 42;
+  assert_int_equal(*(int *) list_front(&l), 42);
+  list_clear(&l, NULL);
+
   list_insert(list_previous(list_front(&l)), (int[]){1}, sizeof (int));
   assert_int_equal(*(int *) list_front(&l), 1);
   list_erase(list_back(&l), NULL);
