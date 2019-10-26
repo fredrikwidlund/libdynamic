@@ -107,6 +107,9 @@ void list_splice(void *object1, void *object2)
 {
   list_item *to, *from;
 
+  if (object1 == object2)
+    return;
+
   to = list_object_item(object1);
   from = list_object_item(object2);
 

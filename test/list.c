@@ -140,13 +140,26 @@ void unit()
   list_destruct(&l, NULL);
 }
 
+void edge()
+{
+  list l1;
+  int *i;
+
+  list_construct(&l1);
+
+  i = list_push_back(&l1, (int[]){1}, sizeof (int));
+  list_splice(i, i);
+  list_destruct(&l1, NULL);
+}
+
 int main()
 {
   const struct CMUnitTest tests[] = {
     cmocka_unit_test(core),
     cmocka_unit_test(object_release),
     cmocka_unit_test(alloc),
-    cmocka_unit_test(unit)
+    cmocka_unit_test(unit),
+    cmocka_unit_test(edge)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
