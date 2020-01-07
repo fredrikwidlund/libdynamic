@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AM_CFLAGS = -std=gnu11 -g -O3 -flto -fuse-linker-plugin
-AM_LDFLAGS = -static
+AM_LDFLAGS = -static -pthread
 
 DIST_SUBDIRS = docs benchmark examples
 
@@ -17,7 +17,8 @@ src/dynamic/vector.c \
 src/dynamic/string.c \
 src/dynamic/map.c \
 src/dynamic/maps.c \
-src/dynamic/mapi.c
+src/dynamic/mapi.c \
+src/dynamic/pool.c
 
 HEADER_FILES = \
 src/dynamic/hash.h \
@@ -27,7 +28,8 @@ src/dynamic/vector.h \
 src/dynamic/string.h \
 src/dynamic/map.h \
 src/dynamic/maps.h \
-src/dynamic/mapi.h
+src/dynamic/mapi.h \
+src/dynamic/pool.c
 
 AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la
@@ -53,7 +55,17 @@ libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
 CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs
 CHECK_LDADD = libdynamic_test.a -lcmocka
-CHECK_LDFLAGS_EXTRA = -Wl,--wrap=malloc -Wl,--wrap=calloc -Wl,--wrap=realloc -Wl,--wrap=aligned_alloc -Wl,--wrap=abort
+CHECK_LDFLAGS_EXTRA = \
+-Wl,--wrap=malloc \
+-Wl,--wrap=calloc \
+-Wl,--wrap=realloc \
+-Wl,--wrap=aligned_alloc \
+-Wl,--wrap=abort \
+-Wl,--wrap=recv \
+-Wl,--wrap=send \
+-Wl,--wrap=pthread_create \
+-Wl,--wrap=socketpair \
+-pthread
 
 check_PROGRAMS = test/hash
 test_hash_CFLAGS = $(CHECK_CFLAGS)
@@ -102,6 +114,12 @@ test_map_CFLAGS = $(CHECK_CFLAGS)
 test_map_LDADD = $(CHECK_LDADD)
 test_map_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_map_SOURCES = test/map.c test/mock.c
+
+check_PROGRAMS += test/pool
+test_pool_CFLAGS = $(CHECK_CFLAGS)
+test_pool_LDADD = $(CHECK_LDADD)
+test_pool_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_pool_SOURCES = test/pool.c test/mock.c
 
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 
