@@ -42,26 +42,20 @@ core_status core_dispatch(core_handler *handler, int type, uintptr_t data)
 void core_loop(core *core)
 {
   struct epoll_event events[CORE_MAX_EVENTS];
-  core_handler *handlers;
   int n, i;
 
-  while (core->handlers_active || vector_size(&core->next))
+  while (core->errors == 0 && (core->handlers_active || vector_size(&core->next)))
     {
-      handlers = vector_data(&core->next);
       for (i = 0; (size_t) i < vector_size(&core->next); i ++)
-        (void) core_dispatch(&handlers[i], 0, 0);
+        (void) core_dispatch(vector_at(&core->next, i), 0, 0);
       vector_clear(&core->next, NULL);
 
       n = epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1);
       if (n == -1)
-        {
-          core->errors ++;
-          break;
-        }
+        core->errors ++;
 
-      handlers = vector_data(&core->handlers);
       for (i = 0; i < n; i ++)
-        (void) core_dispatch(&handlers[events[i].data.fd], 0, events[i].events);
+        (void) core_dispatch(vector_at(&core->handlers, events[i].data.fd), 0, events[i].events);
     }
 }
 
