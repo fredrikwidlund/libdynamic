@@ -18,7 +18,8 @@ src/dynamic/string.c \
 src/dynamic/map.c \
 src/dynamic/maps.c \
 src/dynamic/mapi.c \
-src/dynamic/pool.c
+src/dynamic/pool.c \
+src/dynamic/core.c
 
 HEADER_FILES = \
 src/dynamic/hash.h \
@@ -29,7 +30,8 @@ src/dynamic/string.h \
 src/dynamic/map.h \
 src/dynamic/maps.h \
 src/dynamic/mapi.h \
-src/dynamic/pool.c
+src/dynamic/pool.h \
+src/dynamic/core.h
 
 AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la

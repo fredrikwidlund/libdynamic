@@ -19,6 +19,7 @@ extern "C" {
 #include <dynamic/maps.h>
 #include <dynamic/mapi.h>
 #include <dynamic/pool.h>
+#include <dynamic/core.h>
 
 #ifdef __cplusplus
 }

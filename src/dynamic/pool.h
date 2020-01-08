@@ -52,7 +52,7 @@ struct pool_message
 struct pool
 {
   int                socket;
-  int                error;
+  int                errors;
 
   size_t             workers_min;
   size_t             workers_max;

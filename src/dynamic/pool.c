@@ -53,7 +53,7 @@ static void pool_flush(pool *pool)
       if (n == -1)
         {
           if (errno != EAGAIN)
-            pool->error ++;
+            pool->errors ++;
           break;
         }
       list_splice(list_front(&pool->messages_transit), message);
@@ -77,7 +77,7 @@ static void pool_maintain(pool *pool)
       if (e == -1)
         {
           list_erase(worker, NULL);
-          pool->error ++;
+          pool->errors ++;
           return;
         }
       pool->workers_count ++;
@@ -105,7 +105,7 @@ void pool_construct(pool *pool)
 
   e = socketpair(AF_UNIX, SOCK_STREAM, PF_UNSPEC, fd);
   if (e == -1)
-    pool->error ++;
+    pool->errors ++;
 
   pool->socket = fd[0];
   pool->workers_socket = fd[1];
@@ -156,7 +156,7 @@ int pool_fd(pool *pool)
 
 int pool_error(pool *pool)
 {
-  return pool->error != 0;
+  return pool->errors != 0;
 }
 
 void pool_enqueue(pool *pool, pool_callback *callback, void *state)
@@ -184,7 +184,7 @@ void *pool_collect(pool *pool, int flags)
       if (n == -1)
         {
           if (errno != EAGAIN)
-            pool->error ++;
+            pool->errors ++;
           return NULL;
         }
 
