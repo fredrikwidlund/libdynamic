@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-AM_CFLAGS = -std=gnu11 -g -O3 -flto -fuse-linker-plugin
+AM_CFLAGS = -std=gnu11 -g -O3 -flto
 AM_LDFLAGS = -static -pthread
 
 DIST_SUBDIRS = docs benchmark examples
