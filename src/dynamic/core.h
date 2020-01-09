@@ -42,6 +42,7 @@ void        core_destruct(core *);
 core_status core_dispatch(core_handler *, int, uintptr_t);
 void        core_loop(core *);
 void        core_add(core *, core_callback *, void *, int, int);
+void        core_modify(core *, int, int);
 void        core_delete(core *, int);
 int         core_queue(core *, core_callback *, void *);
 void        core_cancel(core *, int);

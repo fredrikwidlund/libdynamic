@@ -61,8 +61,8 @@ void core_loop(core *core)
 
 void core_add(core *core, core_callback *callback, void *state, int fd, int events)
 {
-  int e;
   core_handler *handlers;
+  int e;
 
   while (vector_size(&core->handlers) <= (size_t) fd)
     vector_push_back(&core->handlers, &core_handler_default);
@@ -77,6 +77,20 @@ void core_add(core *core, core_callback *callback, void *state, int fd, int even
     }
   else
     core->handlers_active ++;
+}
+
+void core_modify(core *core, int fd, int events)
+{
+  core_handler *handlers;
+  int e;
+
+  e = epoll_ctl(core->fd, EPOLL_CTL_MOD, fd, (struct epoll_event[]){{.events = events, .data.fd = fd}});
+  if (e == -1)
+    {
+      handlers = vector_data(&core->handlers);
+      handlers[fd] = core_handler_default;
+      core->errors ++;
+    }
 }
 
 void core_delete(core *core, int fd)
