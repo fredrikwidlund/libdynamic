@@ -30,6 +30,7 @@ struct core_handler
 
 struct core
 {
+  size_t         ref;
   int            fd;
   int            errors;
   vector         handlers;
@@ -46,5 +47,6 @@ void        core_modify(core *, int, int);
 void        core_delete(core *, int);
 int         core_queue(core *, core_callback *, void *);
 void        core_cancel(core *, int);
+int         core_errors(core *);
 
 #endif /* CORE_H_INCLUDED */
