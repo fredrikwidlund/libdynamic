@@ -36,7 +36,7 @@ void core_construct(core *core)
       vector_construct(&core->next, sizeof(core_handler));
       core->fd = epoll_create1(EPOLL_CLOEXEC);
       if (core->fd == -1)
-	core->errors ++;
+        core->errors ++;
     }
   core->ref ++;
 }
@@ -48,7 +48,7 @@ void core_destruct(core *core)
   if (!core->ref)
     {
       if (core->fd >= 0)
-	(void) close(core->fd);
+        (void) close(core->fd);
       vector_destruct(&core->handlers, NULL);
       vector_destruct(&core->next, NULL);
     }
@@ -133,7 +133,7 @@ void core_delete(core *core, int fd)
   core->handlers_active --;
 }
 
-int core_next(core *core,core_callback *callback, void *state)
+int core_next(core *core, core_callback *callback, void *state)
 {
   core_handler handler = {.callback = callback, .state = state};
 

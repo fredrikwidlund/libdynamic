@@ -45,7 +45,7 @@ void        core_loop(core *);
 void        core_add(core *, core_callback *, void *, int, int);
 void        core_modify(core *, int, int);
 void        core_delete(core *, int);
-int         core_queue(core *, core_callback *, void *);
+int         core_next(core *, core_callback *, void *);
 void        core_cancel(core *, int);
 int         core_errors(core *);
 
