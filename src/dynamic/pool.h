@@ -1,5 +1,6 @@
 #ifndef POOL_H_INCLUDED
 #define POOL_H_INCLUDED
+#include <pthread.h>
 
 #define POOL_WORKERS_MIN 1
 #define POOL_WORKERS_MAX 16
