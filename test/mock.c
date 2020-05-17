@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/epoll.h>
 #include <setjmp.h>
+
 #include <cmocka.h>
 
 int debug_out_of_memory = 0;
@@ -9,6 +11,9 @@ int debug_recv = 0;
 int debug_send = 0;
 int debug_pthread_create = 0;
 int debug_socketpair = 0;
+int debug_epoll_create1 = 0;
+int debug_epoll_ctl = 0;
+int debug_epoll_wait = 0;
 
 void *__real_malloc(size_t);
 void *__wrap_malloc(size_t size)
@@ -65,4 +70,22 @@ int __real_socketpair(int, int, int, int [2]);
 int __wrap_socketpair(int domain, int type, int protocol, int socket_vector[2])
 {
   return debug_socketpair ? -1 : __real_socketpair(domain, type, protocol, socket_vector);
+}
+
+int __real_epoll_create1(int);
+int __wrap_epoll_create1(int flags)
+{
+  return debug_epoll_create1 ? -1 : __real_epoll_create1(flags);
+}
+
+int __real_epoll_ctl(int, int ,int, struct epoll_event *);
+int __wrap_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)
+{
+  return debug_epoll_ctl ? -1 : __real_epoll_ctl(epfd, op, fd, event);
+}
+
+int __real_epoll_wait(int, struct epoll_event *, int, int);
+int __wrap_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)
+{
+  return debug_epoll_wait ? -1 : __real_epoll_wait(epfd, events, maxevents, timeout);
 }

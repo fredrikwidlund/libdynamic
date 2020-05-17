@@ -31,7 +31,6 @@ void core_construct(core *core)
   core = core_get(core);
   if (!core->ref)
     {
-      core = core_get(core);
       vector_construct(&core->handlers, sizeof(core_handler));
       vector_construct(&core->next, sizeof(core_handler));
       core->fd = epoll_create1(EPOLL_CLOEXEC);
@@ -51,6 +50,7 @@ void core_destruct(core *core)
         (void) close(core->fd);
       vector_destruct(&core->handlers, NULL);
       vector_destruct(&core->next, NULL);
+      *core = (struct core) {0};
     }
 }
 
@@ -71,7 +71,7 @@ void core_loop(core *core)
         (void) core_dispatch(vector_at(&core->next, i), 0, 0);
       vector_clear(&core->next, NULL);
 
-      n = epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1);
+      n = core->handlers_active ? epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1) : 0;
       if (n == -1)
         core->errors ++;
 
@@ -122,9 +122,6 @@ void core_delete(core *core, int fd)
   int e;
 
   core = core_get(core);
-  if (fd < 0)
-    return;
-
   e = epoll_ctl(core->fd, EPOLL_CTL_DEL, fd, NULL);
   if (e == -1)
     core->errors ++;

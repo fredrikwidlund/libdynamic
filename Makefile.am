@@ -67,6 +67,9 @@ CHECK_LDFLAGS_EXTRA = \
 -Wl,--wrap=send \
 -Wl,--wrap=pthread_create \
 -Wl,--wrap=socketpair \
+-Wl,--wrap=epoll_create1 \
+-Wl,--wrap=epoll_ctl \
+-Wl,--wrap=epoll_wait \
 -pthread
 
 check_PROGRAMS = test/hash
@@ -122,6 +125,12 @@ test_pool_CFLAGS = $(CHECK_CFLAGS)
 test_pool_LDADD = $(CHECK_LDADD)
 test_pool_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_pool_SOURCES = test/pool.c test/mock.c
+
+check_PROGRAMS += test/core
+test_core_CFLAGS = $(CHECK_CFLAGS)
+test_core_LDADD = $(CHECK_LDADD)
+test_core_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_core_SOURCES = test/core.c test/mock.c
 
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 
