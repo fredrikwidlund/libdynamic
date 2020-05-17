@@ -33,3 +33,13 @@ Released 2019-09-02
 * New features:
 
   - Add list splicing
+
+Version 2.0
+===========
+
+Released 2020-05-17
+
+* New features:
+
+  - Add event handling
+  - Add worker pools
