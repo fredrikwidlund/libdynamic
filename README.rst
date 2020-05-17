@@ -1,5 +1,5 @@
-README
-======
+libdynamic v2.0
+===============
 
 .. image:: https://travis-ci.org/fredrikwidlund/libdynamic.svg?branch=master
   :target: https://travis-ci.org/fredrikwidlund/libdynamic
@@ -16,51 +16,43 @@ README
 
 Documentation is available at http://libdynamic.readthedocs.io/en/latest/.
 
-Compiling and installing
-========================
+Description
+===========
 
-The source uses GNU Autotools (autoconf_, automake_, libtool_), so
-compiling and installing is simple:
+Status
+======
 
-.. code-block:: shell
+Build
+=====
 
-    $ ./configure
-    $ make
-    $ make install
+Build from the Git repository
+-------------------------
 
-To run the test suite which requires cmocka_ and valgrind_, invoke:
-
-.. code-block:: shell
-
-    $ make check
-
-To change the destination directory (``/usr/local`` by default), use
-the ``--prefix=DIR`` argument to ``./configure``. See ``./configure
---help`` for the list of all possible configuration options.
-
-The command ``make check`` runs the test suite distributed with
-libdynamic. This step is not strictly necessary, but it may find possible
-problems that libdynamic has on your platform. If any problems are found,
-please report them.
-
-If you obtained the source from a Git repository (or any other source
-control system), there's no ``./configure`` script as it's not kept in
-version control. To create the script, the build system needs to be
-bootstrapped. There are many ways to do this, but the easiest one is
-to use the supplied autogen.sh script:
+Building from Git requires GNU Autotools (autoconf_, automake_, libtool_).
 
 .. code-block:: shell
 
     $ ./autogen.sh
+    $ ./configure
+    $ make install
     
-Benchmarks
-==========
+Build from release
+------------------
 
-The library uses a separate repository for some additional benchmarks_.
+.. code-block:: shell
 
-.. figure:: https://cloud.githubusercontent.com/assets/2116262/22250690/1e9e74ca-e248-11e6-8366-6356e8611c06.png
-   
-   ``Intel(R) Xeon(R) CPU E5-2623 v3 @ 3.00GHz``
+    $ ./configure
+    $ make install
+
+Running unit tests
+------------------
+
+The test suite requires cmocka_ and valgrind_.
+
+.. code-block:: shell
+
+    $ ./configure
+    $ make check
 
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
