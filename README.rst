@@ -61,7 +61,7 @@ The test suite requires cmocka_ and valgrind_.
 Versioning
 ==========
 
-libdynamic follows the semantic_versioning_ scheme.
+libdynamic follows the `semantic versioning`_ scheme.
 
 Licensing
 =========
@@ -69,7 +69,7 @@ Licensing
 libdynamic is licensed under the MIT license. 
 
 .. _libreactor: https://github.com/fredrikwidlund/libreactor
-.. _semantic_versioning: https://semver.org/
+.. _`semantic versioning`: https://semver.org/
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
 .. _autoconf: http://www.gnu.org/software/autoconf/
