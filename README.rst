@@ -6,6 +6,9 @@ README
     
 .. image:: https://coveralls.io/repos/github/fredrikwidlund/libdynamic/badge.svg?branch=master
   :target: https://coveralls.io/github/fredrikwidlund/libdynamic?branch=master
+  
+.. image:: https://img.shields.io/lgtm/grade/cpp/g/fredrikwidlund/libdynamic.svg?logo=lgtm&logoWidth=18)
+  :target: https://lgtm.com/projects/g/fredrikwidlund/libdynamic/context:cpp
 
 .. image:: https://readthedocs.org/projects/libdynamic/badge/?version=latest
   :target: http://libdynamic.readthedocs.io/en/latest/?badge=latest
