@@ -19,14 +19,18 @@ Documentation is available at http://libdynamic.readthedocs.io/en/latest/.
 Description
 ===========
 
+libdynamic is a utility library for C that will give you dynamic data structures like buffers, lists, vectors, maps and strings. It also includes asynchronous worker pools, and a core event loop framework. It is used for example in conjunction with libreactor serving many millions of transactions daily.
+
 Status
 ======
+
+libdynamic currently is (and has been for many years) used in high concurrency and high performance production environments in a very robust manner.
 
 Build
 =====
 
 Build from the Git repository
--------------------------
+-----------------------------
 
 Building from Git requires GNU Autotools (autoconf_, automake_, libtool_).
 
