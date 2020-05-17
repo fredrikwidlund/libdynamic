@@ -32,17 +32,17 @@ Building from Git requires GNU Autotools (autoconf_, automake_, libtool_).
 
 .. code-block:: shell
 
-    $ ./autogen.sh
-    $ ./configure
-    $ make install
+    ./autogen.sh
+    ./configure
+    make install
     
 Build from release
 ------------------
 
 .. code-block:: shell
 
-    $ ./configure
-    $ make install
+    ./configure
+    make install
 
 Running unit tests
 ------------------
@@ -51,8 +51,8 @@ The test suite requires cmocka_ and valgrind_.
 
 .. code-block:: shell
 
-    $ ./configure
-    $ make check
+    ./configure
+    make check
 
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
