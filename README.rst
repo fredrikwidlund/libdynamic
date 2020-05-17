@@ -19,7 +19,7 @@ Documentation is available at http://libdynamic.readthedocs.io/en/latest/.
 Description
 ===========
 
-libdynamic is a utility library for C that will give you dynamic data structures like buffers, lists, vectors, maps and strings. It also includes asynchronous worker pools, and a core event loop framework. It is used for example in conjunction with libreactor serving many millions of transactions daily.
+libdynamic is a utility library for C that will give you dynamic data structures like buffers, lists, vectors, maps and strings. It also includes asynchronous worker pools, and a core event driven framework. It is used, for example, in conjunction with libreactor_ serving many millions of transactions daily.
 
 Status
 ======
@@ -58,6 +58,7 @@ The test suite requires cmocka_ and valgrind_.
     ./configure
     make check
 
+.. _libreactor: https://github.com/fredrikwidlund/libreactor
 .. _cmocka: https://cmocka.org/
 .. _valgrind: http://valgrind.org/
 .. _autoconf: http://www.gnu.org/software/autoconf/
