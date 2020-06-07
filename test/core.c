@@ -38,7 +38,7 @@ static core_status in(core_event *event)
   return CORE_ABORT;
 }
 
-static void basic()
+static void basic(__attribute__ ((unused)) void **state)
 {
   core c;
   int n, id, e, p[2];
@@ -89,7 +89,7 @@ static void basic()
   assert_int_equal(n, 1);
 }
 
-static void error()
+static void error(__attribute__ ((unused)) void **state)
 {
   /* epoll_create1 error */
   debug_epoll_create1 = 1;

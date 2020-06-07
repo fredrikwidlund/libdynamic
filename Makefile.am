@@ -1,8 +1,9 @@
+AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-AM_CFLAGS = -std=gnu11 -g -O3 -flto
-AM_LDFLAGS = -static -pthread
+AM_CFLAGS = -std=gnu2x -g -O3 -march=native -flto -I$(srcdir)/src
+AM_LDFLAGS = -static
 
-DIST_SUBDIRS = docs benchmark examples
+DIST_SUBDIRS = docs examples
 
 EXTRA_DIST = \
 CHANGES \
@@ -10,6 +11,8 @@ LICENSE \
 README.rst
 
 SOURCE_FILES = \
+src/dynamic/segment.c \
+src/dynamic/utility.c \
 src/dynamic/hash.c \
 src/dynamic/buffer.c \
 src/dynamic/list.c \
@@ -22,6 +25,8 @@ src/dynamic/pool.c \
 src/dynamic/core.c
 
 HEADER_FILES = \
+src/dynamic/segment.h \
+src/dynamic/utility.h \
 src/dynamic/hash.h \
 src/dynamic/buffer.h \
 src/dynamic/list.h \
@@ -33,7 +38,6 @@ src/dynamic/mapi.h \
 src/dynamic/pool.h \
 src/dynamic/core.h
 
-AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES= libdynamic.la
 libdynamic_la_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
@@ -55,7 +59,7 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs
+CHECK_CFLAGS = -std=gnu2x -O0 -g -ftest-coverage -fprofile-arcs -I$(srcdir)/src -DGCOV_BUILD
 CHECK_LDADD = libdynamic_test.a -lcmocka
 CHECK_LDFLAGS_EXTRA = \
 -Wl,--wrap=malloc \
@@ -72,7 +76,21 @@ CHECK_LDFLAGS_EXTRA = \
 -Wl,--wrap=epoll_wait \
 -pthread
 
-check_PROGRAMS = test/hash
+check_PROGRAMS =
+
+check_PROGRAMS += test/segment
+test_segment_CFLAGS = $(CHECK_CFLAGS)
+test_segment_LDADD = $(CHECK_LDADD)
+test_segment_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_segment_SOURCES = test/segment.c test/mock.c
+
+check_PROGRAMS += test/utility
+test_utility_CFLAGS = $(CHECK_CFLAGS)
+test_utility_LDADD = $(CHECK_LDADD)
+test_utility_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
+test_utility_SOURCES = test/utility.c test/mock.c
+
+check_PROGRAMS += test/hash
 test_hash_CFLAGS = $(CHECK_CFLAGS)
 test_hash_LDADD = $(CHECK_LDADD)
 test_hash_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)

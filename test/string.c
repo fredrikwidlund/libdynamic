@@ -11,7 +11,7 @@
 #include "../src/dynamic/vector.h"
 #include "../src/dynamic/string.h"
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   string s, s2;
   vector v;

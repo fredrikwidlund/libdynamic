@@ -12,7 +12,7 @@
 extern int debug_out_of_memory;
 extern int debug_abort;
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   buffer b;
 
@@ -49,7 +49,7 @@ void core()
   buffer_destruct(&b);
 }
 
-void alloc()
+void alloc(__attribute__ ((unused)) void **state)
 {
   buffer b;
 

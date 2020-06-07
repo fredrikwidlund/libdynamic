@@ -1,15 +1,17 @@
 #ifndef DYNAMIC_H_INCLUDED
 #define DYNAMIC_H_INCLUDED
 
-#define DYNAMIC_VERSION "2.0.0"
+#define DYNAMIC_VERSION "2.1.0"
 #define DYNAMIC_VERSION_MAJOR 2
-#define DYNAMIC_VERSION_MINOR 0
+#define DYNAMIC_VERSION_MINOR 1
 #define DYNAMIC_VERSION_PATCH 0
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include <dynamic/segment.h>
+#include <dynamic/utility.h>
 #include <dynamic/hash.h>
 #include <dynamic/buffer.h>
 #include <dynamic/list.h>

@@ -24,7 +24,7 @@ static int compare(void *a, void *b)
   return strcmp(sa, sb);
 }
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   list l;
   char *a[] = {"a", "list", "of", "string", "pointers"}, **s;
@@ -59,7 +59,7 @@ void core()
   list_destruct(&l, NULL);
 }
 
-void object_release()
+void object_release(__attribute__ ((unused)) void **state)
 {
   list l;
   char *s;
@@ -76,7 +76,7 @@ void object_release()
   list_destruct(&l, release);
 }
 
-void alloc()
+void alloc(__attribute__ ((unused)) void **state)
 {
   list l;
 
@@ -89,7 +89,7 @@ void alloc()
   list_destruct(&l, NULL);
 }
 
-void unit()
+void unit(__attribute__ ((unused)) void **state)
 {
   list l, l2;
   int *p;
@@ -140,7 +140,7 @@ void unit()
   list_destruct(&l, NULL);
 }
 
-void edge()
+void edge(__attribute__ ((unused)) void **state)
 {
   list l1;
   int *i;

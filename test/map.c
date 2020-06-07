@@ -32,7 +32,7 @@ static size_t hash(void *p)
   return *(uint32_t *) p;
 }
 
-void erase()
+void erase(__attribute__ ((unused)) void **state)
 {
   map m;
   uint32_t last = MAP_ELEMENTS_CAPACITY_MIN - 1, coll1 = 1 << 16, coll2 = 1 << 17 ;

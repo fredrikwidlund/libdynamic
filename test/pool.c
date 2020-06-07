@@ -32,7 +32,7 @@ void job_failsend(void *arg)
   (*state) ++;
 }
 
-void core()
+void core(__attribute__ ((unused)) void **ununsed)
 {
   pool p;
   int i, state = 0, *statep;
@@ -63,7 +63,7 @@ void core()
   pool_destruct(&p);
 }
 
-void call_failures()
+void call_failures(__attribute__ ((unused)) void **unused)
 {
   pool p;
   int state = 0;

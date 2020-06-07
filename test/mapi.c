@@ -10,7 +10,7 @@
 #include "../src/dynamic/map.h"
 #include "../src/dynamic/mapi.h"
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   mapi mapi;
 

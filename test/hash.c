@@ -9,7 +9,7 @@
 
 #include "../src/dynamic/hash.h"
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   int i;
   struct

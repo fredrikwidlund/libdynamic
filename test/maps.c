@@ -18,7 +18,7 @@ void release(maps_entry *e)
   free(e->key);
 }
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   maps maps;
   int i;
@@ -47,7 +47,7 @@ void core()
   maps_destruct(&maps, release);
 }
 
-void memory()
+void memory(__attribute__ ((unused)) void **state)
 {
   maps maps;
 

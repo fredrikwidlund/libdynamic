@@ -15,7 +15,7 @@ static void release(void *object)
   free(*(char **) object);
 }
 
-void core()
+void core(__attribute__ ((unused)) void **state)
 {
   vector v;
   char *a[] = {"a", "list", "of", "string", "pointers"}, *s;

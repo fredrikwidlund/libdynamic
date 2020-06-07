@@ -1,6 +1,0 @@
-#ifndef BENCHMARKS_MAP_H_INCLUDED
-#define BENCHMARKS_MAP_H_INCLUDED
-
-uint64_t ntime(void);
-
-#endif /* BENCHMARKS_MAP_H_INCLUDED */
