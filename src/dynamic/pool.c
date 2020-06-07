@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <sys/socket.h>
 #include <sys/param.h>
+#include <sys/types.h>
 
 #include "list.h"
 #include "pool.h"

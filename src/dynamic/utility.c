@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 #include "dynamic.h"
 
