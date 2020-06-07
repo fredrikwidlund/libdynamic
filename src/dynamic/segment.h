@@ -9,7 +9,7 @@ struct segment
   size_t  size;
 };
 
-segment segment_empty();
+segment segment_empty(void);
 segment segment_data(void *, size_t);
 segment segment_string(char *);
 segment segment_offset(segment , size_t);

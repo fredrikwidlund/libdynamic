@@ -12,5 +12,5 @@ AM_PROG_CC_C_O
 AC_PROG_CXX
 
 AC_PREFIX_DEFAULT(/usr)
-AC_CONFIG_FILES([Makefile docs/Makefile benchmark/Makefile examples/Makefile libdynamic.pc])
+AC_CONFIG_FILES([Makefile docs/Makefile examples/Makefile libdynamic.pc])
 AC_OUTPUT
