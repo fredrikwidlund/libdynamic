@@ -29,3 +29,8 @@ int segment_equal(segment s1, segment s2)
 {
   return s1.size == s2.size && memcmp(s1.base, s2.base, s1.size) == 0;
 }
+
+int segment_equal_case(segment s1, segment s2)
+{
+  return s1.size == s2.size && strncasecmp(s1.base, s2.base, s1.size) == 0;
+}

@@ -19,6 +19,9 @@ void basic(__attribute__ ((unused)) void **state)
   assert_false(segment_equal(s1, segment_string("nope")));
   assert_true(segment_equal(s1, segment_offset(s2, 1)));
   assert_false(segment_equal(s1, segment_empty()));
+  assert_true(segment_equal_case(s1, segment_string("TeSt")));
+  assert_false(segment_equal_case(s1, segment_string("TeStA")));
+  assert_false(segment_equal_case(s1, segment_string("TeSA")));
 }
 
 int main()

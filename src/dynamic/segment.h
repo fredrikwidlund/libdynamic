@@ -14,5 +14,6 @@ segment segment_data(void *, size_t);
 segment segment_string(char *);
 segment segment_offset(segment , size_t);
 int     segment_equal(segment, segment);
+int     segment_equal_case(segment, segment);
 
 #endif /* SEGMENT_H_INCLUDED */
