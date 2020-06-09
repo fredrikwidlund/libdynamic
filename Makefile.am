@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-AM_CFLAGS = -std=gnu2x -g -O3 -march=native -flto -I$(srcdir)/src
+AM_CFLAGS = -std=gnu11 -g -O3 -march=native -flto -I$(srcdir)/src
 AM_LDFLAGS = -static
 
 DIST_SUBDIRS = docs examples
@@ -59,7 +59,7 @@ check_LIBRARIES = libdynamic_test.a
 libdynamic_test_a_CFLAGS = $(CHECK_CFLAGS)
 libdynamic_test_a_SOURCES = $(SOURCE_FILES) $(HEADER_FILES)
 
-CHECK_CFLAGS = -std=gnu2x -O0 -g -ftest-coverage -fprofile-arcs -I$(srcdir)/src -DGCOV_BUILD
+CHECK_CFLAGS = -std=gnu11 -O0 -g -ftest-coverage -fprofile-arcs -I$(srcdir)/src -DGCOV_BUILD
 CHECK_LDADD = libdynamic_test.a -lcmocka
 CHECK_LDFLAGS_EXTRA = \
 -Wl,--wrap=malloc \
