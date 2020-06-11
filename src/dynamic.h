@@ -6,6 +6,9 @@
 #define DYNAMIC_VERSION_MINOR 1
 #define DYNAMIC_VERSION_PATCH 0
 
+#define dynamic_likely(x)   __builtin_expect(!!(x), 1)
+#define dynamic_unlikely(x) __builtin_expect(!!(x), 0)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
