@@ -36,6 +36,7 @@ void core_construct(core *core)
       core->fd = epoll_create1(EPOLL_CLOEXEC);
       if (core->fd == -1)
         core->errors ++;
+      core->active = 1;
     }
   core->ref ++;
 }
@@ -54,6 +55,12 @@ void core_destruct(core *core)
     }
 }
 
+void core_abort(core *core)
+{
+  core = core_get(core);
+  core->active = 0;
+}
+
 core_status core_dispatch(core_handler *handler, int type, uintptr_t data)
 {
   return handler->callback((core_event[]){{.state = handler->state, .type = type, .data = data}});
@@ -65,7 +72,7 @@ void core_loop(core *core)
   int n, i;
 
   core = core_get(core);
-  while (core->errors == 0 && (core->handlers_active || vector_size(&core->next)))
+  while (core->active && core->errors == 0 && (core->handlers_active || vector_size(&core->next)))
     {
       for (i = 0; (size_t) i < vector_size(&core->next); i ++)
         (void) core_dispatch(vector_at(&core->next, i), 0, 0);

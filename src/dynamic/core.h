@@ -32,6 +32,7 @@ struct core
 {
   size_t         ref;
   int            fd;
+  int            active;
   int            errors;
   vector         handlers;
   size_t         handlers_active;
@@ -40,6 +41,7 @@ struct core
 
 void        core_construct(core *);
 void        core_destruct(core *);
+void        core_abort(core *);
 core_status core_dispatch(core_handler *, int, uintptr_t);
 void        core_loop(core *);
 void        core_add(core *, core_callback *, void *, int, int);
