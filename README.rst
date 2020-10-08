@@ -1,4 +1,4 @@
-libdynamic v2.0
+libdynamic v2.1
 ===============
 
 .. image:: https://travis-ci.org/fredrikwidlund/libdynamic.svg?branch=master
