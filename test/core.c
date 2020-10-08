@@ -87,6 +87,12 @@ static void basic(__attribute__ ((unused)) void **state)
   core_loop(NULL);
   core_destruct(NULL);
   assert_int_equal(n, 1);
+
+  /* abort */
+  core_construct(NULL);
+  core_abort(NULL);
+  core_loop(NULL);
+  core_destruct(NULL);
 }
 
 static void error(__attribute__ ((unused)) void **state)
