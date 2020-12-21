@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-AM_CFLAGS = -std=gnu11 -g -O3 -march=native -flto -I$(srcdir)/src
+AM_CFLAGS = -std=gnu11 -g -O3 -march=native -flto -I$(srcdir)/src -fPIC
 AM_LDFLAGS = -static
 
 DIST_SUBDIRS = docs examples
