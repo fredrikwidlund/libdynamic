@@ -88,6 +88,15 @@ static void basic(__attribute__((unused)) void **state)
   core_destruct(NULL);
   assert_int_equal(n, 1);
 
+  /* time and counters */
+  core_construct(NULL);
+  core_now(NULL);
+  core_now(NULL);
+  core_get_counters(NULL);
+  core_clear_counters(NULL);
+  core_destruct(NULL);
+
+
   /* abort */
   core_construct(NULL);
   core_abort(NULL);
