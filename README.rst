@@ -1,4 +1,4 @@
-libdynamic v2.1
+libdynamic v2.2
 ===============
 
 .. image:: https://travis-ci.org/fredrikwidlund/libdynamic.svg?branch=master
@@ -47,9 +47,9 @@ Build from release
 
 .. code-block:: shell
 
-    wget https://github.com/fredrikwidlund/libdynamic/releases/download/v2.0.0/libdynamic-2.0.0.tar.gz
-    tar fxz libdynamic-2.0.0.tar.gz
-    cd libdynamic-2.0.0
+    wget https://github.com/fredrikwidlund/libdynamic/releases/download/v2.0.0/libdynamic-2.2.0.tar.gz
+    tar fxz libdynamic-2.2.0.tar.gz
+    cd libdynamic-2.2.0
     ./configure
     make install
 
