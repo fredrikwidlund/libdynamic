@@ -47,7 +47,7 @@ Build from release
 
 .. code-block:: shell
 
-    wget https://github.com/fredrikwidlund/libdynamic/releases/download/v2.0.0/libdynamic-2.2.0.tar.gz
+    wget https://github.com/fredrikwidlund/libdynamic/releases/download/v2.2.0/libdynamic-2.2.0.tar.gz
     tar fxz libdynamic-2.2.0.tar.gz
     cd libdynamic-2.2.0
     ./configure
