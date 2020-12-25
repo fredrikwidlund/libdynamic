@@ -98,7 +98,7 @@ void vector_erase_range(vector *v, size_t first, size_t last, vector_release *re
   size_t i;
 
   if (release)
-    for (i = first; i < last; i ++)
+    for (i = first; i < last; i++)
       release(vector_at(v, i));
 
   buffer_erase(&v->buffer, first * v->object_size, (last - first) * v->object_size);

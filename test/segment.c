@@ -9,7 +9,7 @@
 
 #include "dynamic.h"
 
-void basic(__attribute__ ((unused)) void **state)
+void basic(__attribute__((unused)) void **state)
 {
   segment s1, s2;
 
@@ -27,8 +27,7 @@ void basic(__attribute__ ((unused)) void **state)
 int main()
 {
   const struct CMUnitTest tests[] = {
-    cmocka_unit_test(basic)
-  };
+      cmocka_unit_test(basic)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

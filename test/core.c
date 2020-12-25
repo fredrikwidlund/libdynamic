@@ -38,7 +38,7 @@ static core_status in(core_event *event)
   return CORE_ABORT;
 }
 
-static void basic(__attribute__ ((unused)) void **state)
+static void basic(__attribute__((unused)) void **state)
 {
   core c;
   int n, id, e, p[2];
@@ -95,7 +95,7 @@ static void basic(__attribute__ ((unused)) void **state)
   core_destruct(NULL);
 }
 
-static void error(__attribute__ ((unused)) void **state)
+static void error(__attribute__((unused)) void **state)
 {
   /* epoll_create1 error */
   debug_epoll_create1 = 1;
@@ -130,10 +130,9 @@ int main()
   int e;
 
   const struct CMUnitTest tests[] =
-    {
-     cmocka_unit_test(basic),
-     cmocka_unit_test(error)
-    };
+      {
+          cmocka_unit_test(basic),
+          cmocka_unit_test(error)};
 
   e = cmocka_run_group_tests(tests, NULL, NULL);
   (void) close(0);

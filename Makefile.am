@@ -155,3 +155,6 @@ dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 TESTS = $(check_PROGRAMS) test/coverage.sh test/valgrind.sh
 
 CLEANFILES = {.,src/dynamic,test}/*.{gcno,gcda,gcov}
+
+indent:
+	clang-format -i src/dynamic/*.c test/*.c

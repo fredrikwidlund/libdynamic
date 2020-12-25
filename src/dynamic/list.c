@@ -17,7 +17,7 @@ static list_item *list_item_new(void *object, size_t size)
 {
   list_item *item;
 
-  item = calloc(1, sizeof (list_item) + size);
+  item = calloc(1, sizeof(list_item) + size);
   if (!item)
     abort();
 
@@ -147,9 +147,7 @@ void *list_find(list *l, list_compare *compare, void *object)
 {
   void *list_object;
 
-  list_foreach(l, list_object)
-    if (compare(object, list_object) == 0)
-      return list_object;
+  list_foreach(l, list_object) if (compare(object, list_object) == 0) return list_object;
 
   return NULL;
 }

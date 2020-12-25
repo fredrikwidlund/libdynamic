@@ -21,7 +21,7 @@ void job(void *arg)
 {
   _Atomic int *state = arg;
 
-  (*state) ++;
+  (*state)++;
 }
 
 void job_failsend(void *arg)
@@ -29,10 +29,10 @@ void job_failsend(void *arg)
   _Atomic int *state = arg;
 
   debug_send = 1;
-  (*state) ++;
+  (*state)++;
 }
 
-void core(__attribute__ ((unused)) void **ununsed)
+void core(__attribute__((unused)) void **ununsed)
 {
   pool p;
   int i, state = 0, *statep;
@@ -42,7 +42,7 @@ void core(__attribute__ ((unused)) void **ununsed)
   pool_limits(&p, 1, 8);
 
   /* process jobs */
-  for (i = 0; i < 1000; i ++)
+  for (i = 0; i < 1000; i++)
     pool_enqueue(&p, job, &state);
   while (pool_jobs(&p))
     statep = pool_collect(&p, 0);
@@ -54,7 +54,7 @@ void core(__attribute__ ((unused)) void **ununsed)
   assert_int_equal(state, 1000);
 
   /* create jobs without collecting */
-  for (i = 0; i < 1000; i ++)
+  for (i = 0; i < 1000; i++)
     pool_enqueue(&p, job, &state);
   assert_true(pool_fd(&p) >= 0);
   assert_int_equal(pool_error(&p), 0);
@@ -63,7 +63,7 @@ void core(__attribute__ ((unused)) void **ununsed)
   pool_destruct(&p);
 }
 
-void call_failures(__attribute__ ((unused)) void **unused)
+void call_failures(__attribute__((unused)) void **unused)
 {
   pool p;
   int state = 0;
@@ -116,10 +116,10 @@ void call_failures(__attribute__ ((unused)) void **unused)
 int main()
 {
   const struct CMUnitTest tests[] =
-    {
-     cmocka_unit_test(core),
-     cmocka_unit_test(call_failures),
-    };
+      {
+          cmocka_unit_test(core),
+          cmocka_unit_test(call_failures),
+      };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

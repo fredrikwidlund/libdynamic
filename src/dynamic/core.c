@@ -23,7 +23,8 @@ static uint64_t core_tsc(void)
 {
 #if defined(__x86_64__) || defined(__amd64__)
   uint32_t lo, hi;
-  __asm__ volatile ("RDTSC" : "=a" (lo), "=d" (hi));
+  __asm__ volatile("RDTSC"
+                   : "=a"(lo), "=d"(hi));
   return (((uint64_t) hi) << 32) | lo;
 #else
   return 0;
@@ -42,29 +43,29 @@ void core_construct(core *core)
 
   core = core_get(core);
   if (!core->ref)
-    {
-      vector_construct(&core->handlers, sizeof(core_handler));
-      vector_construct(&core->next, sizeof(core_handler));
-      core->fd = epoll_create1(EPOLL_CLOEXEC);
-      if (core->fd == -1)
-        core->errors ++;
-      core->active = 1;
-    }
-  core->ref ++;
+  {
+    vector_construct(&core->handlers, sizeof(core_handler));
+    vector_construct(&core->next, sizeof(core_handler));
+    core->fd = epoll_create1(EPOLL_CLOEXEC);
+    if (core->fd == -1)
+      core->errors++;
+    core->active = 1;
+  }
+  core->ref++;
 }
 
 void core_destruct(core *core)
 {
   core = core_get(core);
-  core->ref --;
+  core->ref--;
   if (!core->ref)
-    {
-      if (core->fd >= 0)
-        (void) close(core->fd);
-      vector_destruct(&core->handlers, NULL);
-      vector_destruct(&core->next, NULL);
-      *core = (struct core) {0};
-    }
+  {
+    if (core->fd >= 0)
+      (void) close(core->fd);
+    vector_destruct(&core->handlers, NULL);
+    vector_destruct(&core->next, NULL);
+    *core = (struct core) {0};
+  }
 }
 
 void core_abort(core *core)
@@ -75,7 +76,7 @@ void core_abort(core *core)
 
 core_status core_dispatch(core_handler *handler, int type, uintptr_t data)
 {
-  return handler->callback((core_event[]){{.state = handler->state, .type = type, .data = data}});
+  return handler->callback((core_event[]) {{.state = handler->state, .type = type, .data = data}});
 }
 
 void core_loop(core *core)
@@ -87,24 +88,24 @@ void core_loop(core *core)
   t1 = core_tsc();
   core = core_get(core);
   while (core->active && core->errors == 0 && (core->handlers_active || vector_size(&core->next)))
-    {
-      for (i = 0; (size_t) i < vector_size(&core->next); i ++)
-        (void) core_dispatch(vector_at(&core->next, i), 0, 0);
-      vector_clear(&core->next, NULL);
+  {
+    for (i = 0; (size_t) i < vector_size(&core->next); i++)
+      (void) core_dispatch(vector_at(&core->next, i), 0, 0);
+    vector_clear(&core->next, NULL);
 
-      t0 = core_tsc();
-      core->time = 0;
-      n = core->handlers_active ? epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1) : 0;
-      core->errors += n == -1;
-      core->counters.awake += t0 - t1;
-      t1 = core_tsc();
-      core->counters.sleep += t1 - t0;
-      core->counters.polls++;
-      core->counters.events += n;
+    t0 = core_tsc();
+    core->time = 0;
+    n = core->handlers_active ? epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1) : 0;
+    core->errors += n == -1;
+    core->counters.awake += t0 - t1;
+    t1 = core_tsc();
+    core->counters.sleep += t1 - t0;
+    core->counters.polls++;
+    core->counters.events += n;
 
-      for (i = 0; i < n; i ++)
-        (void) core_dispatch(vector_at(&core->handlers, events[i].data.fd), 0, events[i].events);
-    }
+    for (i = 0; i < n; i++)
+      (void) core_dispatch(vector_at(&core->handlers, events[i].data.fd), 0, events[i].events);
+  }
 }
 
 void core_add(core *core, core_callback *callback, void *state, int fd, int events)
@@ -118,14 +119,14 @@ void core_add(core *core, core_callback *callback, void *state, int fd, int even
 
   handlers = vector_data(&core->handlers);
   handlers[fd] = (core_handler) {.callback = callback, .state = state};
-  e = epoll_ctl(core->fd, EPOLL_CTL_ADD, fd, (struct epoll_event[]){{.events = events, .data.fd = fd}});
+  e = epoll_ctl(core->fd, EPOLL_CTL_ADD, fd, (struct epoll_event[]) {{.events = events, .data.fd = fd}});
   if (e == -1)
-    {
-      handlers[fd] = core_handler_default;
-      core->errors ++;
-    }
+  {
+    handlers[fd] = core_handler_default;
+    core->errors++;
+  }
   else
-    core->handlers_active ++;
+    core->handlers_active++;
 }
 
 void core_modify(core *core, int fd, int events)
@@ -134,13 +135,13 @@ void core_modify(core *core, int fd, int events)
   int e;
 
   core = core_get(core);
-  e = epoll_ctl(core->fd, EPOLL_CTL_MOD, fd, (struct epoll_event[]){{.events = events, .data.fd = fd}});
+  e = epoll_ctl(core->fd, EPOLL_CTL_MOD, fd, (struct epoll_event[]) {{.events = events, .data.fd = fd}});
   if (e == -1)
-    {
-      handlers = vector_data(&core->handlers);
-      handlers[fd] = core_handler_default;
-      core->errors ++;
-    }
+  {
+    handlers = vector_data(&core->handlers);
+    handlers[fd] = core_handler_default;
+    core->errors++;
+  }
 }
 
 void core_delete(core *core, int fd)
@@ -151,10 +152,10 @@ void core_delete(core *core, int fd)
   core = core_get(core);
   e = epoll_ctl(core->fd, EPOLL_CTL_DEL, fd, NULL);
   if (e == -1)
-    core->errors ++;
+    core->errors++;
   handlers = vector_data(&core->handlers);
   handlers[fd] = core_handler_default;
-  core->handlers_active --;
+  core->handlers_active--;
 }
 
 int core_next(core *core, core_callback *callback, void *state)

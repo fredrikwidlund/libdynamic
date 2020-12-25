@@ -7,14 +7,14 @@
 
 static size_t map_roundup(size_t s)
 {
-  s --;
+  s--;
   s |= s >> 1;
   s |= s >> 2;
   s |= s >> 4;
   s |= s >> 8;
   s |= s >> 16;
   s |= s >> 32;
-  s ++;
+  s++;
 
   return s;
 }
@@ -29,7 +29,7 @@ static void map_release_all(map *m, map_equal *equal, map_release *release)
   size_t i;
 
   if (release)
-    for (i = 0; i < m->elements_capacity; i ++)
+    for (i = 0; i < m->elements_capacity; i++)
       if (!equal(map_element(m, i), NULL))
         release(map_element(m, i));
 }
@@ -43,20 +43,20 @@ static void map_rehash(map *m, size_t size, map_hash *hash, map_set *set, map_eq
   new = *m;
   new.elements_count = 0;
   new.elements_capacity = size;
-  new.elements = malloc(new.elements_capacity * new.element_size);
+  new.elements = malloc(new.elements_capacity *new.element_size);
   if (!new.elements)
     abort();
 
-  for (i = 0; i < new.elements_capacity; i ++)
+  for (i = 0; i < new.elements_capacity; i++)
     set(map_element(&new, i), NULL);
 
   if (m->elements)
-    {
-      for (i = 0; i < m->elements_capacity; i ++)
-        if (!equal(map_element(m, i), NULL))
-          map_insert(&new, map_element(m, i), hash, set, equal, NULL);
-      free(m->elements);
-    }
+  {
+    for (i = 0; i < m->elements_capacity; i++)
+      if (!equal(map_element(m, i), NULL))
+        map_insert(&new, map_element(m, i), hash, set, equal, NULL);
+    free(m->elements);
+  }
 
   *m = new;
 }
@@ -101,13 +101,13 @@ void *map_at(map *m, void *element, map_hash *hash, map_equal *equal)
 
   i = hash(element);
   while (1)
-    {
-      i &= m->elements_capacity - 1;
-      test = map_element(m, i);
-      if (equal(test, NULL) || equal(test, element))
-        return test;
-      i ++;
-    }
+  {
+    i &= m->elements_capacity - 1;
+    test = map_element(m, i);
+    if (equal(test, NULL) || equal(test, element))
+      return test;
+    i++;
+  }
 }
 
 /* modifiers */
@@ -119,10 +119,10 @@ void map_insert(map *m, void *element, map_hash *hash, map_set *set, map_equal *
   map_reserve(m, m->elements_count + 1, hash, set, equal);
   test = map_at(m, element, hash, equal);
   if (equal(test, NULL))
-    {
-      set(test, element);
-      m->elements_count ++;
-    }
+  {
+    set(test, element);
+    m->elements_count++;
+  }
   else if (release)
     release(element);
 }
@@ -134,35 +134,35 @@ void map_erase(map *m, void *element, map_hash *hash, map_set *set, map_equal *e
 
   i = hash(element);
   while (1)
-    {
-      i &= m->elements_capacity - 1;
-      test = map_element(m, i);
-      if (equal(test, NULL))
-        return;
-      if (equal(test, element))
-        break;
-      i ++;
-    }
+  {
+    i &= m->elements_capacity - 1;
+    test = map_element(m, i);
+    if (equal(test, NULL))
+      return;
+    if (equal(test, element))
+      break;
+    i++;
+  }
 
   if (release)
     release(test);
-  m->elements_count --;
+  m->elements_count--;
 
   j = i;
   while (1)
-    {
-      j = (j + 1) & (m->elements_capacity - 1);
-      if (equal(map_element(m, j), NULL))
-        break;
+  {
+    j = (j + 1) & (m->elements_capacity - 1);
+    if (equal(map_element(m, j), NULL))
+      break;
 
-      k = hash(map_element(m, j)) & (m->elements_capacity - 1);
-      if ((i < j && (k <= i || k > j)) ||
-          (i > j && (k <= i && k > j)))
-        {
-          set(map_element(m, i), map_element(m, j));
-          i = j;
-        }
+    k = hash(map_element(m, j)) & (m->elements_capacity - 1);
+    if ((i < j && (k <= i || k > j)) ||
+        (i > j && (k <= i && k > j)))
+    {
+      set(map_element(m, i), map_element(m, j));
+      i = j;
     }
+  }
 
   set(map_element(m, i), NULL);
 }
@@ -176,4 +176,3 @@ void map_clear(map *m, map_set *set, map_equal *equal, map_release *release)
   m->elements_capacity = 0;
   map_rehash(m, MAP_ELEMENTS_CAPACITY_MIN, NULL, set, NULL);
 }
-

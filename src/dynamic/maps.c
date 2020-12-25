@@ -56,19 +56,19 @@ void maps_reserve(maps *maps, size_t size)
 
 uintptr_t maps_at(maps *maps, char *key)
 {
-  return ((maps_entry *) map_at(&maps->map, (maps_entry[]){{.key = key}}, hash, equal))->value;
+  return ((maps_entry *) map_at(&maps->map, (maps_entry[]) {{.key = key}}, hash, equal))->value;
 }
 
 /* modifiers */
 
 void maps_insert(maps *maps, char *key, uintptr_t value, maps_release *release)
 {
-  map_insert(&maps->map,(maps_entry[]){{.key = key, .value = value}}, hash, set, equal, (map_release *) release);
+  map_insert(&maps->map, (maps_entry[]) {{.key = key, .value = value}}, hash, set, equal, (map_release *) release);
 }
 
 void maps_erase(maps *maps, char *key, maps_release *release)
 {
-  map_erase(&maps->map, (maps_entry[]){{.key = key}}, hash, set, equal, (map_release *) release);
+  map_erase(&maps->map, (maps_entry[]) {{.key = key}}, hash, set, equal, (map_release *) release);
 }
 
 void maps_clear(maps *maps, maps_release *release)

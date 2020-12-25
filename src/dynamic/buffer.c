@@ -6,14 +6,14 @@
 
 static size_t buffer_roundup(size_t size)
 {
-  size --;
+  size--;
   size |= size >> 1;
   size |= size >> 2;
   size |= size >> 4;
   size |= size >> 8;
   size |= size >> 16;
   size |= size >> 32;
-  size ++;
+  size++;
 
   return size;
 }
@@ -53,13 +53,13 @@ void buffer_reserve(buffer *b, size_t capacity)
   void *data;
 
   if (capacity > b->capacity)
-    {
-      capacity = buffer_roundup(capacity);
-      data = realloc(b->data, capacity);
-      buffer_assert(data != NULL);
-      b->data = data;
-      b->capacity = capacity;
-    }
+  {
+    capacity = buffer_roundup(capacity);
+    data = realloc(b->data, capacity);
+    buffer_assert(data != NULL);
+    b->data = data;
+    b->capacity = capacity;
+  }
 }
 
 void buffer_resize(buffer *b, size_t size)
@@ -74,13 +74,13 @@ void buffer_compact(buffer *b)
   void *data;
 
   if (b->capacity > b->size)
-    {
-      data = realloc(b->data, b->size);
-      if (b->size)
-        buffer_assert(data != NULL);
-      b->data = data;
-      b->capacity = b->size;
-    }
+  {
+    data = realloc(b->data, b->size);
+    if (b->size)
+      buffer_assert(data != NULL);
+    b->data = data;
+    b->capacity = b->size;
+  }
 }
 
 /* modifiers */
@@ -102,7 +102,7 @@ void buffer_insert_fill(buffer *b, size_t position, size_t count, void *data, si
   if (position < b->size)
     memmove((char *) b->data + position + (count * size), (char *) b->data + position, b->size - position);
 
-  for (i = 0; i < count; i ++)
+  for (i = 0; i < count; i++)
     memcpy((char *) b->data + position + (i * size), data, size);
   b->size += count * size;
 }

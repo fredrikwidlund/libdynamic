@@ -15,7 +15,7 @@ static void release(void *object)
   free(*(char **) object);
 }
 
-void core(__attribute__ ((unused)) void **state)
+void core(__attribute__((unused)) void **state)
 {
   vector v;
   char *a[] = {"a", "list", "of", "string", "pointers"}, *s;
@@ -31,7 +31,7 @@ void core(__attribute__ ((unused)) void **state)
   vector_shrink_to_fit(&v);
   assert_int_equal(vector_capacity(&v), 0);
 
-  vector_insert_fill(&v, 0, 5, (char *[]){"foo"});
+  vector_insert_fill(&v, 0, 5, (char *[]) {"foo"});
   for (i = 0; i < 5; i++)
     assert_string_equal("foo", *(char **) vector_at(&v, i));
   vector_erase_range(&v, 0, 5, NULL);
@@ -46,17 +46,17 @@ void core(__attribute__ ((unused)) void **state)
   vector_erase(&v, 0, NULL);
   assert_string_equal(a[1], *(char **) vector_front(&v));
 
-  vector_push_back(&v, (char *[]){"pushed"});
+  vector_push_back(&v, (char *[]) {"pushed"});
   assert_string_equal("pushed", *(char **) vector_back(&v));
   vector_pop_back(&v, NULL);
   assert_string_equal(a[a_len - 1], *(char **) vector_back(&v));
   vector_clear(&v, NULL);
 
   for (i = 0; i < a_len; i++)
-    {
-      s = strdup(a[i]);
-      vector_insert(&v, i, &s);
-    }
+  {
+    s = strdup(a[i]);
+    vector_insert(&v, i, &s);
+  }
   for (i = 0; i < a_len; i++)
     assert_string_equal(a[i], *(char **) vector_at(&v, i));
   vector_erase(&v, 0, release);
@@ -68,9 +68,7 @@ void core(__attribute__ ((unused)) void **state)
 int main()
 {
   const struct CMUnitTest tests[] = {
-    cmocka_unit_test(core)
-  };
+      cmocka_unit_test(core)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }
-

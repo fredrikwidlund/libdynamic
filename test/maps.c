@@ -18,7 +18,7 @@ void release(maps_entry *e)
   free(e->key);
 }
 
-void core(__attribute__ ((unused)) void **state)
+void core(__attribute__((unused)) void **state)
 {
   maps maps;
   int i;
@@ -38,16 +38,16 @@ void core(__attribute__ ((unused)) void **state)
   maps_reserve(&maps, 32);
   assert_true(maps.map.elements_capacity == 64);
 
-  for (i = 0; i < 100; i ++)
-    {
-      snprintf(key, sizeof key, "test%d", i);
-      maps_insert(&maps, strdup(key), i, release);
-    }
+  for (i = 0; i < 100; i++)
+  {
+    snprintf(key, sizeof key, "test%d", i);
+    maps_insert(&maps, strdup(key), i, release);
+  }
   maps_clear(&maps, release);
   maps_destruct(&maps, release);
 }
 
-void memory(__attribute__ ((unused)) void **state)
+void memory(__attribute__((unused)) void **state)
 {
   maps maps;
 
@@ -61,10 +61,10 @@ void memory(__attribute__ ((unused)) void **state)
 int main()
 {
   const struct CMUnitTest tests[] =
-    {
-     cmocka_unit_test(core),
-     cmocka_unit_test(memory),
-    };
+      {
+          cmocka_unit_test(core),
+          cmocka_unit_test(memory),
+      };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

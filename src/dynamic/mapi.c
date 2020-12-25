@@ -56,23 +56,22 @@ void mapi_reserve(mapi *mapi, size_t size)
 
 uintptr_t mapi_at(mapi *mapi, uintptr_t key)
 {
-  return ((mapi_entry *) map_at(&mapi->map, (mapi_entry[]){{.key = key}}, hash, equal))->value;
+  return ((mapi_entry *) map_at(&mapi->map, (mapi_entry[]) {{.key = key}}, hash, equal))->value;
 }
 
 /* modifiers */
 
 void mapi_insert(mapi *mapi, uintptr_t key, uintptr_t value, mapi_release *release)
 {
-  map_insert(&mapi->map,(mapi_entry[]){{.key = key, .value = value}}, hash, set, equal, (map_release *) release);
+  map_insert(&mapi->map, (mapi_entry[]) {{.key = key, .value = value}}, hash, set, equal, (map_release *) release);
 }
 
 void mapi_erase(mapi *mapi, uintptr_t key, mapi_release *release)
 {
-  map_erase(&mapi->map, (mapi_entry[]){{.key = key}}, hash, set, equal, (map_release *) release);
+  map_erase(&mapi->map, (mapi_entry[]) {{.key = key}}, hash, set, equal, (map_release *) release);
 }
 
 void mapi_clear(mapi *mapi, mapi_release *release)
 {
   map_clear(&mapi->map, set, equal, (map_release *) release);
 }
-

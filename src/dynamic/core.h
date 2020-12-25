@@ -5,8 +5,8 @@
 
 enum core_status
 {
- CORE_OK    = 0,
- CORE_ABORT = -1
+  CORE_OK    = 0,
+  CORE_ABORT = -1
 };
 
 typedef enum core_status     core_status;

@@ -61,12 +61,12 @@ ssize_t __wrap_send(int socket, const void *buffer, size_t length, int flags)
 }
 
 int __real_pthread_create(pthread_t *, const pthread_attr_t *, void *(*) (void *), void *);
-int __wrap_pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg)
+int __wrap_pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg)
 {
   return debug_pthread_create ? -1 : __real_pthread_create(thread, attr, start_routine, arg);
 }
 
-int __real_socketpair(int, int, int, int [2]);
+int __real_socketpair(int, int, int, int[2]);
 int __wrap_socketpair(int domain, int type, int protocol, int socket_vector[2])
 {
   return debug_socketpair ? -1 : __real_socketpair(domain, type, protocol, socket_vector);
@@ -78,7 +78,7 @@ int __wrap_epoll_create1(int flags)
   return debug_epoll_create1 ? -1 : __real_epoll_create1(flags);
 }
 
-int __real_epoll_ctl(int, int ,int, struct epoll_event *);
+int __real_epoll_ctl(int, int, int, struct epoll_event *);
 int __wrap_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)
 {
   return debug_epoll_ctl ? -1 : __real_epoll_ctl(epfd, op, fd, event);

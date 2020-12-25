@@ -63,31 +63,31 @@ static inline uint64_t hash_len_16(uint64_t u, uint64_t v, uint64_t mul)
 static inline uint64_t hash_len_0_to_16(const char *s, size_t len)
 {
   if (len >= 8)
-    {
-      uint64_t mul = k2 + len * 2;
-      uint64_t a = fetch64(s) + k2;
-      uint64_t b = fetch64(s + len - 8);
-      uint64_t c = rotate64(b, 37) * mul + a;
-      uint64_t d = (rotate64(a, 25) + b) * mul;
-      return hash_len_16(c, d, mul);
+  {
+    uint64_t mul = k2 + len * 2;
+    uint64_t a = fetch64(s) + k2;
+    uint64_t b = fetch64(s + len - 8);
+    uint64_t c = rotate64(b, 37) * mul + a;
+    uint64_t d = (rotate64(a, 25) + b) * mul;
+    return hash_len_16(c, d, mul);
   }
 
   if (len >= 4)
-    {
-      uint64_t mul = k2 + len * 2;
-      uint64_t a = fetch32(s);
-      return hash_len_16(len + (a << 3), fetch32(s + len - 4), mul);
-    }
+  {
+    uint64_t mul = k2 + len * 2;
+    uint64_t a = fetch32(s);
+    return hash_len_16(len + (a << 3), fetch32(s + len - 4), mul);
+  }
 
   if (len > 0)
-    {
-      uint8_t a = s[0];
-      uint8_t b = s[len >> 1];
-      uint8_t c = s[len - 1];
-      uint32_t y = (uint32_t) a + ((uint32_t) b << 8);
-      uint32_t z = len + ((uint32_t) c << 2);
-      return shift_mix(y * k2 ^ z * k0) * k2;
-    }
+  {
+    uint8_t a = s[0];
+    uint8_t b = s[len >> 1];
+    uint8_t c = s[len - 1];
+    uint32_t y = (uint32_t) a + ((uint32_t) b << 8);
+    uint32_t z = len + ((uint32_t) c << 2);
+    return shift_mix(y * k2 ^ z * k0) * k2;
+  }
 
   return k2;
 }
@@ -119,10 +119,16 @@ static inline uint64_t hash_len_33_to_64(const char *s, size_t len)
   uint64_t h = (z + fetch64(s + len - 24)) * mul;
 
   return hash_len_16(rotate64(e + f, 43) + rotate64(g, 30) + h,
-                   e + rotate64(f + a, 18) + g, mul);
+                     e + rotate64(f + a, 18) + g, mul);
 }
 
-#define swap(x, y) do {(x) = (x) ^ (y); (y) = (x) ^ (y); (x) = (x) ^ y;} while(0); 
+#define swap(x, y)   \
+  do                 \
+  {                  \
+    (x) = (x) ^ (y); \
+    (y) = (x) ^ (y); \
+    (x) = (x) ^ y;   \
+  } while (0);
 
 typedef struct pair64 pair64;
 
@@ -179,18 +185,17 @@ static uint64_t cfarmhash(const char *s, size_t len)
   const char *last64 = end + ((len - 1) & 63) - 63;
 
   do
-    {
-      x = rotate64(x + y + v.first + fetch64(s + 8), 37) * k1;
-      y = rotate64(y + v.second + fetch64(s + 48), 42) * k1;
-      x ^= w.second;
-      y += v.first + fetch64(s + 40);
-      z = rotate64(z + w.first, 33) * k1;
-      v = weak_hash_len_32_with_seeds(s, v.second * k1, x + w.first);
-      w = weak_hash_len_32_with_seeds(s + 32, z + w.second, y + fetch64(s + 16));
-      swap(z, x);
-      s += 64;
-    }
-  while (s != end);
+  {
+    x = rotate64(x + y + v.first + fetch64(s + 8), 37) * k1;
+    y = rotate64(y + v.second + fetch64(s + 48), 42) * k1;
+    x ^= w.second;
+    y += v.first + fetch64(s + 40);
+    z = rotate64(z + w.first, 33) * k1;
+    v = weak_hash_len_32_with_seeds(s, v.second * k1, x + w.first);
+    w = weak_hash_len_32_with_seeds(s + 32, z + w.second, y + fetch64(s + 16));
+    swap(z, x);
+    s += 64;
+  } while (s != end);
 
   mul = k1 + ((z & 0xff) << 1);
   s = last64;

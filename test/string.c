@@ -11,7 +11,7 @@
 #include "../src/dynamic/vector.h"
 #include "../src/dynamic/string.h"
 
-void core(__attribute__ ((unused)) void **state)
+void core(__attribute__((unused)) void **state)
 {
   string s, s2;
   vector v;
@@ -61,8 +61,7 @@ void core(__attribute__ ((unused)) void **state)
 int main()
 {
   const struct CMUnitTest tests[] = {
-    cmocka_unit_test(core)
-  };
+      cmocka_unit_test(core)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

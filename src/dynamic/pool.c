@@ -19,25 +19,25 @@ static void *pool_thread(void *arg)
   int active = 1;
 
   while (active)
+  {
+    n = recv(worker->socket, &message, sizeof message, 0);
+    if (n == -1)
+      break;
+
+    if (message->type == POOL_MESSAGE_JOB)
     {
-      n = recv(worker->socket, &message, sizeof message, 0);
-      if (n == -1)
-        break;
-
-      if (message->type == POOL_MESSAGE_JOB)
-        {
-          message->job.callback(message->job.state);
-        }
-      else
-        {
-          message->control.worker = arg;
-          active = 0;
-        }
-
-      n = send(worker->socket, &message, sizeof message, 0);
-      if (n == -1)
-        break;
+      message->job.callback(message->job.state);
     }
+    else
+    {
+      message->control.worker = arg;
+      active = 0;
+    }
+
+    n = send(worker->socket, &message, sizeof message, 0);
+    if (n == -1)
+      break;
+  }
 
   return NULL;
 }
@@ -48,17 +48,17 @@ static void pool_flush(pool *pool)
   ssize_t n;
 
   while (!list_empty(&pool->messages_queued))
+  {
+    message = list_front(&pool->messages_queued);
+    n = send(pool->socket, &message, sizeof message, MSG_DONTWAIT);
+    if (n == -1)
     {
-      message = list_front(&pool->messages_queued);
-      n = send(pool->socket, &message, sizeof message, MSG_DONTWAIT);
-      if (n == -1)
-        {
-          if (errno != EAGAIN)
-            pool->errors ++;
-          break;
-        }
-      list_splice(list_front(&pool->messages_transit), message);
+      if (errno != EAGAIN)
+        pool->errors++;
+      break;
     }
+    list_splice(list_front(&pool->messages_transit), message);
+  }
 }
 
 static void pool_maintain(pool *pool)
@@ -70,26 +70,26 @@ static void pool_maintain(pool *pool)
 
   n = MIN(MAX(pool->jobs_count, pool->workers_min), pool->workers_max);
 
-  for (i = pool->workers_count; i < n; i ++)
+  for (i = pool->workers_count; i < n; i++)
+  {
+    worker = list_push_back(&pool->workers, NULL, sizeof *worker);
+    worker->socket = pool->workers_socket;
+    e = pthread_create(&worker->thread, NULL, pool_thread, worker);
+    if (e == -1)
     {
-      worker = list_push_back(&pool->workers, NULL, sizeof *worker);
-      worker->socket = pool->workers_socket;
-      e = pthread_create(&worker->thread, NULL, pool_thread, worker);
-      if (e == -1)
-        {
-          list_erase(worker, NULL);
-          pool->errors ++;
-          return;
-        }
-      pool->workers_count ++;
+      list_erase(worker, NULL);
+      pool->errors++;
+      return;
     }
+    pool->workers_count++;
+  }
 
-  for (; n < pool->workers_count; n ++)
-    {
-      message = list_push_front(&pool->messages_queued, NULL, sizeof *message);
-      message->type = POOL_MESSAGE_CONTROL;
-      pool->workers_count --;
-    }
+  for (; n < pool->workers_count; n++)
+  {
+    message = list_push_front(&pool->messages_queued, NULL, sizeof *message);
+    message->type = POOL_MESSAGE_CONTROL;
+    pool->workers_count--;
+  }
 
   pool_flush(pool);
 }
@@ -106,7 +106,7 @@ void pool_construct(pool *pool)
 
   e = socketpair(AF_UNIX, SOCK_STREAM, PF_UNSPEC, fd);
   if (e == -1)
-    pool->errors ++;
+    pool->errors++;
 
   pool->socket = fd[0];
   pool->workers_socket = fd[1];
@@ -123,10 +123,10 @@ void pool_destruct(pool *pool)
   while (state);
 
   list_foreach(&pool->workers, worker)
-    {
-      pthread_cancel(worker->thread);
-      pthread_join(worker->thread, NULL);
-    }
+  {
+    pthread_cancel(worker->thread);
+    pthread_join(worker->thread, NULL);
+  }
 
   list_destruct(&pool->workers, NULL);
   list_destruct(&pool->messages_queued, NULL);
@@ -168,7 +168,7 @@ void pool_enqueue(pool *pool, pool_callback *callback, void *state)
   message->type = POOL_MESSAGE_JOB;
   message->job.callback = callback;
   message->job.state = state;
-  pool->jobs_count ++;
+  pool->jobs_count++;
   pool_maintain(pool);
 }
 
@@ -180,28 +180,28 @@ void *pool_collect(pool *pool, int flags)
 
   pool_maintain(pool);
   while (1)
+  {
+    n = recv(pool->socket, &message, sizeof message, flags & POOL_DONTWAIT ? MSG_DONTWAIT : 0);
+    if (n == -1)
     {
-      n = recv(pool->socket, &message, sizeof message, flags & POOL_DONTWAIT ? MSG_DONTWAIT : 0);
-      if (n == -1)
-        {
-          if (errno != EAGAIN)
-            pool->errors ++;
-          return NULL;
-        }
-
-      if (message->type == POOL_MESSAGE_JOB)
-        {
-          pool->jobs_count --;
-          state = message->job.state;
-          list_erase(message, NULL);
-          return state;
-        }
-      else
-        {
-          pthread_cancel(message->control.worker->thread);
-          pthread_detach(message->control.worker->thread);
-          list_erase(message->control.worker, NULL);
-          list_erase(message, NULL);
-        }
+      if (errno != EAGAIN)
+        pool->errors++;
+      return NULL;
     }
+
+    if (message->type == POOL_MESSAGE_JOB)
+    {
+      pool->jobs_count--;
+      state = message->job.state;
+      list_erase(message, NULL);
+      return state;
+    }
+    else
+    {
+      pthread_cancel(message->control.worker->thread);
+      pthread_detach(message->control.worker->thread);
+      list_erase(message->control.worker, NULL);
+      list_erase(message, NULL);
+    }
+  }
 }

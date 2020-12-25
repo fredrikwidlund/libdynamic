@@ -128,10 +128,10 @@ void string_split(string *s, char *delim, vector *v)
   string_construct(&copy);
   string_append(&copy, string_data(s));
   for (cp = strtok_r(string_data(&copy), delim, &cp_saved); cp; cp = strtok_r(NULL, delim, &cp_saved))
-    {
-      string_construct(&token);
-      string_append(&token, cp);
-      vector_push_back(v, &token);
-    }
+  {
+    string_construct(&token);
+    string_append(&token, cp);
+    vector_push_back(v, &token);
+  }
   string_destruct(&copy);
 }

@@ -10,7 +10,7 @@
 #include "../src/dynamic/map.h"
 #include "../src/dynamic/mapi.h"
 
-void core(__attribute__ ((unused)) void **state)
+void core(__attribute__((unused)) void **state)
 {
   mapi mapi;
 
@@ -34,9 +34,8 @@ void core(__attribute__ ((unused)) void **state)
 int main()
 {
   const struct CMUnitTest tests[] =
-    {
-     cmocka_unit_test(core)
-    };
+      {
+          cmocka_unit_test(core)};
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }
