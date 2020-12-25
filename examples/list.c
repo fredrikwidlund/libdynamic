@@ -1,12 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <time.h>
-#include <string.h>
-#include <unistd.h>
 #include <assert.h>
 
-#include "dynamic.h"
+#include <dynamic.h>
 
 static int compare(void *p1, void *p2)
 {

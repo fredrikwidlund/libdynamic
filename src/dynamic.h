@@ -13,6 +13,10 @@
 extern "C" {
 #endif
 
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+
 #include <dynamic/segment.h>
 #include <dynamic/utility.h>
 #include <dynamic/hash.h>
