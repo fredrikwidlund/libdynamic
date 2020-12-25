@@ -43,3 +43,13 @@ Released 2020-05-17
 
   - Add event handling
   - Add worker pools
+
+Version 2.2
+===========
+
+Released 2020-12-25
+
+* New features:
+
+  - Add counters
+  - Add abort
