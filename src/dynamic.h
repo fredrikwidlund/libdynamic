@@ -1,9 +1,9 @@
 #ifndef DYNAMIC_H_INCLUDED
 #define DYNAMIC_H_INCLUDED
 
-#define DYNAMIC_VERSION "2.1.0"
+#define DYNAMIC_VERSION "2.2.0"
 #define DYNAMIC_VERSION_MAJOR 2
-#define DYNAMIC_VERSION_MINOR 1
+#define DYNAMIC_VERSION_MINOR 2
 #define DYNAMIC_VERSION_PATCH 0
 
 #define dynamic_likely(x)   __builtin_expect(!!(x), 1)
