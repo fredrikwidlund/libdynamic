@@ -18,5 +18,6 @@ list_LDADD = ../libdynamic.la
 
 async_SOURCES = async.c
 async_LDADD = ../libdynamic.la
+async_LDFLAGS = -pthread
 
 MAINTAINERCLEANFILES = Makefile.in

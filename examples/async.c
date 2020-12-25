@@ -39,6 +39,7 @@ core_status collect(core_event *event)
 core_status timeout(core_event *event)
 {
   struct state *state = event->state;
+  core_counters *counters;
   uint64_t exp;
   ssize_t n;
   int i;
@@ -51,7 +52,12 @@ core_status timeout(core_event *event)
       if (n != sizeof exp)
         err(1, "read");
 
+      counters = core_get_counters(&state->core);
       (void) printf("[timer %lu, jobs %lu]\n", exp, state->jobs);
+      (void) printf("[stats polls %lu, events %lu, awake %lu, total %lu, usage %f\n",
+                    counters->polls, counters->events, counters->awake, counters->awake + counters->sleep,
+                    (double) counters->awake / (double) (counters->awake + counters->sleep));
+      core_clear_counters(&state->core);
     }
 
   for (i = 0; i < 1000; i ++)

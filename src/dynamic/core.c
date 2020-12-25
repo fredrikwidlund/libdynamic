@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/epoll.h>
 
 #include "buffer.h"
@@ -16,6 +17,17 @@ static core_handler core_handler_default = {.callback = core_default_callback};
 static core_status core_default_callback(core_event *event __attribute__((unused)))
 {
   return CORE_OK;
+}
+
+static uint64_t core_tsc(void)
+{
+#if defined(__x86_64__) || defined(__amd64__)
+  uint32_t lo, hi;
+  __asm__ volatile ("RDTSC" : "=a" (lo), "=d" (hi));
+  return (((uint64_t) hi) << 32) | lo;
+#else
+  return 0;
+#endif
 }
 
 static core *core_get(core *core)
@@ -69,8 +81,10 @@ core_status core_dispatch(core_handler *handler, int type, uintptr_t data)
 void core_loop(core *core)
 {
   struct epoll_event events[CORE_MAX_EVENTS];
+  uint64_t t0, t1;
   int n, i;
 
+  t1 = core_tsc();
   core = core_get(core);
   while (core->active && core->errors == 0 && (core->handlers_active || vector_size(&core->next)))
     {
@@ -78,9 +92,15 @@ void core_loop(core *core)
         (void) core_dispatch(vector_at(&core->next, i), 0, 0);
       vector_clear(&core->next, NULL);
 
+      t0 = core_tsc();
+      core->time = 0;
       n = core->handlers_active ? epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1) : 0;
-      if (n == -1)
-        core->errors ++;
+      core->errors += n == -1;
+      core->counters.awake += t0 - t1;
+      t1 = core_tsc();
+      core->counters.sleep += t1 - t0;
+      core->counters.polls++;
+      core->counters.events += n;
 
       for (i = 0; i < n; i ++)
         (void) core_dispatch(vector_at(&core->handlers, events[i].data.fd), 0, events[i].events);
@@ -162,4 +182,27 @@ int core_errors(core *core)
 {
   core = core_get(core);
   return core->errors;
+}
+
+uint64_t core_now(core *core)
+{
+  struct timespec tv;
+
+  core = core_get(core);
+  if (core->time == 0)
+  {
+    clock_gettime(CLOCK_REALTIME, &tv);
+    core->time = (uint64_t) tv.tv_sec * 1000000000 + (uint64_t) tv.tv_nsec;
+  }
+  return core->time;
+}
+
+core_counters *core_get_counters(core *core)
+{
+  return &core_get(core)->counters;
+}
+
+void core_clear_counters(core *core)
+{
+  core_get(core)->counters = (core_counters) {0};
 }
