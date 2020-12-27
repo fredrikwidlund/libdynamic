@@ -96,7 +96,6 @@ static void basic(__attribute__((unused)) void **state)
   core_clear_counters(NULL);
   core_destruct(NULL);
 
-
   /* abort */
   core_construct(NULL);
   core_abort(NULL);

@@ -149,7 +149,7 @@ test_core_CFLAGS = $(CHECK_CFLAGS)
 test_core_LDADD = $(CHECK_LDADD)
 test_core_LDFLAGS = $(CHECK_LDFLAGS_EXTRA)
 test_core_SOURCES = test/core.c test/mock.c
-
+v
 dist_noinst_SCRIPTS = test/valgrind.sh test/coverage.sh
 
 TESTS = $(check_PROGRAMS) test/coverage.sh test/valgrind.sh
@@ -157,4 +157,4 @@ TESTS = $(check_PROGRAMS) test/coverage.sh test/valgrind.sh
 CLEANFILES = {.,src/dynamic,test}/*.{gcno,gcda,gcov}
 
 indent:
-	clang-format -i src/dynamic/*.c test/*.c
+	clang-format -i src/dynamic/*.c test/*.c examples/*.c

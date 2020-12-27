@@ -10,16 +10,16 @@
 
 struct state
 {
-  core           core;
-  pool           pool;
-  int            timer;
+  core core;
+  pool pool;
+  int timer;
   _Atomic size_t jobs;
 };
 
 void async(void *state)
 {
   usleep(10000);
-  ((struct state *) state)->jobs ++;
+  ((struct state *) state)->jobs++;
 }
 
 core_status collect(core_event *event)
@@ -43,22 +43,22 @@ core_status timeout(core_event *event)
   int i;
 
   while (1)
-    {
-      n = read(state->timer, &exp, sizeof exp);
-      if (n == -1 && errno == EAGAIN)
-        break;
-      if (n != sizeof exp)
-        err(1, "read");
+  {
+    n = read(state->timer, &exp, sizeof exp);
+    if (n == -1 && errno == EAGAIN)
+      break;
+    if (n != sizeof exp)
+      err(1, "read");
 
-      counters = core_get_counters(&state->core);
-      (void) printf("[timer %lu, jobs %lu]\n", exp, state->jobs);
-      (void) printf("[stats polls %lu, events %lu, awake %lu, total %lu, usage %f\n",
-                    counters->polls, counters->events, counters->awake, counters->awake + counters->sleep,
-                    (double) counters->awake / (double) (counters->awake + counters->sleep));
-      core_clear_counters(&state->core);
-    }
+    counters = core_get_counters(&state->core);
+    (void) printf("[timer %lu, jobs %lu]\n", exp, state->jobs);
+    (void) printf("[stats polls %lu, events %lu, awake %lu, total %lu, usage %f\n",
+                  counters->polls, counters->events, counters->awake, counters->awake + counters->sleep,
+                  (double) counters->awake / (double) (counters->awake + counters->sleep));
+    core_clear_counters(&state->core);
+  }
 
-  for (i = 0; i < 1000; i ++)
+  for (i = 0; i < 1000; i++)
     pool_enqueue(&state->pool, async, state);
   return CORE_OK;
 }

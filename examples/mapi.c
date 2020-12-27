@@ -30,11 +30,11 @@ int main(int argc, char **argv)
   // create keys/values
   keys = calloc(n, sizeof keys[0]);
   values = calloc(n, sizeof values[0]);
-  for (i = 0; i < n; i ++)
-    {
-      keys[i] = i + 1;
-      values[i] = i + 1;
-    }
+  for (i = 0; i < n; i++)
+  {
+    keys[i] = i + 1;
+    values[i] = i + 1;
+  }
 
   // construct map
   mapi_construct(&m);
@@ -42,23 +42,23 @@ int main(int argc, char **argv)
   // insert key->value mappings
 
   t1 = nano_time();
-  for (i = 0; i < n; i ++)
+  for (i = 0; i < n; i++)
     mapi_insert(&m, keys[i], values[i], release);
   t2 = nano_time();
   printf("insert %lu\n", t2 - t1);
 
   // lookup key and validate value
   t1 = nano_time();
-  for (i = 0; i < n; i ++)
-    {
-      p = mapi_at(&m, keys[i]);
-      assert(p == values[i]);
-    }
+  for (i = 0; i < n; i++)
+  {
+    p = mapi_at(&m, keys[i]);
+    assert(p == values[i]);
+  }
   t2 = nano_time();
   printf("lookup %lu\n", t2 - t1);
 
   t1 = nano_time();
-  for (i = 0; i < n; i ++)
+  for (i = 0; i < n; i++)
     mapi_erase(&m, keys[i], release);
   t2 = nano_time();
   printf("erase  %lu\n", t2 - t1);
