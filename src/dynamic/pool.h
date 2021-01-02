@@ -1,78 +1,63 @@
-#ifndef POOL_H_INCLUDED
-#define POOL_H_INCLUDED
+#ifndef DYNAMIC_POOL_H_INCLUDED
+#define DYNAMIC_POOL_H_INCLUDED
 
-#define POOL_WORKERS_MIN 1
+#define POOL_WORKERS_MIN 0
 #define POOL_WORKERS_MAX 16
 
-enum pool_message_types
+enum
 {
  POOL_MESSAGE_JOB,
- POOL_MESSAGE_CONTROL
+ POOL_MESSAGE_WORKER
 };
 
-enum pool_flags
+enum
 {
-  POOL_DONTWAIT = 0x01
+  POOL_REQUEST,
+  POOL_REPLY
 };
 
-typedef void                pool_callback(void *);
 typedef struct pool_worker  pool_worker;
-typedef struct pool_job     pool_job;
-typedef struct pool_control pool_control;
 typedef struct pool_message pool_message;
 typedef struct pool         pool;
 
 struct pool_worker
 {
-  pthread_t          thread;
-  int                socket;
-};
-
-struct pool_job
-{
-  pool_callback     *callback;
-  void              *state;
-};
-
-struct pool_control
-{
-  pool_worker       *worker;
+  pthread_t       thread;
+  int             socket;
 };
 
 struct pool_message
 {
-  int                type;
+  size_t          type;
   union
   {
-    pool_job         job;
-    pool_control     control;
+    core_handler *user;
+    pool_worker  *worker;
   };
 };
 
 struct pool
 {
-  int                socket;
-  int                errors;
-
-  size_t             workers_min;
-  size_t             workers_max;
-  int                workers_socket;
-  list               workers;
-  size_t             workers_count;
-
-  list               messages_queued;
-  list               messages_transit;
-
-  size_t             jobs_count;
+  core           *core;
+  size_t          ref;
+  size_t          errors;
+  int             socket_master;
+  int             socket_worker;
+  size_t          workers_min;
+  size_t          workers_max;
+  list            jobs_waiting;
+  list            jobs_queued;
+  size_t          jobs_count;
+  list            workers;
+  size_t          workers_count;
+  int             active;
 };
 
-void   pool_construct(pool *);
-void   pool_destruct(pool *);
-void   pool_limits(pool *, size_t, size_t);
-size_t pool_jobs(pool *);
-int    pool_fd(pool *);
-int    pool_error(pool *);
-void   pool_enqueue(pool *, pool_callback *, void *);
-void  *pool_collect(pool *, int);
+void    pool_construct(pool *, core *);
+void    pool_destruct(pool *);
+void    pool_limits(pool *, size_t, size_t);
+size_t  pool_errors(pool *);
+core_id pool_enqueue(pool *, core_callback *, void *);
+void    pool_cancel(pool *, core_id);
 
-#endif /* POOL_H_INCLUDED */
+#endif /* DYNAMIC_POOL_H_INCLUDED */

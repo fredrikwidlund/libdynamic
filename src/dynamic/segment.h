@@ -1,5 +1,5 @@
-#ifndef SEGMENT_H_INCLUDED
-#define SEGMENT_H_INCLUDED
+#ifndef DYNAMIC_SEGMENT_H_INCLUDED
+#define DYNAMIC_SEGMENT_H_INCLUDED
 
 typedef struct segment segment;
 
@@ -16,4 +16,4 @@ segment segment_offset(segment , size_t);
 int     segment_equal(segment, segment);
 int     segment_equal_case(segment, segment);
 
-#endif /* SEGMENT_H_INCLUDED */
+#endif /* DYNAMIC_SEGMENT_H_INCLUDED */

@@ -14,9 +14,7 @@
 
 #include <cmocka.h>
 
-#include "../src/dynamic/buffer.h"
-#include "../src/dynamic/vector.h"
-#include "../src/dynamic/core.h"
+#include "dynamic.h"
 
 extern int debug_epoll_create1;
 extern int debug_epoll_ctl;
@@ -40,7 +38,7 @@ static core_status in(core_event *event)
 
 static void basic(__attribute__((unused)) void **state)
 {
-  core c;
+  core c = {0};
   int n, id, e, p[2];
 
   /* construct and destruct local instance */

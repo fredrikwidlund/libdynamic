@@ -53,3 +53,12 @@ Released 2020-12-25
 
   - Add counters
   - Add abort
+
+Version 2.3
+===========
+
+Released 2021-01-02
+
+* New features:
+
+  - Pool refactoring

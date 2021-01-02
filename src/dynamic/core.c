@@ -8,6 +8,8 @@
 #include "buffer.h"
 #include "vector.h"
 #include "core.h"
+#include "segment.h"
+#include "utility.h"
 
 static __thread core core_default = {0};
 
@@ -19,18 +21,6 @@ static core_status core_default_callback(core_event *event __attribute__((unused
   return CORE_OK;
 }
 
-static uint64_t core_tsc(void)
-{
-#if defined(__x86_64__) || defined(__amd64__)
-  uint32_t lo, hi;
-  __asm__ volatile("RDTSC"
-                   : "=a"(lo), "=d"(hi));
-  return (((uint64_t) hi) << 32) | lo;
-#else
-  return 0;
-#endif
-}
-
 static core *core_get(core *core)
 {
   return core ? core : &core_default;
@@ -38,9 +28,6 @@ static core *core_get(core *core)
 
 void core_construct(core *core)
 {
-  if (core)
-    *core = (struct core) {0};
-
   core = core_get(core);
   if (!core->ref)
   {
@@ -85,7 +72,7 @@ void core_loop(core *core)
   uint64_t t0, t1;
   int n, i;
 
-  t1 = core_tsc();
+  t1 = utility_tsc();
   core = core_get(core);
   while (core->active && core->errors == 0 && (core->handlers_active || vector_size(&core->next)))
   {
@@ -93,12 +80,12 @@ void core_loop(core *core)
       (void) core_dispatch(vector_at(&core->next, i), 0, 0);
     vector_clear(&core->next, NULL);
 
-    t0 = core_tsc();
+    t0 = utility_tsc();
     core->time = 0;
     n = core->handlers_active ? epoll_wait(core->fd, events, CORE_MAX_EVENTS, -1) : 0;
     core->errors += n == -1;
     core->counters.awake += t0 - t1;
-    t1 = core_tsc();
+    t1 = utility_tsc();
     core->counters.sleep += t1 - t0;
     core->counters.polls++;
     core->counters.events += n;
@@ -158,7 +145,7 @@ void core_delete(core *core, int fd)
   core->handlers_active--;
 }
 
-int core_next(core *core, core_callback *callback, void *state)
+core_id core_next(core *core, core_callback *callback, void *state)
 {
   core_handler handler = {.callback = callback, .state = state};
 
@@ -167,7 +154,7 @@ int core_next(core *core, core_callback *callback, void *state)
   return vector_size(&core->next);
 }
 
-void core_cancel(core *core, int id)
+void core_cancel(core *core, core_id id)
 {
   core_handler *handlers;
 
@@ -179,7 +166,7 @@ void core_cancel(core *core, int id)
   handlers[id - 1] = core_handler_default;
 }
 
-int core_errors(core *core)
+size_t core_errors(core *core)
 {
   core = core_get(core);
   return core->errors;

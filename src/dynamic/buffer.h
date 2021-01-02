@@ -1,5 +1,5 @@
-#ifndef BUFFER_H_INCLUDED
-#define BUFFER_H_INCLUDED
+#ifndef DYNAMIC_BUFFER_H_INCLUDED
+#define DYNAMIC_BUFFER_H_INCLUDED
 
 typedef struct buffer buffer;
 struct buffer
@@ -29,4 +29,4 @@ void    buffer_clear(buffer *);
 /* element access */
 void   *buffer_data(buffer *);
 
-#endif /* BUFFER_H_INCLUDED */
+#endif /* DYNAMIC_BUFFER_H_INCLUDED */

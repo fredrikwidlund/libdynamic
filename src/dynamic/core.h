@@ -1,5 +1,5 @@
-#ifndef CORE_H_INCLUDED
-#define CORE_H_INCLUDED
+#ifndef DYNAMIC_CORE_H_INCLUDED
+#define DYNAMIC_CORE_H_INCLUDED
 
 #define CORE_MAX_EVENTS 16
 
@@ -9,6 +9,7 @@ enum core_status
   CORE_ABORT = -1
 };
 
+typedef uintptr_t            core_id;
 typedef enum core_status     core_status;
 typedef struct core_event    core_event;
 typedef core_status          core_callback(core_event *);
@@ -42,7 +43,7 @@ struct core
   size_t         ref;
   int            fd;
   int            active;
-  int            errors;
+  size_t         errors;
   vector         handlers;
   size_t         handlers_active;
   vector         next;
@@ -58,11 +59,11 @@ void           core_loop(core *);
 void           core_add(core *, core_callback *, void *, int, int);
 void           core_modify(core *, int, int);
 void           core_delete(core *, int);
-int            core_next(core *, core_callback *, void *);
-void           core_cancel(core *, int);
-int            core_errors(core *);
+core_id        core_next(core *, core_callback *, void *);
+void           core_cancel(core *, core_id);
+size_t         core_errors(core *);
 uint64_t       core_now(core *);
 core_counters *core_get_counters(core *);
 void           core_clear_counters(core *);
 
-#endif /* CORE_H_INCLUDED */
+#endif /* DYNAMIC_CORE_H_INCLUDED */

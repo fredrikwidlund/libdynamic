@@ -16,21 +16,15 @@ struct state
   _Atomic size_t jobs;
 };
 
-void async(void *state)
-{
-  usleep(10000);
-  ((struct state *) state)->jobs++;
-}
-
-core_status collect(core_event *event)
+static core_status async(core_event *event)
 {
   struct state *state = event->state;
-  void *result;
 
-  do
-    result = pool_collect(&state->pool, POOL_DONTWAIT);
-  while (result);
-
+  if (event->type == POOL_REQUEST)
+  {
+    usleep(10000);
+    state->jobs++;
+  }
   return CORE_OK;
 }
 
@@ -68,12 +62,12 @@ int main()
   struct state state = {0};
 
   core_construct(&state.core);
-  pool_construct(&state.pool);
+  pool_construct(&state.pool, &state.core);
+  pool_limits(&state.pool, 1, 32);
 
   state.timer = timerfd_create(CLOCK_REALTIME, TFD_NONBLOCK | TFD_CLOEXEC);
   timerfd_settime(state.timer, 0, (struct itimerspec[]) {{{1, 0}, {1, 0}}}, NULL);
   core_add(&state.core, timeout, &state, state.timer, EPOLLIN | EPOLLET);
-  core_add(&state.core, collect, &state, pool_fd(&state.pool), EPOLLIN | EPOLLET);
 
   core_loop(&state.core);
 
