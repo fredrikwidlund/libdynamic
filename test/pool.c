@@ -186,16 +186,15 @@ void fails(__attribute__((unused)) void **unused)
   debug_socketpair = 0;
   assert_int_equal(pool_errors(&p), 1);
   core_destruct(NULL);
-
 }
 
 int main()
 {
   const struct CMUnitTest tests[] =
-    {
-      cmocka_unit_test(basic),
-      cmocka_unit_test(fails),
-    };
+      {
+          cmocka_unit_test(basic),
+          cmocka_unit_test(fails),
+      };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

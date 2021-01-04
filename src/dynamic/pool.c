@@ -10,7 +10,6 @@
 #include <sys/types.h>
 #include <sys/epoll.h>
 
-
 #include "list.h"
 #include "buffer.h"
 #include "vector.h"
@@ -137,7 +136,7 @@ static void pool_update(pool *pool)
 
   while (pool->workers_count > workers_goal)
   {
-    e = pool_send(pool, (pool_message[]){{.type = POOL_MESSAGE_WORKER}});
+    e = pool_send(pool, (pool_message[]) {{.type = POOL_MESSAGE_WORKER}});
     if (e == -1)
       break;
     pool->workers_count--;
@@ -146,7 +145,7 @@ static void pool_update(pool *pool)
   while (!list_empty(&pool->jobs_queued))
   {
     user = list_front(&pool->jobs_queued);
-    e = pool_send(pool, (pool_message[]){{.type = POOL_MESSAGE_JOB, .user = user}});
+    e = pool_send(pool, (pool_message[]) {{.type = POOL_MESSAGE_JOB, .user = user}});
     if (e == -1)
       break;
     list_splice(list_front(&pool->jobs_waiting), user);
@@ -252,7 +251,7 @@ core_id pool_enqueue(pool *pool, core_callback *callback, void *state)
   pool_activated = 1;
   job = list_push_back(&pool->jobs_queued, NULL, sizeof *job);
   *job = (core_handler) {.callback = callback, .state = state};
-  pool->jobs_count ++;
+  pool->jobs_count++;
 
   pool_update(pool);
 
