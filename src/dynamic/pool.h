@@ -23,6 +23,7 @@ typedef struct pool         pool;
 struct pool_worker
 {
   pthread_t       thread;
+  int             active;
   int             socket;
 };
 
@@ -59,5 +60,6 @@ void    pool_limits(pool *, size_t, size_t);
 size_t  pool_errors(pool *);
 core_id pool_enqueue(pool *, core_callback *, void *);
 void    pool_cancel(pool *, core_id);
+void    pool_abort(pool *);
 
 #endif /* DYNAMIC_POOL_H_INCLUDED */

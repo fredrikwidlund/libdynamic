@@ -31,14 +31,12 @@ static void *pool_thread(void *arg)
   pool_worker *worker = arg;
   pool_message message;
   ssize_t n;
-  int active = 1;
 
-  while (active)
+  while (worker->active)
   {
     n = recv(worker->socket, &message, sizeof message, 0);
     if (n == -1)
       break;
-
     switch (message.type)
     {
     case POOL_MESSAGE_JOB:
@@ -46,7 +44,7 @@ static void *pool_thread(void *arg)
         (void) core_dispatch(message.user, POOL_REQUEST, 0);
       break;
     default:
-      active = 0;
+      worker->active = 0;
       message.type = POOL_MESSAGE_WORKER;
       message.worker = worker;
       break;
@@ -128,6 +126,7 @@ static void pool_update(pool *pool)
   while (pool->workers_count < workers_goal)
   {
     worker = list_push_back(&pool->workers, NULL, sizeof *worker);
+    worker->active = 1;
     worker->socket = pool->socket_worker;
     e = pthread_create(&worker->thread, NULL, pool_thread, worker);
     pool->errors += e == -1;
@@ -202,8 +201,11 @@ void pool_destruct(pool *pool)
   {
     list_foreach(&pool->workers, worker)
     {
-      pthread_cancel(worker->thread);
-      pthread_join(worker->thread, NULL);
+      if (worker->thread)
+      {
+        pthread_cancel(worker->thread);
+        pthread_join(worker->thread, NULL);
+      }
     }
   }
   list_destruct(&pool->workers, NULL);
@@ -262,4 +264,21 @@ void pool_cancel(pool *pool, core_id id)
 {
   (void) pool;
   *((core_handler *) id) = (core_handler) {0};
+}
+
+void pool_abort(pool *pool)
+{
+  pool_worker *worker;
+
+  if (pool_activated)
+  {
+    pool = pool_get(pool);
+    list_foreach(&pool->workers, worker)
+    {
+      worker->active = 0;
+      pthread_kill(worker->thread, SIGTERM);
+      pthread_join(worker->thread, NULL);
+      worker->thread = 0;
+    }
+  }
 }

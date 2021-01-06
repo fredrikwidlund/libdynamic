@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <signal.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -63,6 +64,11 @@ void basic(__attribute__((unused)) void **ununsed)
   // create pool
   core_construct(NULL);
 
+  // abort on non active pool
+  pool_construct(&p, NULL);
+  pool_abort(&p);
+  pool_destruct(&p);
+
   // create default pool
   pool_construct(NULL, NULL);
   assert_int_equal(pool_errors(NULL), 0);
@@ -93,6 +99,16 @@ void basic(__attribute__((unused)) void **ununsed)
 
   // run core loop with pool removed
   core_loop(NULL);
+  core_destruct(NULL);
+
+  // abort
+  signal(SIGTERM, SIG_IGN);
+  core_construct(NULL);
+  pool_construct(&p, NULL);
+  pool_enqueue(&p, job, &state);
+  core_loop(NULL);
+  pool_abort(&p);
+  pool_destruct(&p);
   core_destruct(NULL);
 }
 
