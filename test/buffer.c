@@ -49,24 +49,10 @@ void core(__attribute__((unused)) void **state)
   buffer_destruct(&b);
 }
 
-void alloc(__attribute__((unused)) void **state)
-{
-  buffer b;
-
-  buffer_construct(&b);
-  debug_out_of_memory = 1;
-  debug_abort = 1;
-  expect_assert_failure(buffer_reserve(&b, 100));
-  debug_abort = 0;
-  debug_out_of_memory = 0;
-  buffer_destruct(&b);
-}
-
 int main()
 {
   const struct CMUnitTest tests[] = {
-      cmocka_unit_test(core),
-      cmocka_unit_test(alloc),
+      cmocka_unit_test(core)
   };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
