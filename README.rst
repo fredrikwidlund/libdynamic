@@ -10,10 +10,6 @@ libdynamic v2.3
 .. image:: https://img.shields.io/lgtm/grade/cpp/g/fredrikwidlund/libdynamic.svg?logo=lgtm&logoWidth=18)
   :target: https://lgtm.com/projects/g/fredrikwidlund/libdynamic/context:cpp
 
-.. image:: https://readthedocs.org/projects/libdynamic/badge/?version=latest
-  :target: http://libdynamic.readthedocs.io/en/latest/?badge=latest
-  :alt: Documentation Status
-
 Documentation is available at http://libdynamic.readthedocs.io/en/latest/.
 
 Description

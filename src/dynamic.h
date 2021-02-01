@@ -16,6 +16,8 @@ extern "C" {
 #include <stdlib.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <unistd.h>
+#include <pthread.h>
 
 #include <dynamic/segment.h>
 #include <dynamic/utility.h>
