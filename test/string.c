@@ -27,7 +27,8 @@ void core(__attribute__((unused)) void **state)
   string_shrink_to_fit(&s);
   assert_int_equal(string_capacity(&s), 0);
 
-  string_insert(&s, 0, "insert");
+  string_insert_buffer(&s, 0, "ert", 3);
+  string_insert(&s, 0, "ins");
   string_prepend(&s, "prepend");
   string_append(&s, "append");
   assert_string_equal(string_data(&s), "prependinsertappend");

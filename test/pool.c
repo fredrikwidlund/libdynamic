@@ -110,6 +110,16 @@ void basic(__attribute__((unused)) void **ununsed)
   pool_abort(&p);
   pool_destruct(&p);
   core_destruct(NULL);
+
+  // abort default instance
+  signal(SIGTERM, SIG_IGN);
+  core_construct(NULL);
+  pool_construct(NULL, NULL);
+  pool_enqueue(NULL, job, &state);
+  core_loop(NULL);
+  pool_abort(NULL);
+  pool_destruct(NULL);
+  core_destruct(NULL);
 }
 
 void fails(__attribute__((unused)) void **unused)
@@ -158,6 +168,18 @@ void fails(__attribute__((unused)) void **unused)
   debug_send = 0;
   assert_int_equal(pool_errors(&p), 2);
   pool_destruct(&p);
+
+  // send in main reduce default pool
+  pool_construct(NULL, NULL);
+  pool_limits(NULL, 2, 2);
+  pool_enqueue(NULL, job, &state);
+  pool_limits(NULL, 0, 1);
+  errno = 0;
+  debug_send = 1;
+  pool_enqueue(NULL, job, &state);
+  debug_send = 0;
+  assert_int_equal(pool_errors(NULL), 2);
+  pool_destruct(NULL);
 
   // cancel
   pool_construct(&p, NULL);

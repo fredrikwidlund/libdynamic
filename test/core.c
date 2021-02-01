@@ -65,6 +65,14 @@ static void basic(__attribute__((unused)) void **state)
   core_loop(NULL);
   core_destruct(NULL);
 
+    /* add, modify and remove fd with given instance */
+  core_construct(&c);
+  core_add(&c, NULL, NULL, 0, 0);
+  core_modify(&c, 0, EPOLLIN);
+  core_delete(&c, 0);
+  core_loop(&c);
+  core_destruct(&c);
+
   /* poll event */
   e = pipe(p);
   assert_int_equal(e, 0);
@@ -86,6 +94,17 @@ static void basic(__attribute__((unused)) void **state)
   core_destruct(NULL);
   assert_int_equal(n, 1);
 
+  /* next, cancel with given instance */
+  n = 0;
+  core_construct(&c);
+  core_next(&c, next, &n);
+  id = core_next(&c, next, &n);
+  core_cancel(&c, id);
+  core_cancel(&c, 0);
+  core_loop(&c);
+  core_destruct(&c);
+  assert_int_equal(n, 1);
+
   /* time and counters */
   core_construct(NULL);
   core_now(NULL);
@@ -94,11 +113,25 @@ static void basic(__attribute__((unused)) void **state)
   core_clear_counters(NULL);
   core_destruct(NULL);
 
+  core_construct(&c);
+  core_now(&c);
+  core_now(&c);
+  core_get_counters(&c);
+  core_clear_counters(&c);
+  core_destruct(&c);
+
   /* abort */
   core_construct(NULL);
   core_abort(NULL);
   core_loop(NULL);
   core_destruct(NULL);
+
+  /* abort instance */
+  core_construct(&c);
+  core_abort(&c);
+  core_loop(&c);
+  assert_int_equal(core_errors(&c), 0);
+  core_destruct(&c);
 }
 
 static void error(__attribute__((unused)) void **state)
