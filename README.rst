@@ -1,9 +1,6 @@
 libdynamic v2.3
 ===============
 
-.. image:: https://travis-ci.org/fredrikwidlund/libdynamic.svg?branch=master
-  :target: https://travis-ci.org/fredrikwidlund/libdynamic
-    
 .. image:: https://coveralls.io/repos/github/fredrikwidlund/libdynamic/badge.svg?branch=master
   :target: https://coveralls.io/github/fredrikwidlund/libdynamic?branch=master
   
