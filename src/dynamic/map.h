@@ -1,5 +1,5 @@
 /*
- * libdynamic map.h v0.1.0 - https://github.com/fredrikwidlund/libdynamic
+ * libdynamic map.h v0.9.0 - https://github.com/fredrikwidlund/libdynamic
  *
  * Copyright (c) 2016-2024 Fredrik Widlund - fredrik.widlund@gmail.com
  *
