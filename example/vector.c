@@ -13,20 +13,21 @@ static uint64_t ntime(void)
 
 int main(int argc, char **argv)
 {
-  size_t i, n;
-  list_t *l;
   uint64_t t1, t2;
+  size_t i, n;
+  char c;
 
-  n = argc == 2 ? strtoull(argv[1], NULL, 0) : 1000000;
+  n = argc == 2 ? strtoull(argv[1], NULL, 0) : 1000000000;
 
-  l = list_create();
-
+  vector_t v = vector();
   t1 = ntime();
   for (i = 0; i < n; i++)
-    list_append(l, &i, sizeof (i));
+  {
+    c = i;
+    vector_push(&v, char, c);
+  }
   t2 = ntime();
-
-  fprintf(stderr, "%lu inserts, time %fs\n", n, (double) (t2 - t1) / 1000000000);
-
-  list_destroy(l);
+  assert(vector_at(v, char, 0) == 0);
+  fprintf(stderr, "%lu inserts, time %fs\n", vector_size(v), (double) (t2 - t1) / 1000000000.0);
+  vector_clear(&v);
 }

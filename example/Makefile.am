@@ -1,13 +1,11 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-AM_CFLAGS = -std=gnu11 -std=gnu11
-LDADD = -L.. -ldynamic
+AM_CFLAGS = -O3 -std=gnu2x -g -O3 -flto -I../src
 
 bin_PROGRAMS = \
-maps \
-mapi \
+buffer \
+vector \
+reverse \
 list \
-async
-
-async_LDFLAGS = -pthread
+map
 
 MAINTAINERCLEANFILES = Makefile.in

@@ -1,68 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <stdint.h>
-#include <string.h>
-#include <sys/time.h>
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../src/dynamic/buffer.h"
-#include "../src/dynamic/vector.h"
-#include "../src/dynamic/string.h"
+#include "dynamic/string.h"
 
-void core(__attribute__((unused)) void **state)
+void test_string(__attribute__((unused)) void **arg)
 {
-  string s, s2;
-  vector v;
-  ssize_t i;
+  char *cstr;
+  string_t s;
 
-  string_construct(&s);
-  assert_int_equal(string_length(&s), 0);
-  assert_int_equal(string_capacity(&s), 0);
-  assert_true(string_empty(&s));
+  s = string("test");
+  assert_false(string_empty(s));
+  assert_true(string_end(s) == string_base(s) + string_size(s));
+  (void) fwrite(string_base(s), string_size(s), 1, stdout);
 
-  string_reserve(&s, 1023);
-  assert_int_equal(string_capacity(&s), 1023);
-  string_shrink_to_fit(&s);
-  assert_int_equal(string_capacity(&s), 0);
+  s = string_null();
+  assert_true(string_empty(s));
 
-  string_insert_buffer(&s, 0, "ert", 3);
-  string_insert(&s, 0, "ins");
-  string_prepend(&s, "prepend");
-  string_append(&s, "append");
-  assert_string_equal(string_data(&s), "prependinsertappend");
-
-  i = string_find(&s, "insert", 0);
-  assert_true(i >= 0);
-  string_erase(&s, i, 6);
-  assert_string_equal(string_data(&s), "prependappend");
-  string_replace_all(&s, "pend", "-");
-
-  string_construct(&s2);
-  string_append(&s2, "pre-ap-");
-  assert_true(string_compare(&s, &s2) == 0);
-  string_destruct(&s2);
-  string_clear(&s);
-  assert_true(string_empty(&s));
-  string_destruct(&s);
-
-  string_construct(&s);
-  string_append(&s, " some space   delimited string ");
-  string_split(&s, " ", &v);
-  assert_int_equal(vector_size(&v), 4);
-  assert_string_equal(string_data(vector_at(&v, 0)), "some");
-  assert_string_equal(string_data(vector_at(&v, 1)), "space");
-  assert_string_equal(string_data(vector_at(&v, 2)), "delimited");
-  assert_string_equal(string_data(vector_at(&v, 3)), "string");
-  vector_destruct(&v, string_release);
-  string_destruct(&s);
+  /* strdup breaks in valgrind with cmocka */
+  cstr = malloc(5);
+  memcpy(cstr, "test", 5);
+  s = string(cstr);
+  s = string_clear(s);
+  assert_true(string_empty(s));
 }
 
 int main()
 {
   const struct CMUnitTest tests[] = {
-      cmocka_unit_test(core)};
+    cmocka_unit_test(test_string)
+  };
 
   return cmocka_run_group_tests(tests, NULL, NULL);
 }

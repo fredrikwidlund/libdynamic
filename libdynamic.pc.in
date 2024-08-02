@@ -4,7 +4,6 @@ libdir=@libdir@
 includedir=${prefix}/include
 
 Name: libdynamic
-Description: C library for various dynamic container types
+Description: Single file header library for dynamic C types
 Version: @VERSION@
-Libs: -L${libdir} -ldynamic
-Cflags: -I${includedir} -flto -fuse-linker-plugin
+Cflags: -I${includedir} -flto

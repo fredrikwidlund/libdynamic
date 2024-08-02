@@ -62,3 +62,13 @@ Released 2021-01-02
 * New features:
 
   - Pool refactoring
+
+Version 0.9
+===========
+
+Released 2024-08-02
+
+* New features:
+
+  - Complete next gen rewrite into single file include library
+  - zlib license

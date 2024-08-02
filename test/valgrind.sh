@@ -1,10 +1,10 @@
 #!/bin/sh
 
 if command -v valgrind; then
-    for file in segment utility hash buffer list vector string maps mapi map pool
+    for file in hash data buffer vector list map
     do
         echo [$file]
-        if ! valgrind  --error-exitcode=1 --read-var-info=yes --leak-check=full --show-leak-kinds=all test/$file; then
+        if ! valgrind --track-fds=yes --error-exitcode=1 --leak-check=full --show-leak-kinds=all test/$file; then
             exit 1
         fi
     done
