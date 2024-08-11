@@ -25,7 +25,7 @@ maintainer-clean-local:
 
 ### unit testing ###
 
-AM_CFLAGS 			= -std=gnu23 -Wall -Werror -pedantic -g -flto -O0 -ftest-coverage -fprofile-arcs -I$(srcdir)/src -DGCOV_BUILD -DUNIT_TESTING
+AM_CFLAGS 			= -std=gnu2x -Wall -Werror -pedantic -g -flto -O0 -ftest-coverage -fprofile-arcs -I$(srcdir)/src -DGCOV_BUILD -DUNIT_TESTING
 LDADD 				= -lcmocka
 
 check_PROGRAMS 			= \
