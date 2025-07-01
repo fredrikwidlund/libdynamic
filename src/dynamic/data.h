@@ -87,6 +87,8 @@ DYNAMIC_INLINE data_t data(const void *base, size_t size)
   return (data_t) {.iov_base = (void *) base, .iov_len = size};
 }
 
+DYNAMIC_INLINE data_t data_null(void);
+
 DYNAMIC_INLINE data_t data_string(const char *string)
 {
   return data(string, strlen(string));
