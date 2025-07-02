@@ -2,7 +2,7 @@
 
 ## About
 
-libdynamic is a single file header library design to provide dynamic, performance optimized, low-level data structures for C.
+libdynamic is a single file header library designed to provide dynamic, performance optimized, low-level data structures for C.
 
 ## Installation
 
@@ -10,10 +10,12 @@ Copy `dynamic.h` to your header path and compile with `-flto` to ensure link tim
 
 ## Unit tests
 
-The test suite requires cmocka and valgrind.
+The test suite requires cmocka and valgrind, and requires 100% line and branch coverage to succeed.
 
+```
 ./configure
 make check
+```
 
 ## Versioning
 
