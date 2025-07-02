@@ -11,18 +11,11 @@ int main()
   while (1)
   {
     n = getline(&line, &size, stdin);
-    if (n <= 0)
+    if (n == -1)
       break;
-    if (line[n - 1] == '\n')
-    {
-      line[n - 1] = 0;
-      n--;
-    }
-    buffer_prepend(&b, data_string("\n"));
-    buffer_prepend(&b, data(line, n));
+    b = buffer_prepend(b, data(line, n));
   }
-
-  fwrite(buffer_base(b), buffer_size(b), 1, stdout);
-  buffer_clear(&b);
   free(line);
+  string_fwrite(buffer_data(b), stdout);
+  buffer_free(b);
 }
