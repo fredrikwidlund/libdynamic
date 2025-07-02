@@ -19,7 +19,6 @@ jobs:
       uses: egor-tensin/setup-gcc@v1
       with:
         version: 14
-        architecture: x64
     - name: autogen
       run: ./autogen.sh
     - name: configure
